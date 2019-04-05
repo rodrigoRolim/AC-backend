@@ -1,11 +1,7 @@
-import express from 'express';
-import bodyParser from 'body-parser';
+import app from './src/app';
+const port = 3000;
 
-const app = express();
-app.use(bodyParser.json());
 
-app.get('/', (req, res) => res.send("hello"));
-
-app.listen(3000, () => {
-  console.log('Listen on port 3000')
+app.listen(port, () => {
+  console.log(`Listen on port ${port}`)
 })
