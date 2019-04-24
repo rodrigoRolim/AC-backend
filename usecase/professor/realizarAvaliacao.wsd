@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor Professor
+actor Aluno
+rectangle "Realizar avaliação de documentos" {
+  Professor -- (receber documento)
+  Aluno -- (receber documento)
+  Professor -- (visualizar documento)
+  Professor -- (aprovar documento)
+  Professor -- (reprovar documento)
+  (aprovar documento) -- (verificar regulamento de AC): <<extends>>
+  (reprovar documento) -- (verificar regulamento de AC): <<extends>>
+  Professor -- (desfazer um avaliação)
+}
+
+@enduml

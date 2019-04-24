@@ -1,0 +1,44 @@
+@startuml
+actor Admin
+boundary "tela de cadastro de professor" as cadastro
+control ProfessorController
+entity ProfessorEntity
+
+Admin -> cadastro: entrar com os dados do professor
+activate Admin
+activate cadastro
+cadastro ->o UTFPR: verificar se o professor pertence a UTFPR-CP
+activate UTFPR
+deactivate cadastro
+alt Professor pertence a UTFPR-CP
+    UTFPR o--> cadastro: professor pertence
+    activate cadastro
+    cadastro --> Admin: mensagem de sucesso
+    deactivate Admin
+    deactivate cadastro
+    Admin ->> cadastro: confirmar envio de dados
+    activate Admin
+    activate cadastro
+    cadastro ->> ProfessorController: requisitar cadastro de professor
+    deactivate cadastro
+    activate ProfessorController
+    ProfessorController -> ProfessorEntity: salvar professor
+    activate ProfessorEntity
+    deactivate ProfessorController
+    ProfessorEntity --> ProfessorController: salvado
+    deactivate ProfessorEntity
+    activate ProfessorController
+    ProfessorController -->> cadastro: responder com mesagem de 'ok'
+    deactivate ProfessorController
+    activate cadastro
+    cadastro -->> Admin: salvo com sucesso
+    deactivate Admin
+    deactivate cadastro 
+else Professor não pertence
+    UTFPR o--> cadastro: professor não pertence
+    activate cadastro
+    cadastro --> Admin: cadastro não permitido
+    deactivate cadastro
+    activate Admin
+end     
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+skinparam packgestyle rectangle
+actor Admin
+rectangle "gerenciar grupos" {
+  Admin -- (adicionar grupo)
+  Admin -- (excluir grupo)
+  Admin -- (editar grupo)
+  (excluir grupo) ..> (selecionar grupo): <<include>>
+  (editar grupo) ..> (selecionar grupo): <<include>>
+}
+@enduml

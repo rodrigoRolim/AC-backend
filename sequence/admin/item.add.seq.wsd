@@ -1,0 +1,24 @@
+@startuml
+actor Admin
+boundary "cadastro de item" as grupo
+control ItemController
+entity ItemEntity
+
+Admin ->> grupo: tentar cadastrar um item
+activate Admin
+activate grupo
+grupo ->> ItemController: solicitar cadastro do item
+deactivate grupo
+activate ItemController
+ItemController -> ItemEntity: confirmar cadastro do item
+deactivate ItemController
+activate ItemEntity
+ItemEntity --> ItemController: mensagem de confirmação
+deactivate ItemEntity
+activate ItemController
+ItemController -->> grupo: enviar mensagem de confirmação
+deactivate ItemController
+activate grupo
+grupo -->> Admin: exibir mensagem de confirmação
+deactivate grupo
+@enduml

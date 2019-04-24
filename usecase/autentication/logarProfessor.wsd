@@ -1,0 +1,11 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor professor
+rectangle login {
+    professor -- (fazer login)
+    (fazer login) ..> (autenticar professor): <<include>>
+    (fazer login) ..> (informar admin): <<extends>>
+}  
+
+@enduml

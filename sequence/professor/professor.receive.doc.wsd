@@ -1,0 +1,26 @@
+@startuml
+
+Actor Aluno 
+boundary "adicionar documentos" as tela
+control DocumentController
+entity DocumentEntity
+boundary "visualizar documentos" as ver
+Actor Professor
+
+Aluno ->> tela: tentar enviar documento para avaliação
+activate Aluno
+activate tela
+tela ->> DocumentController: solcitar o envio de documento
+activate DocumentController
+DocumentController -> DocumentEntity: enviar documento para avaliação
+deactivate DocumentController
+activate DocumentEntity
+DocumentEntity --> DocumentController: documento enviado
+deactivate DocumentEntity
+activate DocumentController
+DocumentController -->> ver: enviar mesangem com documento
+deactivate DocumentController
+activate ver
+ver -->> Professor: exibir documento enviado
+activate Professor
+@enduml

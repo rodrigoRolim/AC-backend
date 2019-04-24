@@ -1,0 +1,29 @@
+@startuml
+actor Professor
+'boundary "tela de login" as login
+boundary "tela de perfil" as perfil
+boundary "tela de edicao" as edite
+control ProfessorController
+entity ProfessorEntity
+
+Professor ->> perfil: editar dados pessoais
+activate Professor
+activate perfil
+perfil ->> edite: direcionar para edicao
+deactivate perfil
+activate edite
+edite ->> ProfessorController: confirma alteração de dados
+deactivate edite
+activate ProfessorController
+ProfessorController -> ProfessorEntity: atualizar dados
+activate ProfessorEntity
+deactivate ProfessorController
+ProfessorEntity --> ProfessorController: atualização confirmada
+deactivate ProfessorEntity
+activate ProfessorController
+ProfessorController -->> edite: mensagem de confirmação
+activate edite
+deactivate ProfessorController
+edite -->> Professor: exibir mensagem de confirmação
+deactivate edite
+@enduml

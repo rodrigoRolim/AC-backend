@@ -1,0 +1,23 @@
+@startuml
+actor Admin
+boundary "tela principal" as home
+control ProfessorController
+entity ProfessorEntity
+
+
+activate Admin
+Admin ->> home: tentar substiuir professor por outro
+activate home
+home ->> ProfessorController: solicitar atualização de professor
+activate ProfessorController
+ProfessorController -> ProfessorEntity: atualizar professor por outro
+deactivate ProfessorController
+activate ProfessorEntity
+ProfessorEntity --> ProfessorController: mensagem de confirmação
+deactivate ProfessorEntity
+activate ProfessorController
+ProfessorController -->> home: enviar mesagem de confirmação
+deactivate ProfessorController
+home -->> Admin: exibir mensagem de confirmação 
+
+@enduml

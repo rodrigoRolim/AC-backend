@@ -1,0 +1,58 @@
+@startuml
+actor Aluno
+boundary "cadastro de documento" as addDoc
+control DocumentController
+entity DocumentEntity
+
+Aluno ->> addDoc: entrar com nome do documento
+activate Aluno
+activate addDoc
+activate DocumentController
+addDoc ->> DocumentController: verificar se nome ja existe
+DocumentController -> DocumentEntity: buscar documento pelo nome entrado
+activate DocumentEntity
+alt nome de documento não em uso
+    DocumentEntity --> DocumentController: não encontrado
+    deactivate DocumentEntity
+    DocumentController -->> addDoc: nome não usado
+    deactivate DocumentController
+    addDoc -->> Aluno: nome válido
+    deactivate addDoc
+    deactivate Aluno
+
+    Aluno ->> addDoc: carregar documento
+    activate Aluno
+    activate addDoc
+    Aluno ->> addDoc: preencher informações sobre o documento
+    addDoc -> addDoc: verificar informações
+    addDoc --> Aluno: informações validadas
+    deactivate addDoc
+    deactivate Aluno
+
+    Aluno -> addDoc: confirmar envio
+    activate addDoc 
+    activate Aluno
+    addDoc -> DocumentController: adicionar documento
+    activate DocumentController
+    DocumentController -> DocumentEntity: registrar documento
+    activate DocumentEntity
+    DocumentEntity --> DocumentController: registro confirmado
+    deactivate DocumentEntity
+    DocumentController --> addDoc: adição confirmado
+    deactivate DocumentController
+    addDoc --> Aluno: mensagem de confirmação
+    deactivate addDoc
+    deactivate Aluno
+else Ja existe documento com o nome entrado 
+    activate DocumentEntity
+    DocumentEntity -->> DocumentController: Documento encontrado
+    deactivate DocumentEntity
+    activate DocumentController
+    DocumentController -->> addDoc: nome ja está em uso
+    deactivate DocumentController
+    activate addDoc
+    addDoc -->> Aluno: por favor, entre com outro nome
+    deactivate addDoc
+    activate Aluno
+end
+@enduml

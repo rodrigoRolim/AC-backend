@@ -1,0 +1,11 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor aluno
+rectangle login {
+    aluno -- (solicitar acesso a conta de aluno)
+    (solicitar acesso a conta de aluno) .> (cadastrar aluno): extend
+    (solicitar acesso a conta de aluno) ..> (checar cadastro de aluno): include
+}
+
+@enduml

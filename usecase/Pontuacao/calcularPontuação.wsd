@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+:Rotina de calculo de pontuçao: as pontuation <<application>>
+rectangle "realizar calculo de pontuação"{
+    pontuation -- (calcular pontuação)
+    (calcular pontuação) <|-- (calcular pontuação do grupo 1) 
+    (calcular pontuação) <|-- (calcular pontuação do grupo 2) 
+    (calcular pontuação) <|-- (calcular pontuação do grupo 3)
+    (calcular pontuação) <|-- (calcular pontuação total)
+    (calcular pontuação total) ..> (buscar por todos os documentos): <<includes>>
+    (calcular pontuação do grupo 1) ..> (buscar documentos por grupo): <<includes>>
+    (calcular pontuação do grupo 2) ..> (buscar documentos por grupo): <<includes>>
+    (calcular pontuação do grupo 3) ..> (buscar documentos por grupo): <<includes>>
+}
+@enduml

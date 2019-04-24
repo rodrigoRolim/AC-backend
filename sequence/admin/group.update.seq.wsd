@@ -1,0 +1,24 @@
+@startuml
+actor Admin
+boundary "atualização de grupo" as grupo
+control GroupController
+entity GroupEntity
+
+Admin ->> grupo: tentar atualizar um grupo
+activate Admin
+activate grupo
+grupo ->> GroupController: solicitar atualização do grupo
+deactivate grupo
+activate GroupController
+GroupController -> GroupEntity: confirmar atualização do grupo
+activate GroupEntity
+deactivate GroupController
+GroupEntity --> GroupController: mensagem de confirmação
+deactivate GroupEntity
+activate GroupController
+GroupController -->> grupo: enviar mensagem de confirmação
+deactivate GroupController
+activate grupo
+grupo -->> Admin: exibir mensagem de confirmação
+deactivate grupo
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+actor Professor
+boundary "Tela de documentos do aluno" as documentos 
+control DocumentController as controller  
+entity DocumentEntity as model  
+
+activate Professor
+activate documentos
+Professor -> documentos: selecionar um documento
+deactivate Professor
+deactivate documentos
+documentos --> Professor: exibir documento
+activate documentos
+activate Professor
+
+Professor ->> documentos: Reprovar documento
+documentos -->> Professor: Expresse o motivo
+Professor ->> documentos: Expressar motivo da reprovação
+Professor ->> documentos: confirmar avaliação
+documentos ->> controller: enviar avaliação
+activate controller 
+controller -> model: atualizar documento com o valor da avaliação
+activate model
+model --> controller: atualizado
+deactivate model
+controller -->> documentos: avaliação confirmada
+deactivate controller
+documentos -->> Professor: mensagem de confirmação
+deactivate documentos
+deactivate Professor
+@enduml

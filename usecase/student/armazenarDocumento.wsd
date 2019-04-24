@@ -1,0 +1,11 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor Aluno
+rectangle "realizar registro de documento" {
+    Aluno -- (armazenar documento)
+    (armazenar documento) ..> (preencher informações sobre o documento): <<include>>
+    (armazenar documento) ..> (carregar documento): <<include>>
+    (armazenar documento) ..> (calcular pontos): <<includes>>
+}
+@enduml

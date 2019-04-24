@@ -1,0 +1,23 @@
+@startuml
+actor Student
+boundary "tela principal" as home
+control DocumentController 
+entity DocumentEntity
+
+Student ->> home: ver documentos adicionados
+activate Student
+activate home
+home ->> DocumentController: requisitar os documentos adicionados
+activate DocumentController
+DocumentController -> DocumentEntity: buscar pelos documentos adcionados
+deactivate DocumentController
+activate DocumentEntity
+DocumentEntity --> DocumentController: retornar com os documentos
+deactivate DocumentEntity
+activate DocumentController
+DocumentController -->> home: responder com os documentos
+deactivate DocumentController
+home -->> Student: exibir lista de documentos
+Student ->> home: ver documentos por grupo
+home -->> Student: exibir documentos por grupo
+@enduml

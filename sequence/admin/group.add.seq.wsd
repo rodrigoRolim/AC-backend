@@ -1,0 +1,24 @@
+@startuml
+actor Admin
+boundary "cadastro de grupo" as grupo
+control GroupController
+entity GroupEntity
+
+Admin ->> grupo: tentar cadastrar um novo grupo
+activate Admin
+activate grupo
+grupo -> GroupController: solicitar cadastro de grupo
+deactivate grupo
+activate GroupController
+GroupController -> GroupEntity: confirmar cadastro de grupo
+deactivate GroupController
+activate GroupEntity
+GroupEntity -->> GroupController: mensagem de confirmação
+deactivate GroupEntity
+activate GroupController
+GroupController -->> grupo: enviar mensagem de confirmação
+deactivate GroupController
+activate grupo
+grupo -->> Admin: exibir mensagem de confirmação
+deactivate grupo
+@enduml
