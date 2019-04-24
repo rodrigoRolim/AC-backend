@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+:Rotina de calculo de progresso: as Progresso <<application>>
+rectangle "realizar calculo de progresso"{
+    Progresso -- (calcular progresso)
+    (calcular progresso total) <|-- (calcular progresso do grupo 1) 
+    (calcular progresso total) <|-- (calcular progresso do grupo 2) 
+    (calcular progresso total) <|-- (calcular progresso do grupo 3)
+    (calcular progresso total) <|-- (calcular pontuação total)
+    (calcular progresso total) ..> (buscar por todos os documentos): <<includes>>
+    (calcular progresso do grupo 1) ..> (calcular pontuação por grupo): <<includes>>
+    (calcular progresso do grupo 2) ..> (calcular pontuação por grupo): <<includes>>
+    (calcular progresso do grupo 3) ..> (calcular pontuação por grupo): <<includes>>
+}
+@enduml
