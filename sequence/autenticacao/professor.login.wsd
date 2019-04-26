@@ -4,7 +4,7 @@ boundary "Tela de login" as login
 control  ProfessorController
 entity ProfessorEntity
 
-Professor ->> login: Solicitar acesso a conta
+Professor ->> login: tentar acessar a conta
 activate login
 login ->> ProfessorController: Requisitar Autenticação
 activate ProfessorController

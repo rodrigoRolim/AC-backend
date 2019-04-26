@@ -1,27 +1,27 @@
 @startuml
 actor Aluno
 boundary "Tela de login" as login
-control  StudentController
+control  loginController
 entity StudentEntity
 
 Aluno ->> login: Solicitar acesso a conta
 activate login
-login ->> StudentController: Requisitar Autenticação
-activate StudentController
+login ->> loginController: Requisitar Autenticação
+activate loginController
 
-StudentController -> StudentEntity: Buscar aluno
+loginController -> StudentEntity: Buscar aluno
     activate StudentEntity
     alt Professor existe na base de dados
         
-        StudentEntity --> StudentController: aluno encontrado
-        'deactivate StudentController
-         StudentController -> StudentController: Verificar dados do aluno
+        StudentEntity --> loginController: aluno encontrado
+        'deactivate loginController
+         loginController -> loginController: Verificar dados do aluno
         alt dados válidos
-            StudentController -->> login: Aluno Autenticado
+            loginController -->> login: Aluno Autenticado
             login -->> Aluno: Acesso permitido 
         else dados inválidos
             
-            login <<-- StudentController: Não Autenticado
+            login <<-- loginController: Não Autenticado
             login -->> Aluno: Acesso não permitido
         end
        

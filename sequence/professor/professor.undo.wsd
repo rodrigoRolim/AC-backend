@@ -1,0 +1,25 @@
+@startuml
+actor Professor
+boundary "tela principal" as home
+control DocumentController as controle
+entity DocumentEntity as entidade
+
+Professor ->> home: selecionar o documento
+activate Professor
+activate home
+Professor ->> home: desfazer a avaliação salva
+Professor ->> home: confirmar o desfazer da avaliação
+home ->> controle: solicitar atualização da avaliação do documento
+deactivate home
+activate controle
+controle -> entidade: atualizar avaliação do documento
+deactivate controle
+activate entidade
+entidade --> controle: documento atualizado
+deactivate entidade
+activate controle
+controle -->> home: enviar documento atualizado
+deactivate controle
+activate home
+home -->> Professor: exibir documento atualizado
+@enduml
