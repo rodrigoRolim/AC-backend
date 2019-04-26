@@ -1,9 +1,0 @@
-@startuml
-skinparam packagestyle rectangle
-actor professor
-rectangle "alteração de dados de professor" {
-    professor -- (acessar perfil de conta)
-    (acessar perfil de conta) ..> (fazer login): <<includes>>
-    (acessar perfil de conta) ..> (editar dados da conta): <<extends>>
-}
-@enduml
