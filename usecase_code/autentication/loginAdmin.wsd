@@ -1,0 +1,10 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor Admin
+
+rectangle "realizar login de admin" {
+  Admin -- (efetuar login)
+  (efetuar login) ..> (autenticar dados): <<include>>
+}
+@enduml
