@@ -1,0 +1,9 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor Aluno
+rectangle "realizar envio de documento" {
+  Aluno -- (enviar documento)
+  (enviar documento) ..> (verificar documentos armazenados): <<include>>
+}
+@enduml
