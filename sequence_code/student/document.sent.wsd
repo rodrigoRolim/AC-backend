@@ -1,0 +1,24 @@
+@startuml
+actor Aluno
+boundary "tela principal" as home
+control DocumentController as controle
+entity DocumentEntity as entidade
+
+Aluno ->> home: tentar enviar o(s) documento(s) não enviados
+activate Aluno
+activate home
+home ->> controle: solicitar envio de documento
+deactivate home
+activate controle
+controle -> entidade: atualizar documento para enviado
+deactivate controle
+activate entidade
+entidade --> controle: atualização confirmada
+deactivate entidade
+activate controle
+controle -->> home: enviar mensagem de confirmação
+deactivate controle
+activate home
+home -->> Aluno: exibir mesangem de confirmação
+deactivate home
+@enduml
