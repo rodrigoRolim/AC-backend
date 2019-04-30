@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+:Rotina de calculo de progresso: <<application>> as progresso
+rectangle "calcular progresso" {
+  progresso -- (calcular progresso avaliado)
+  progresso -- (calcular progresso não avaliado)
+  (calcular progresso avaliado) ..> (recuperar pontuação avaliada): <<includes>>
+  (calcular progresso não avaliado) ..> (recuperar pontuação não avaliada): <<includes>>
+  
+}
+@enduml

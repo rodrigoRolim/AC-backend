@@ -1,0 +1,11 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+:Rotina de calculo de pontuacao: <<application>> as pontuacao
+rectangle "calcular pontuação de aluno" {
+  pontuacao -- (calcular pontuação avaliada)
+  pontuacao -- (calcular pontuação não avaliada)
+  (calcular pontuação avaliada) ..> (recuperar documentos avaliados): <<includes>>
+  (calcular pontuação não avaliada) ..> (recuperar documentos não avaliados): <<inlcudes>>
+}
+@enduml
