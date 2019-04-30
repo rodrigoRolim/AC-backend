@@ -1,0 +1,19 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor Aluno
+actor Professor
+rectangle "gerencia documento" {
+  Aluno -- (armazenar documento)
+  (armazenar documento) ..> (carregar documento): <<includes>>
+  (armazenar documento) ..> (adicionar pontuação do documento): <<includes>>
+  Aluno -- (enviar documentos)
+  Professor -- (enviar documentos)
+  Aluno -- (excluir documento)
+  (excluir documento) ..> (verificar se documento não foi enviado): <<includes>>
+  Aluno -- (editar documento)
+  (editar documento) ..> (verificar se documento não foi enviado): <<includes>>
+  Aluno -- (visualizar documento)
+  (visualizar documento) ..> (selecionar documento): <<includes>>
+}
+@enduml
