@@ -3,7 +3,7 @@ left to right direction
 skinparam packagestyle rectangle
 actor Aluno
 actor Professor
-rectangle "gerencia documento" {
+rectangle "gerenciar documento" {
   Aluno -- (armazenar documento)
   (armazenar documento) ..> (carregar documento): <<includes>>
   (armazenar documento) ..> (adicionar pontuação do documento): <<includes>>
