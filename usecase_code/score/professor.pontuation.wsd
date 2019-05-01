@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+skinparam packagestyle rectangle
+actor Professor
+rectangle "visualizar alunos" {
+  Professor -- (ver lista de alunos)
+  Professor -- (ver progresso de um aluno)
+  (ver progresso de um aluno) ..> (selecionar o aluno): <<includes>>
+  Professor -- (visualizar documentos de um aluno)
+  (visualizar documentos de um aluno) ..> (selecionar o aluno): <<includes>>
+}
+
+@enduml

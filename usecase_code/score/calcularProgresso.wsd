@@ -3,10 +3,13 @@ left to right direction
 skinparam packagestyle rectangle
 :Rotina de calculo de progresso: <<application>> as progresso
 rectangle "calcular progresso" {
-  progresso -- (calcular progresso avaliado)
-  progresso -- (calcular progresso não avaliado)
-  (calcular progresso avaliado) ..> (recuperar pontuação avaliada): <<includes>>
-  (calcular progresso não avaliado) ..> (recuperar pontuação não avaliada): <<includes>>
-  
+  progresso --- (calcular progresso avaliado)
+  progresso --- (calcular progresso não avaliado)
+  (calcular progresso avaliado) ...> (recuperar pontuação avaliada): <<includes>>
+  (calcular progresso não avaliado) ...> (recuperar pontuação não avaliada): <<includes>>
+  (calcular progresso total avaliada) -|> (calcular progresso avaliado)
+  (calcular progresso avaliada por grupo ) ---|> (calcular progresso avaliado)
+  (calcular progresso não avaliado total) ---|> (calcular progresso não avaliado)
+  (calcular progresso não avaliada por grupo ) ---|> (calcular progresso não avaliado)
 }
 @enduml
