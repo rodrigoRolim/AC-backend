@@ -4,7 +4,6 @@
       class="form-login" 
       @submit="checkForm"
       method="post"
-      
       >
       <h3>Administrador</h3>
       <div class="form-row-name">
@@ -30,7 +29,7 @@
 
 <script>
   export default {
-    data() {
+    data () {
       return{
         username: '',
         password: ''
@@ -46,7 +45,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .container-lg-ad {
   background-color: rgba(0,0,0,0.005);
   display: flex;
