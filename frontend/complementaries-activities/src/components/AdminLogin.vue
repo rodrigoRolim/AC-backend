@@ -1,8 +1,8 @@
-<template>
+  <template>
   <div class="container-lg-ad">
     <form 
       class="form-login" 
-      @submit="checkForm"
+      @submit.prevent="checkForm"
       method="post"
       >
       <h3>Administrador</h3>
@@ -37,8 +37,8 @@
     },
     methods: {
       checkForm: (e) => {
-       
-        e.prenventDefault();
+        console.log("submit")
+      
      
       }
     }
