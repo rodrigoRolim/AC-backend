@@ -1,17 +1,22 @@
 <template>
   <div class="container-lg-ad">
-    <form class="form-login" method="post">
+    <form 
+      class="form-login" 
+      @submit="checkForm"
+      method="post"
+      
+      >
       <h3>Administrador</h3>
       <div class="form-row-name">
         <div class="input-label">
-          <label for="username">username</label>
-          <input type="text" name="username" id="username"/>
+          <label for="username">nome de usuário</label>
+          <input type="text" v-model="username" id="username"/>
           </div>
       </div>
       <div class="form-row-password">
         <div class="input-label">
           <label for="password">senha</label>
-          <input type="password" name="password" id="password"/>
+          <input type="password" v-model="password" id="password"/>
         </div>
       </div>
       <div class="form-row">
@@ -25,9 +30,17 @@
 
 <script>
   export default {
-    data: () => {
-      return {
-        
+    data() {
+      return{
+        username: '',
+        password: ''
+      }
+    },
+    methods: {
+      checkForm: (e) => {
+       
+        e.prenventDefault();
+     
       }
     }
   }
