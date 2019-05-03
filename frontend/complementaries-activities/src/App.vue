@@ -11,7 +11,7 @@
     components: { AdminLogin },
     data () {
       return {
-
+        
       }
     }
   }
