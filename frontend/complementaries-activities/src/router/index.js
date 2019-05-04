@@ -11,6 +11,6 @@ export default new Router({
       path: '/',
       name: 'AdminLogin',
       component: AdminLogin
-    }
+    },
   ]
 })

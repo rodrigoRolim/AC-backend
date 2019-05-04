@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="container-lg-ad">
     <form 
       class="form-login" 
@@ -20,14 +20,16 @@
       </div>
       <div class="form-row">
         <div class="actions">
-          <button type="submit" :value="state" :disabled="state">confirmar</button>
+          <button type="submit" :value="state"  >confirmar</button>
         </div>
       </div>
    </form>
+  
   </div>
 </template>
 
 <script>
+  import router from '@/router/index'
   export default {
     data () {
       return {
@@ -35,12 +37,13 @@
           username: '',
           password: ''
         },
-        state: false
       }
     },
     methods: {
-      login: (e) => {
-        
+      login: () => {
+        this.state = true
+        router.replace('/filhadaputa')
+        console.log(this.$router)
       }
     }
   }
