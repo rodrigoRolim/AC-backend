@@ -1,7 +1,7 @@
 <template>
   <div class="container-lg-ad">
-    <form 
-      class="form-login" 
+    <form
+      class="form-login"
       @submit.prevent="login"
       method="post"
       >
@@ -20,33 +20,33 @@
       </div>
       <div class="form-row">
         <div class="actions">
-          <button type="submit" :value="state"  >confirmar</button>
+          <button type="submit">confirmar</button>
         </div>
       </div>
    </form>
-  
+
   </div>
 </template>
 
 <script>
-  import router from '@/router/index'
-  export default {
-    data () {
-      return {
-        admin: {
-          username: '',
-          password: ''
-        },
-      }
-    },
-    methods: {
-      login: () => {
-        this.state = true
-        router.replace('/filhadaputa')
-        console.log(this.$router)
+/* import router from '@/router/index' */
+import Admin from '@/services/Admin.js'
+export default {
+  name: 'AdminLogin',
+  data () {
+    return {
+      admin: {
+        username: '',
+        password: ''
       }
     }
+  },
+  methods: {
+    login: () => {
+      Admin.loginAdmin(this.admin).then(response => {})
+    }
   }
+}
 </script>
 
 <style scoped>
