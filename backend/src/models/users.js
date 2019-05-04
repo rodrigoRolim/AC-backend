@@ -1,10 +1,10 @@
-import { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
-const schema = new Mongoose.Schema({
+const schema = new mongoose.Schema({
   username: String,
   password: String
 })
 
-const User = Mongoose.model('User', schema)
+const User = mongoose.model('User', schema)
 
 export default User
