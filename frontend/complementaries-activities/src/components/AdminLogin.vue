@@ -2,25 +2,25 @@
   <div class="container-lg-ad">
     <form 
       class="form-login" 
-      @submit.prevent="checkForm"
+      @submit.prevent="login"
       method="post"
       >
       <h3>Administrador</h3>
       <div class="form-row-name">
         <div class="input-label">
           <label for="username">nome de usuário</label>
-          <input type="text" v-model="username" id="username"/>
+          <input type="text" v-model="admin.username" id="username"/>
           </div>
       </div>
       <div class="form-row-password">
         <div class="input-label">
           <label for="password">senha</label>
-          <input type="password" v-model="password" id="password"/>
+          <input type="password" v-model="admin.password" id="password"/>
         </div>
       </div>
       <div class="form-row">
         <div class="actions">
-          <button type="submit">confirmar</button>
+          <button type="submit" :value="state" :disabled="state">confirmar</button>
         </div>
       </div>
    </form>
@@ -30,16 +30,17 @@
 <script>
   export default {
     data () {
-      return{
-        username: '',
-        password: ''
+      return {
+        admin: {
+          username: '',
+          password: ''
+        },
+        state: false
       }
     },
     methods: {
-      checkForm: (e) => {
-        console.log("submit")
-      
-     
+      login: (e) => {
+        
       }
     }
   }
