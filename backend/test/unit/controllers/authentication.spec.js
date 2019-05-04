@@ -7,7 +7,7 @@ describe('Controllers: Users', () => {
     msg: true
   }
   describe('post() users', () => {
-    it('should return id session for admin user', () => {
+    it('should return session token for admin user', () => {
       const request = {}
       const response = {
         send: sinon.spy()
@@ -17,7 +17,7 @@ describe('Controllers: Users', () => {
       usersController.post(request, response)
 
       expect(response.send.called).to.be.true
-      expect(reponse.send.calledWith(defaultToken)).to.be.true
+      expect(response.send.calledWith([defaultToken])).to.be.true
     })
   })
 })
