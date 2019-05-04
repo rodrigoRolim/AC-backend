@@ -1,4 +1,12 @@
 describe('Routes: Authentication', () => {
+  let request
+
+  before(() => {
+    return setupApp()
+      .then(app => {
+        request = supertest(app)
+      })
+  })
   const defaultToken = {
     token: 'asdf10',
     msg: true
