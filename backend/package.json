@@ -7,7 +7,7 @@
     "start": "babel-node server.js",
     "build": "babel src -d app --source-maps",
     "whatch": "babel src -d app --source-maps",
-    "test": "mocha --require test/integration/helpers.js --reporter spec --require babel-core/register  test/integration/**/*_spec.js",
+    "test:unit": "NODE_ENV=test mocha --opts test/unit/mocha.opts test/unit/**/*.spec.js",
     "test:integration": "NODE_ENV=test mocha --opts test/integration/mocha.opts test/integration/**/*.spec.js"
   },
   "keywords": [],
