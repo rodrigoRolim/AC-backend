@@ -38,16 +38,16 @@ export default {
       admin: {
         username: '',
         password: ''
-      },
-      porra: false
+      }
     }
   },
   methods: {
     login () {
-      console.log(this.admin)
       Admin.loginAdmin(this.admin).then(response => {
         if(response.data.auth){
-          router.replace('/homeAdmin')
+          router.replace('/admin/home')
+        } else {
+          router.replace('/admin/login')
         }
       })
     }
