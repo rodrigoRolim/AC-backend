@@ -3,7 +3,7 @@ import { mount } from 'avoriaz'
 import AdminLogin from '@/components/AdminLogin'
 
 describe('Admin.vue', () => {
-  it('receive promisse', done => {
+  it('should authenticantion admin user', done => {
     const expectedResponse = [{
       token: 'token-01',
       msg: 'success'

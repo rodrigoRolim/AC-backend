@@ -5,7 +5,7 @@ import User from '../../../src/models/users'
 describe('Controllers: Users', () => {
   const defaultToken = {
     token: 'asdf10',
-    msg: true
+    auth: true
   }
   const userDefault = {
     username: 'admin',

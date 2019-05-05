@@ -29,7 +29,7 @@
 </template>
 
 <script>
-/* import router from '@/router/index' */
+import router from '@/router/index'
 import Admin from '@/services/Admin.js'
 export default {
   name: 'AdminLogin',
@@ -38,12 +38,18 @@ export default {
       admin: {
         username: '',
         password: ''
-      }
+      },
+      porra: false
     }
   },
   methods: {
-    login: () => {
-      Admin.loginAdmin(this.admin).then(response => {})
+    login () {
+      console.log(this.admin)
+      Admin.loginAdmin(this.admin).then(response => {
+        if(response.data.auth){
+          router.replace('/homeAdmin')
+        }
+      })
     }
   }
 }

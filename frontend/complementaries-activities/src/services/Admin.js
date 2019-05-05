@@ -1,7 +1,9 @@
 import { http } from './config'
 
 export default {
-  loginAdmin: ({ name, password }) => {
-    return http.post('admin/login', { name, password })
+  loginAdmin: ({ username, password }) => {
+    console.log("asdasd")
+    return http.post('/users/admin/login', { username, password })
+   
   }
 }
