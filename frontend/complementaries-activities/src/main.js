@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/root'
+import AdminLogin from '@/components/admin/AdminLogin'
+import AdminHome from '@/components/admin/AdminHome'
 
 Vue.config.productionTip = false
 
@@ -12,6 +14,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: { App, AdminLogin, AdminHome },
   template: '<App/>'
 })

@@ -3,4 +3,4 @@ export default {
     return state.user
   }
 }
-//como usar: this.$store.getters.getUser
+// como usar: this.$store.getters.getUser

@@ -44,7 +44,7 @@ export default {
   methods: {
     login () {
       Admin.loginAdmin(this.admin).then(response => {
-        if(response.data.auth){
+        if (response.data.auth) {
           router.replace('/admin/home')
         } else {
           router.replace('/admin/login')

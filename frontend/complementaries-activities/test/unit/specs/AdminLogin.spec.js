@@ -4,19 +4,24 @@ import AdminLogin from '@/components/AdminLogin'
 
 describe('Admin.vue', () => {
   it('should authenticantion admin user', done => {
-    const expectedResponse = [{
-      token: 'token-01',
-      msg: 'success'
-    }]
+
     const adminLogin = mount(AdminLogin)
-    adminLogin.vm.login = function () {
-     return expectedResponse
-    }
-    adminLogin.vm.login()
-    expect(adminLogin.vm.login()).to.equal(expectedResponse)
-    done()
-  })
-  it('should acess account of admin', () => {
     
+    adminLogin.vm.login = function () {
+      
+      let promise = new Promise((resolve) => {
+        resolve({auth: true})
+      })
+      
+      return promise
+    }
+
+    adminLogin.vm.login().then(res => {
+      
+      expecte(res.auth).to.be.true
+    
+    })
+    
+    done()
   })
 })
