@@ -1,9 +1,16 @@
 <template>
-  <div>
-    <ac-navbar></ac-navbar>
-    <ac-leftbar></ac-leftbar>
-    <ac-main></ac-main>
-    <ac-rightbar></ac-rightbar>
+  <div id="AdminHome">
+    <ac-navbar>
+      <button>
+        <span class="rot-logout">logout</span>
+        <i class="material-icons">exit_to_app</i>
+      </button>
+    </ac-navbar>
+    <div class="middle">
+      <ac-leftbar></ac-leftbar>
+      <ac-main></ac-main>
+      <ac-rightbar></ac-rightbar>
+    </div>
     <ac-footer></ac-footer>
   </div>
 </template>
@@ -22,4 +29,17 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box
+}
+#AdminHome {
+  display: flex;
+  flex-direction: column
+}
+.middle {
+  display: flex;
+  flex-direction: row;
+}
 </style>

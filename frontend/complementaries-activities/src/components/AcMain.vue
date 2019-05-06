@@ -1,6 +1,6 @@
 <template>
-  <div>
-   <span>main</span>
+  <div id="ac-main">
+  
   </div>
 </template>
 
@@ -10,4 +10,8 @@ export default {
 </script>
 
 <style scoped>
+#ac-main {
+  width: 60%;
+  height: 80vh;
+}
 </style>
