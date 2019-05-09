@@ -1,4 +1,6 @@
-
+import sinon from 'sinon'
+import Course from '../../../src/models/course'
+import CourseController from '../../../src/controllers/course'
 
 describe('Management course', () => {
   const entryCourse = {
@@ -16,14 +18,13 @@ describe('Management course', () => {
         send: sinon.spy()
       }
       Course.save = sinon.stub()
-      Course.save.withArgs(entryCourse).resolves(returnCourse)
+     // Course.save.withArgs(entryCourse).resolves(returnCourse)
 
       const courseController = new CourseController(Course)
-
-      return courseController.save(request, response)
-        .then(() => {
-          sinon.assert.calledWith(reponse.send, returnCourse)
-        })
+      courseController.save(request, response)
+      expect(response.send.called).to.be.true
+      expect(response.send.calledWith(returnCourse)).to.be.true
+      
     })
   })
 })
