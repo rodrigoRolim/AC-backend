@@ -16,7 +16,6 @@ export default {
   justify-content: flex-end;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
-  
 }
 button {
   display: flex;
