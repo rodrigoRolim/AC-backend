@@ -195,9 +195,6 @@ export default {
   width: 52%;
   height: 81vh;
 }
-.body {
-  height: 68vh;
-}
 .name-item {
   width: 100%;
 }

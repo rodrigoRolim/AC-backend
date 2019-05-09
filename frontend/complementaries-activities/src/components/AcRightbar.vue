@@ -1,5 +1,7 @@
 <template>
   <div id="ac-rightbar">
+    
+    <v-btn color="primary" flat class="new-group">novo grupo</v-btn>
     <ac-card-group class="card" v-for="group in groupList" :key="group.id" :group="group"></ac-card-group>
   </div>
 </template>
@@ -54,7 +56,10 @@ export default {
   width: 28%;
   overflow-y: auto;
 }
-
+.new-group {
+  width: 50%;
+  align-self: center
+}
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

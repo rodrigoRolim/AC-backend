@@ -11,8 +11,8 @@
         </v-card-title>
 
         <v-card-actions>
-          <v-btn flat>Editar</v-btn>
-          <v-btn flat color="purple">Excluir</v-btn>
+          <v-btn flat color="info">Editar</v-btn>
+          <v-btn  flat color="error">Excluir</v-btn>
           <v-spacer></v-spacer>
           <v-btn icon @click="show = !show">
             <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>

@@ -1,21 +1,24 @@
 <template>
+  <v-card class="v-card">
   <v-container fluid>
     <v-layout justify-space-around>
       <v-flex xs5 sm12>
         <v-layout column>
-          <v-img src="https://picsum.photos/510/300?random" aspect-ratio="1.7"></v-img>
+        
+          <img src="../assets/rodrigo.jpg" height="125">
         </v-layout>
         <div class="title mb-1">
           Eduardo damasceno
         </div>
         <div class="actions">
-          <v-btn color="success">Adcionar</v-btn>
-          <v-btn color="warning">Substituir</v-btn>
+          <v-btn flat color="success">Adcionar</v-btn>
+          <v-btn flat color="warning">Substituir</v-btn>
         </div>
       </v-flex>
 
     </v-layout>
   </v-container>
+  </v-card>
 </template>
 
 <script>
@@ -26,8 +29,15 @@ export default {
 
 <style scoped>
 .actions {
+  margin-top: 30px;
   display: flex;
   flex-direction: row;
   justify-content: center
+}
+.title {
+  margin-top: 10px;
+}
+.v-card {
+  height: 81vh;
 }
 </style>
