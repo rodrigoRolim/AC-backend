@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken'
 
 class UsersController {
-  constructor (User) {
+  constructor (User, jwt) {
     this.User = User
+    this.jwt = jwt
   }
   post(req, res) {
     
@@ -16,12 +16,12 @@ class UsersController {
         if(password == user.password) {
           
           const id = user._id
-         
-          let token = jwt.sign({ id }, 'batman', {
+          console.log(this.jwt)
+          let token = this.jwt.sign({ id }, 'batman', {
             expiresIn: 300
           })
-        
-          res.send({ auth: true })
+          console.log('veio aqui')
+          res.send({ token: token, auth: true })
         }
         res.send({ auth: false })
       })
