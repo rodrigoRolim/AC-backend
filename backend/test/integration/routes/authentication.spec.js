@@ -9,9 +9,7 @@ describe('Routes: Authentication', () => {
         request = supertest(app)
       })
   })
-  
-  let defaultToken = {}
-  
+    
   const defaultAdmin = {
     username: 'admin',
     password: 'admin'
@@ -21,8 +19,8 @@ describe('Routes: Authentication', () => {
     const user = new User(defaultAdmin)
     console.log(user)
     user._id = '56cb91bdc3464f14678934ca'
-    return User.deleteMany({})
-      .then(() => user.save())
+    User.deleteMany({});
+    return user.save();
   })
 
   afterEach(() => User.deleteMany({}))
