@@ -1,6 +1,7 @@
 import UsersController from '../../../src/controllers/users'
 import sinon from 'sinon'
 import User from '../../../src/models/users'
+import jwt from 'jsonwebtoken'
 
 describe('Controllers: Users', () => {
   const userResolves = {
@@ -21,15 +22,19 @@ describe('Controllers: Users', () => {
         send: sinon.spy(),
         //status: sinon.stub()
       }
-      
+      const id = '12345'
       //response.status.withArgs(200).returns(response)
+      jwt.sign = sinon.stub()
+      jwt.sign.withArgs({ id }, 'batman', {
+        expiresIn: 300
+      }).returns('hash')
       User.find = sinon.stub()
       User.find.withArgs(userDefault).resolves(userResolves)
 
-      const userController = new UsersController(User)
+      const userController = new UsersController(User, jwt)
       return userController.post(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, { auth: true })
+          sinon.assert.calledWith(response.send, { token: 'hash', auth: true })
         })
     })
     it('should return 400 when an error occurs', () => {
