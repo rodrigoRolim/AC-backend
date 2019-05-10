@@ -17,7 +17,6 @@ describe('Routes: Authentication', () => {
   
   beforeEach(() => {
     const user = new User(defaultAdmin)
-    console.log(user)
     user._id = '56cb91bdc3464f14678934ca'
     User.deleteMany({});
     return user.save();

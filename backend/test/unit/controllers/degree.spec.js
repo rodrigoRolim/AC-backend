@@ -1,6 +1,6 @@
 import sinon from 'sinon'
-import Course from '../../../src/models/course'
-import CourseController from '../../../src/controllers/course'
+import Course from '../../../src/models/degree'
+import CourseController from '../../../src/controllers/degree'
 
 describe('Management course', () => {
   const course = {
@@ -17,11 +17,11 @@ describe('Management course', () => {
         send: sinon.spy()
       }
       Course.create = sinon.stub()
-      Course.create.withArgs(course).resolves(course)
+      Course.create.withArgs(course).resolves('success')
 
       const courseController = new CourseController(Course)
-      return courseController.save(request, response).then(() => {
-        sinon.assert.calledWith(response.send, course)
+      return courseController.createDegree(request, response).then(() => {
+        sinon.assert.calledWith(response.send, 'success')
       })
     })
     it('should return 400 when an error occurs', () => {
@@ -35,11 +35,15 @@ describe('Management course', () => {
       Course.create.withArgs(request).rejects({ message: 'Error' })
 
       const courseController = new CourseController(Course)
-      return courseController.save(request, response)
+      return courseController.createDegree(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, 'Error')
         })
     })
   })
-  
+  describe('when reading all the graduations', () => {
+    it('should return all the graduations', () => {
+      
+    })
+  })
 })

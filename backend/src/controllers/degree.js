@@ -1,0 +1,14 @@
+class CourseController {
+  constructor (Degree) {
+    this.Degree = Degree
+  }
+  createDegree (req, res) {
+    const course = req.body
+    return this.Degree.create(course)
+      .then((course) => res.send(course))
+      .catch(err => res.status(400).send(err.message))
+  }
+
+}
+
+export default CourseController
