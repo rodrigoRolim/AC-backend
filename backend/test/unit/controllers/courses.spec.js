@@ -3,10 +3,7 @@ import Course from '../../../src/models/course'
 import CourseController from '../../../src/controllers/course'
 
 describe('Management course', () => {
-  const entryCourse = {
-    name: 'engenharia de software'
-  }
-  const returnCourse = {
+  const course = {
     name: 'engenharia de software'
   }
   describe('when adding course', () => {
@@ -17,14 +14,30 @@ describe('Management course', () => {
       const response = {
         send: sinon.spy()
       }
-      Course.save = sinon.stub()
-     // Course.save.withArgs(entryCourse).resolves(returnCourse)
+      Course.create = sinon.stub()
+      Course.create.withArgs(course).resolves(course)
 
       const courseController = new CourseController(Course)
-      courseController.save(request, response)
-      expect(response.send.called).to.be.true
-      expect(response.send.calledWith(returnCourse)).to.be.true
-      
+      return courseController.save(request, response).then(() => {
+        sinon.assert.calledWith(response.send, course)
+      })
+    })
+    it('should return 400 when an error occurs', () => {
+      const request = null
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      }
+      response.status.withArgs(400).returns(response)
+      Course.create = sinon.stub()
+      Course.create.withArgs(request).rejects({ message: 'Error' })
+
+      const courseController = new CourseController(Course)
+      return courseController.save(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, 'Error')
+        })
     })
   })
+  
 })

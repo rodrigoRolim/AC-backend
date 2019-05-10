@@ -3,10 +3,13 @@ class CourseController {
     this.Course = Course
   }
   save (req, res) {
-    return res.send({
-      name: 'engenharia de software'
-    })
-  } 
+    console.log(req)
+    const course = req
+    return this.Course.create(course)
+      .then(course => res.send(course))
+      .catch(err => res.status(400).send(err.message))
+  }
+ 
 }
 
 export default CourseController
