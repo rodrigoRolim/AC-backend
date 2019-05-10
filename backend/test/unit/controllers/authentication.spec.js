@@ -3,13 +3,13 @@ import sinon from 'sinon'
 import User from '../../../src/models/users'
 
 describe('Controllers: Users', () => {
-  const defaultToken = {
-    token: 'asdf10',
-    auth: true
-  }
-  const userDefault = {
+  const userResolves = {
+    _id: '12345',
     username: 'admin',
     password: 'admin'
+  }
+  const userDefault = {
+    username: 'admin'
   }
   describe('post() users', () => {
     it('should call send with a token for admin user', () => {
@@ -18,16 +18,18 @@ describe('Controllers: Users', () => {
         password: 'admin'
       }
       const response = {
-        send: sinon.spy()
+        send: sinon.spy(),
+        //status: sinon.stub()
       }
       
+      //response.status.withArgs(200).returns(response)
       User.find = sinon.stub()
-      User.find.withArgs(userDefault).resolves(defaultToken)
+      User.find.withArgs(userDefault).resolves(userResolves)
 
       const userController = new UsersController(User)
       return userController.post(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, defaultToken)
+          sinon.assert.calledWith(response.send, { auth: true })
         })
     })
     it('should return 400 when an error occurs', () => {
@@ -42,10 +44,10 @@ describe('Controllers: Users', () => {
 
       response.status.withArgs(400).returns(response)
       User.find = sinon.stub()
-      User.find.withArgs(request).rejects({message: 'Error'})
+      User.find.withArgs({ username: request.username }).rejects({message: 'Error'})
 
       const userController = new UsersController(User)
-
+     
       return userController.post(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, 'Error')

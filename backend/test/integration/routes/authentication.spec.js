@@ -1,5 +1,4 @@
 import User from '../../../src/models/users'
-import jwt from  'jsonwebtoken'
 
 describe('Routes: Authentication', () => {
   let request
