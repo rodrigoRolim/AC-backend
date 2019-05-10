@@ -1,24 +1,29 @@
 import jwt from 'jsonwebtoken'
+
 class UsersController {
-  constructor(User) {
+  constructor (User) {
     this.User = User
   }
   post(req, res) {
+    
+   
+    const username = req.username
+    const password = req.password
   
-    const username = req.body.username
-    const password = req.body.admin
     return this.User.find({username: username})
       .then(user => {
-        console.log(user)
+        
         if(password == user.password) {
+          
           const id = user._id
-          let token = jwt.sign({ id }, process.env.SECRET, {
+         
+          let token = jwt.sign({ id }, 'batman', {
             expiresIn: 300
           })
-          
-          res.status(200).send({ token: token, auth: true })
+        
+          res.send({ auth: true })
         }
-        res.status(500).send({ msg: 'login inválido', auth: false, user: user})
+        res.send({ auth: false })
       })
       .catch(err => res.status(400).send(err.message))
   }
