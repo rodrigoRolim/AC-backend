@@ -7,6 +7,12 @@ describe('Management course', () => {
     name: 'engenharia de software',
     professor: '56cb91bdc3464f14678934ca'
   }
+  const listDegree = [
+    {
+      name: 'engenharia de software',
+      professor: '56cb91bdc3464f14678934ca'
+    }
+  ]
   describe('when adding course', () => {
     it('should save a course into the database', () => {
       const request = {
@@ -43,7 +49,18 @@ describe('Management course', () => {
   })
   describe('when reading all the graduations', () => {
     it('should return all the graduations', () => {
-      
+      const request = {}
+      const response = {
+        send: sinon.spy()
+      }
+      Course.find = sinon.stub()
+      Course.find.withArgs({}).resolves(listDegree)
+
+      const courseController = new CourseController(Course)
+      return courseController.readAll(request, response)
+        .then(() => {
+        sinon.assert.calledWith(response.send, listDegree)
+      })
     })
   })
 })
