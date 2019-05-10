@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema({
-  name: String
+  name: String,
+  professor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor' }
 })
 
 const Course = mongoose.model('Course', schema)

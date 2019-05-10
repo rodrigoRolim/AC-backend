@@ -4,12 +4,14 @@ import CourseController from '../../../src/controllers/course'
 
 describe('Management course', () => {
   const course = {
-    name: 'engenharia de software'
+    name: 'engenharia de software',
+    professor: '56cb91bdc3464f14678934ca'
   }
   describe('when adding course', () => {
     it('should save a course into the database', () => {
       const request = {
-        name: 'engenharia de software'
+        name: 'engenharia de software',
+        professor: '56cb91bdc3464f14678934ca'
       }
       const response = {
         send: sinon.spy()
