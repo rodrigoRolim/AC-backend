@@ -59,7 +59,7 @@ describe('Management course', () => {
       const courseController = new CourseController(Course)
       return courseController.readAll(request, response)
         .then(() => {
-        sinon.assert.calledWith(response.send, listDegree)
+          sinon.assert.calledWith(response.send, listDegree)
       })
     })
   })
