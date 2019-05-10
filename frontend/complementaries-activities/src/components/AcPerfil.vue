@@ -23,7 +23,12 @@
 
 <script>
 export default {
-  name: 'AcPerfil'
+  name: 'AcPerfil',
+  data () {
+    return {
+
+    }
+  }
 }
 </script>
 

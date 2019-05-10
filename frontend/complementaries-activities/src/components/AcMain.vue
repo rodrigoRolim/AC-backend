@@ -52,7 +52,7 @@
       >
         <template v-slot:items="props" >
           <td class="name-item">{{ props.item.name }}</td>
-          <td class="justify-center layout px-0">
+          <td class="justify-end layout px-6">
           <v-icon
             small
             class="mr-2"
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import Degree from '@/services/Admin.js'
 export default {
   data () {
     return {
@@ -110,7 +111,7 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { text: 'Actions', value: 'name', sortable: false, align: 'center' }
+        { text: 'Actions', value: 'name', sortable: false, align: 'right' }
       ],
       degrees: []
     }
@@ -138,29 +139,8 @@ export default {
   },
   methods: {
     initialize () {
-      this.degrees = [
-        {
-          name: 'engenharia de software'
-        },
-        {
-          name: 'engenharia de software'
-        },
-        {
-          name: 'engenharia de software'
-        },
-        {
-          name: 'engenharia de software'
-        },
-        {
-          name: 'engenharia de software'
-        },
-        {
-          name: 'engenharia de software'
-        },
-        {
-          name: 'engenharia de software'
-        }
-      ]
+      
+      this.degrees = []
     },
     editItem (item) {
       this.editedIndex = this.degrees.indexOf(item)
@@ -174,15 +154,19 @@ export default {
     close () {
       this.dialog = false
       setTimeout(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
       }, 300)
     },
     save () {
       if (this.editedIndex > -1) {
+        // programa o update de curso
         Object.assign(this.degrees[this.editedIndex], this.editedItem)
       } else {
-        this.degrees.push(this.editedItem)
+        Degree.addDegree(this.editedItem).then((degree) => {
+          console.log(degree)
+          this.degrees.push(degree.data)
+        })
       }
       this.close()
     }
@@ -195,10 +179,8 @@ export default {
   width: 52%;
   height: 81vh;
 }
-.name-item {
-  width: 100%;
-}
+
 .table {
-  min-height: 52.5vh;
+  min-height: 53vh;
 }
 </style>

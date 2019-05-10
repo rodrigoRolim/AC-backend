@@ -52,6 +52,7 @@ export default {
 .card {
   width: 100%;
   margin: 0;
+  border: 1px solid rgba(0,0,0,0.01);
 }
 ol {
   width: 100%;
