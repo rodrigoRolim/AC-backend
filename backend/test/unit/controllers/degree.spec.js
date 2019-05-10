@@ -16,8 +16,10 @@ describe('Management course', () => {
   describe('when adding course', () => {
     it('should save a course into the database', () => {
       const request = {
-        name: 'engenharia de software',
-        professor: '56cb91bdc3464f14678934ca'
+        body: {
+          name: 'engenharia de software',
+          professor: '56cb91bdc3464f14678934ca'
+        }
       }
       const response = {
         send: sinon.spy()

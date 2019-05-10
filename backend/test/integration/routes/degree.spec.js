@@ -2,14 +2,14 @@ import Degree from "../../../src/models/degree";
 
 describe('Routes: Degrees', () => {
   let request
-  const returnDegree = {
+  const defaultDegree = {
     _id: '5cd5b8b352e7a721c141a2e9',
     __v: 0,
     name: 'engenharia de software',
     professor: '5cd5b4d3939ac63f4957dce7'
   }
-  const defaultDegree = {
-    _id: '5cd5b8b352e7a721c141a2e9',
+  const listDegree = {
+    _id: '5cd60a0312c3e687ea34667f',
     __v: 0,
     name: 'engenharia de software',
     professor: '5cd5b4d3939ac63f4957dce7'
@@ -21,7 +21,9 @@ describe('Routes: Degrees', () => {
       })
   })
   beforeEach(() => {
+    let degree =  new Degree(listDegree)
     Degree.deleteMany({})
+    return degree.save()
   })
 
   afterEach(() => Degree.deleteMany({}))
@@ -32,8 +34,17 @@ describe('Routes: Degrees', () => {
       .post('/degrees/admin/home')
       .send(defaultDegree)
       .end((err, res) => {
-        console.log(res.body)
-        expect(res.body).to.be.eql(returnDegree)
+        expect(res.body).to.be.eql(defaultDegree)
+        done(err)
+      })
+    })
+  })
+  describe('GET /admin/home', () => {
+    it('should return list of degrees', done => {
+      request
+      .get('/degrees/admin/home')
+      .end((err, res) => {
+        expect(res.body[0]).to.be.eql(listDegree)
         done(err)
       })
     })
