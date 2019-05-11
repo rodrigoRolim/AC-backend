@@ -16,6 +16,6 @@ export default {
 #ac-leftbar {
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   width: 20%;
-  height: 81vh;
+  height: 80vh;
 }
 </style>

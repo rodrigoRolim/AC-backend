@@ -1,11 +1,11 @@
 <template>
-  <v-app id="ac-main">
-   <v-card>
+
+   <v-card id="ac-main">
     <v-toolbar flat color="white">
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-1" v-on="on">Novo curso</v-btn>
+          <v-btn color="primary" flat dark class="mb-1" v-on="on">Novo curso</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -79,11 +79,10 @@
         </v-alert>
         </template>
       </v-data-table>
-      <div class="text-xs-center pt-1">
+      <div class="text-xs-center pt-0">
       <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
     </div>
   </v-card>
-  </v-app>
 </template>
 
 <script>
@@ -177,10 +176,10 @@ export default {
 <style scoped>
 #ac-main {
   width: 52%;
-  height: 81vh;
+  max-height: 80vh;
 }
 
 .table {
-  min-height: 53vh;
+  min-height: 50vh;
 }
 </style>

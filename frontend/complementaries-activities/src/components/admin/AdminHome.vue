@@ -11,7 +11,7 @@
       <ac-main></ac-main>
       <ac-rightbar></ac-rightbar>
     </div>
-    <ac-footer class="ac-footer"></ac-footer>
+    <ac-footer></ac-footer>
   </div>
 </template>
 
@@ -41,8 +41,5 @@ export default {
 .middle {
   display: flex;
   flex-direction: row;
-}
-button {
-  
 }
 </style>

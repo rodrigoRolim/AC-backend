@@ -3,16 +3,19 @@
   <v-container fluid>
     <v-layout justify-space-around>
       <v-flex xs5 sm12>
-        <v-layout column>
+        <v-layout column class="perfil">
         
-          <img src="../assets/rodrigo.jpg" height="125">
+          
         </v-layout>
         <div class="title mb-1">
-          Eduardo damasceno
+          Nome do professor
+        </div>
+        <div class="mb-6">
+          <strong>email: </strong> email do professor
         </div>
         <div class="actions">
-          <v-btn flat color="success">Adcionar</v-btn>
-          <v-btn flat color="warning">Substituir</v-btn>
+          <v-btn color="primary">Adcionar</v-btn>
+          <v-btn color="warning">Substituir</v-btn>
         </div>
       </v-flex>
 
@@ -43,6 +46,12 @@ export default {
   margin-top: 10px;
 }
 .v-card {
-  height: 81vh;
+  height: 80vh;
+}
+.perfil {
+  border: 1px solid;
+  border-radius: 4px;
+  height: 35vh;
+  width: 100%;
 }
 </style>
