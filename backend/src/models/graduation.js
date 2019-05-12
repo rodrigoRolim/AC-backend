@@ -5,6 +5,6 @@ const schema = new mongoose.Schema({
   professor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor' }
 })
 
-const Course = mongoose.model('Course', schema)
+const Course = mongoose.model('Graduation', schema)
 
 export default Course
