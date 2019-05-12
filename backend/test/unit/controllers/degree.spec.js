@@ -1,22 +1,22 @@
 import sinon from 'sinon'
-import Course from '../../../src/models/degree'
-import CourseController from '../../../src/controllers/degree'
+import Graduation from '../../../src/models/graduation'
+import GraduationController from '../../../src/controllers/degree'
 
-describe('Management course', () => {
-  const course = {
+describe('Management graduation', () => {
+  const graduation = {
     body: {
       name: 'engenharia de software',
       professor: '56cb91bdc3464f14678934ca'
     }
   }
-  const listDegree = [
+  const listGraduation = [
     {
       name: 'engenharia de software',
       professor: '56cb91bdc3464f14678934ca'
     }
   ]
-  describe('when adding course', () => {
-    it('should save a course into the database', () => {
+  describe('when adding graduation', () => {
+    it('should save a graduation into the database', () => {
       const request = {
         body: {
           name: 'engenharia de software',
@@ -26,11 +26,11 @@ describe('Management course', () => {
       const response = {
         send: sinon.spy()
       }
-      Course.create = sinon.stub()
-      Course.create.withArgs(course.body).resolves('success')
+      Graduation.create = sinon.stub()
+      Graduation.create.withArgs(graduation.body).resolves('success')
 
-      const courseController = new CourseController(Course)
-      return courseController.createDegree(request, response).then(() => {
+      const graduationController = new GraduationController(Graduation)
+      return graduationController.createDegree(request, response).then(() => {
         sinon.assert.calledWith(response.send, 'success')
       })
     })
@@ -41,13 +41,13 @@ describe('Management course', () => {
       const response = {
         send: sinon.spy()
       }
-      Course.find = sinon.stub()
-      Course.find.withArgs({}).resolves(listDegree)
+      Graduation.find = sinon.stub()
+      Graduation.find.withArgs({}).resolves(listGraduation)
 
-      const courseController = new CourseController(Course)
-      return courseController.readAll(request, response)
+      const graduationController = new GraduationController(Graduation)
+      return graduationController.readAll(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, listDegree)
+          sinon.assert.calledWith(response.send, listGraduation)
       })
     })
   })
@@ -62,11 +62,11 @@ describe('Management course', () => {
         send: sinon.spy()
       }
       const { params : { id } } = request
-      Course.deleteOne = sinon.stub()
-      Course.deleteOne.withArgs({ _id: id}).resolves('removed with success')
+      Graduation.deleteOne = sinon.stub()
+      Graduation.deleteOne.withArgs({ _id: id}).resolves('removed with success')
 
-      const courseController = new CourseController(Course)
-      return courseController.delete(request, response)
+      const graduationController = new GraduationController(Graduation)
+      return graduationController.delete(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, {message: 'removed with success'})
         })
@@ -87,11 +87,11 @@ describe('Management course', () => {
       }
       
       const { params : { id } } = request
-      Course.update = sinon.stub()
-      Course.update.withArgs({ _id: id}, request.body).resolves({ ok: 1 })
+      Graduation.update = sinon.stub()
+      Graduation.update.withArgs({ _id: id}, request.body).resolves({ ok: 1 })
   
-      const courseController = new CourseController(Course)
-      return courseController.updateDegree(request, response)
+      const graduationController = new GraduationController(Graduation)
+      return graduationController.updateDegree(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, { ok: 1 })
         })
