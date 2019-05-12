@@ -14,6 +14,11 @@ class CourseController {
       .then((degrees) => res.send(degrees))
       .catch(err => res.send(err.message))
   }
+  delete (req, res) {
+    return this.Degree.deleteOne({ _id: req.body._id})
+      .then(() => res.send('removed with success'))
+      .catch((err) => res.send(err.message))
+  }
 }
 
 export default CourseController

@@ -67,7 +67,7 @@ describe('Management course', () => {
       const courseController = new CourseController(Course)
       return courseController.delete(request, response)
         .then(() => {
-          sinon.assert.calledWith(reponse.send, 'removed with success')
+          sinon.assert.calledWith(response.send, 'removed with success')
         })
     })
   })
