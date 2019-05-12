@@ -165,6 +165,10 @@ export default {
     deleteItem (item) {
       const index = this.degrees.indexOf(item)
       confirm('Are you sure you want to delete this item?') && this.degrees.splice(index, 1)
+      Degree.deleteDegree(item).then((res) => {
+        alert(res.data.message)
+      })
+     
     },
     close () {
       this.dialog = false

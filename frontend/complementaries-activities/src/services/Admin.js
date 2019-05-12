@@ -12,8 +12,13 @@ export default {
   },
   readAllDegrees: () => {
     let user = JSON.parse(localStorage.getItem('user'))
-    console.log(user.token)
     http.defaults.headers.common['Authorization'] = `${user.token}`
     return http.get('/degrees/admin/home')
+  },
+  deleteDegree: (degree) => {
+    const id = degree._id
+    let user = JSON.parse(localStorage.getItem('user'))
+    http.defaults.headers.common['Authorization'] = `${user.token}`
+    return http.delete(`/degrees/admin/home/${id}`)
   }
 }
