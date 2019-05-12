@@ -4,8 +4,10 @@ import CourseController from '../../../src/controllers/degree'
 
 describe('Management course', () => {
   const course = {
-    name: 'engenharia de software',
-    professor: '56cb91bdc3464f14678934ca'
+    body: {
+      name: 'engenharia de software',
+      professor: '56cb91bdc3464f14678934ca'
+    }
   }
   const listDegree = [
     {
@@ -25,28 +27,12 @@ describe('Management course', () => {
         send: sinon.spy()
       }
       Course.create = sinon.stub()
-      Course.create.withArgs(course).resolves('success')
+      Course.create.withArgs(course.body).resolves('success')
 
       const courseController = new CourseController(Course)
       return courseController.createDegree(request, response).then(() => {
         sinon.assert.calledWith(response.send, 'success')
       })
-    })
-    it('should return 400 when an error occurs', () => {
-      const request = null
-      const response = {
-        send: sinon.spy(),
-        status: sinon.stub()
-      }
-      response.status.withArgs(400).returns(response)
-      Course.create = sinon.stub()
-      Course.create.withArgs(request).rejects({ message: 'Error' })
-
-      const courseController = new CourseController(Course)
-      return courseController.createDegree(request, response)
-        .then(() => {
-          sinon.assert.calledWith(response.send, 'Error')
-        })
     })
   })
   describe('when reading all the graduations', () => {
@@ -63,6 +49,26 @@ describe('Management course', () => {
         .then(() => {
           sinon.assert.calledWith(response.send, listDegree)
       })
+    })
+  })
+  describe('when deleting a graduation', () => {
+    it('should return an confirmation that it was deleted', () => {
+      const request = {
+        body: {
+          _id: '5cd76713d7d9ed1ce4e7a270'
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+      Course.deleteOne = sinon.stub()
+      Course.deleteOne.withArgs({ _id: request.body._id }).resolves('removed with success')
+
+      const courseController = new CourseController(Course)
+      return courseController.delete(request, response)
+        .then(() => {
+          sinon.assert.calledWith(reponse.send, 'removed with success')
+        })
     })
   })
 })
