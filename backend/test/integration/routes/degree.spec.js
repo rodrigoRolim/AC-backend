@@ -68,6 +68,7 @@ describe('Routes: Degrees', () => {
       .put(`/degrees/admin/home/${listDegree._id}`)
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
+        done(err)
       })
     })
   })
