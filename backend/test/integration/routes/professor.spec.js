@@ -42,8 +42,8 @@ describe('Routes: professor', () => {
           .post('/professor/admin/home')
           .send(newProfessor)
           .end((err, res) => {
-            expect(res.statusCode).to.eql(201)
-            expect(res.body).to.eql(expectedSavedProfessor)
+            expect(res.statusCode).to.eql(401)
+            expect(res.body).to.eql({ auth: false, message: 'No token provided.'})
             done(err)
           })
       })
