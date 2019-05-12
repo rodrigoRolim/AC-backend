@@ -1,4 +1,4 @@
-import Degree from "../../../src/models/degree";
+import Degree from "../../../src/models/graduation";
 
 describe('Routes: Degrees', () => {
   let request
