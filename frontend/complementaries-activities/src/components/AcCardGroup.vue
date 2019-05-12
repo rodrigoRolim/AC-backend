@@ -1,8 +1,6 @@
 <template>
   <v-layout row>
-    
       <v-card class="card">
-
         <v-card-title primary-title>
           <div>
             <div class="headline">Grupo 1</div>
@@ -34,7 +32,6 @@
           </v-card-text>
         </v-slide-y-transition>
       </v-card>
-    
   </v-layout>
 </template>
 <script>

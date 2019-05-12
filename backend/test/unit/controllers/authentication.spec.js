@@ -7,7 +7,8 @@ describe('Controllers: Users', () => {
   const userResolves = {
     _id: '12345',
     username: 'admin',
-    password: 'admin'
+    password: 'admin',
+    admin: true
   }
   const userDefault = {
     username: 'admin'
@@ -15,32 +16,39 @@ describe('Controllers: Users', () => {
   describe('post() users', () => {
     it('should call send with a token for admin user', () => {
       const request = {
-        username: 'admin',
-        password: 'admin'
+        body: {
+          username: 'admin',
+          password: 'admin'
+        }
       }
       const response = {
         send: sinon.spy(),
-        //status: sinon.stub()
+   
       }
-      const id = '12345'
-      //response.status.withArgs(200).returns(response)
+      
+      const _id = '12345'
       jwt.sign = sinon.stub()
-      jwt.sign.withArgs({ id }, 'batman', {
-        expiresIn: 300
+      jwt.sign.withArgs({ _id }, process.env.SECRET , {
+        expiresIn: 86400
       }).returns('hash')
-      User.find = sinon.stub()
-      User.find.withArgs(userDefault).resolves(userResolves)
+      User.findOne = sinon.stub()
+      User.findOne.withArgs(userDefault).resolves(userResolves)
 
       const userController = new UsersController(User, jwt)
       return userController.post(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, { token: 'hash', auth: true })
+          sinon.assert.calledWith(response.send, { token: 'hash', auth: true, admin: true })
         })
+    })
+    it('should return auth false when the login is invalid', () => {
+
     })
     it('should return 400 when an error occurs', () => {
       const request = {
-        username: 'admin2',
-        password: 'admin'
+        body: {
+          username: 'admin2',
+          password: 'admin'
+        }
       }
       const response = {
         send: sinon.spy(),
@@ -48,8 +56,8 @@ describe('Controllers: Users', () => {
       }
 
       response.status.withArgs(400).returns(response)
-      User.find = sinon.stub()
-      User.find.withArgs({ username: request.username }).rejects({message: 'Error'})
+      User.findOne = sinon.stub()
+      User.findOne.withArgs({ username: request.body.username }).rejects({message: 'Error'})
 
       const userController = new UsersController(User)
      

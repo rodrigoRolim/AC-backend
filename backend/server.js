@@ -1,5 +1,5 @@
 import setupApp from './src/app';
-const port = 3000;
+const port = 3001;
 
 setupApp()
 .then(app => app.listen(port, () => console.log(`app running on port ${port}`)))

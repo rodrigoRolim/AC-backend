@@ -1,7 +1,7 @@
 <template>
-  <div id="AdminHome">
+  <v-app id="AdminHome">
     <ac-navbar>
-      <button>
+      <button @click="logout()">
         <span class="rot-logout">logout</span>
         <i class="material-icons">exit_to_app</i>
       </button>
@@ -12,7 +12,7 @@
       <ac-rightbar></ac-rightbar>
     </div>
     <ac-footer></ac-footer>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -24,7 +24,14 @@ import AcFooter from '../AcFooter'
 
 export default {
   name: 'AdminHome',
-  components: { AcNavbar, AcLeftbar, AcRightbar, AcMain, AcFooter }
+  components: { AcNavbar, AcLeftbar, AcRightbar, AcMain, AcFooter },
+  methods: {
+    logout () {
+      localStorage.removeItem('user')
+      localStorage.removeItem('admin_token')
+      this.$router.replace('/admin/login')
+    }
+  }
 }
 </script>
 
@@ -36,7 +43,8 @@ export default {
 }
 #AdminHome {
   display: flex;
-  flex-direction: column
+  flex-direction: column;
+  background-color: rgba(0,0,0, 0.001)
 }
 .middle {
   display: flex;

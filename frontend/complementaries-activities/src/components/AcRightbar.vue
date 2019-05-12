@@ -22,7 +22,7 @@ export default {
             }
           ]
         },
-         {
+        {
           name: 'grupo 2',
           items: [
             {
@@ -51,7 +51,7 @@ export default {
   display: flex;
   flex-direction: column;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
-  max-height: 80vh;
+  max-height: 81vh;
   width: 28%;
   overflow-y: auto;
 }
@@ -66,16 +66,16 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.5); 
+  background: rgba(0,0,0,0.5);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 </style>

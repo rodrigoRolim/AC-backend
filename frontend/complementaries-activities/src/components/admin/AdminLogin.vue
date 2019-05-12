@@ -43,11 +43,13 @@ export default {
   },
   methods: {
     login () {
+      console.log(this.admin)
       Admin.loginAdmin(this.admin).then(response => {
+        console.log(response)
         if (response.data.auth) {
+          localStorage.removeItem('user')
+          localStorage.setItem('user', JSON.stringify(response.data))
           router.replace('/admin/home')
-        } else {
-          router.replace('/admin/login')
         }
       })
     }

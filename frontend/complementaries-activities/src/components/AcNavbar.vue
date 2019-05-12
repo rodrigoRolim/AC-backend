@@ -6,6 +6,11 @@
 
 <script>
 export default {
+  name: 'AcNavbar',
+  data () {
+    return {
+    }
+  }
 }
 </script>
 
@@ -16,7 +21,7 @@ export default {
   justify-content: flex-end;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
-  height: 10vh;
+  height: 9vh;
 }
 button {
   display: flex;

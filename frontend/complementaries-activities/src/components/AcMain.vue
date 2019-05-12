@@ -1,5 +1,4 @@
 <template>
-
    <v-card id="ac-main">
     <v-toolbar flat color="white">
       <v-spacer></v-spacer>
@@ -16,7 +15,12 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm12 md12>
-                  <v-text-field v-model="editedItem.name" label="nome do curso"></v-text-field>
+                  <v-text-field
+                  v-model="editedItem.name"
+                  :rules="nameRules"
+                  label="nome do curso"
+                  required
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -24,13 +28,14 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+            <v-btn color="error" @click="close">Cancel</v-btn>
+            <v-btn color="primary"
+            :disabled="!valid"
+            @click="save">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-toolbar>
-   
       <v-card-title>
         Cursos de graduação
         <v-spacer></v-spacer>
@@ -48,13 +53,14 @@
         :search="search"
         hide-actions
         :pagination.sync="pagination"
-        class="table"
+        class="table elevation-1"
       >
         <template v-slot:items="props" >
           <td class="name-item">{{ props.item.name }}</td>
           <td class="justify-end layout px-6">
           <v-icon
             small
+            color="success"
             class="mr-2"
             @click="editItem(props.item)"
           >
@@ -62,6 +68,7 @@
           </v-icon>
           <v-icon
             small
+            color="#00BFFF"
             @click="deleteItem(props.item)"
           >
             delete
@@ -80,8 +87,8 @@
         </template>
       </v-data-table>
       <div class="text-xs-center pt-0">
-      <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-    </div>
+        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+     </div>
   </v-card>
 </template>
 
@@ -92,15 +99,20 @@ export default {
     return {
       dialog: false,
       editedIndex: -1,
+      valid: true,
+      nameRules: [
+        v => !!v || 'Name is required'
+      ],
       editedItem: {
-        name: '',
+        name: ''
       },
       defaultItem: {
-        name: '',
+        name: ''
       },
       search: '',
       pagination: {
-        rowsPerPage: 6
+        rowsPerPage: 6,
+        page: 1
       },
       selected: [],
       headers: [
@@ -117,10 +129,12 @@ export default {
   },
   computed: {
     pages () {
+      this.pagination.totalItems = this.degrees.length
       if (this.pagination.rowsPerPage == null ||
         this.pagination.totalItems == null
-      ) return 0
-
+      ) {
+          return 0
+        } 
       return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
     },
     formTitle () {
@@ -132,14 +146,16 @@ export default {
       val || this.close()
     }
   },
-  created () {
-    console.log(this.degrees)
+  mounted () {
     this.initialize()
   },
   methods: {
     initialize () {
-      
-      this.degrees = []
+      Degree.readAllDegrees()
+        .then((degrees) => {
+          this.degrees = degrees.data
+          console.log(this.degrees)
+        })
     },
     editItem (item) {
       this.editedIndex = this.degrees.indexOf(item)
@@ -159,11 +175,9 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
-        // programa o update de curso
         Object.assign(this.degrees[this.editedIndex], this.editedItem)
       } else {
         Degree.addDegree(this.editedItem).then((degree) => {
-          console.log(degree)
           this.degrees.push(degree.data)
         })
       }
@@ -176,7 +190,7 @@ export default {
 <style scoped>
 #ac-main {
   width: 52%;
-  max-height: 80vh;
+  max-height: 81vh;
 }
 
 .table {

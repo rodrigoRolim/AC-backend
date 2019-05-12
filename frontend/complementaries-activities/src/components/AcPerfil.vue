@@ -4,8 +4,6 @@
     <v-layout justify-space-around>
       <v-flex xs5 sm12>
         <v-layout column class="perfil">
-        
-          
         </v-layout>
         <div class="title mb-1">
           Nome do professor
@@ -46,7 +44,7 @@ export default {
   margin-top: 10px;
 }
 .v-card {
-  height: 80vh;
+  height: 81vh;
 }
 .perfil {
   border: 1px solid;
