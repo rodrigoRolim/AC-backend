@@ -5,15 +5,15 @@ class UsersController {
     this.jwt = jwt
   }
   post(req, res) {
-   
+    
     const username = req.body.username
     const password = req.body.password
-    console.log(username)
+ 
     return this.User.findOne({ username: username })
       .then(user => {
-        console.log(user.username)
+
         if (password == user.password) {
-          console.log(user)
+
           const _id = user._id
           let token = this.jwt.sign({ _id }, process.env.SECRET, {
             expiresIn: 86400
