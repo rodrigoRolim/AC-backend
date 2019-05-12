@@ -20,6 +20,11 @@ class CourseController {
       .then(() => res.send({ message:'removed with success' }))
       .catch((err) => res.send(err.message))
   }
+  updateDegree (req, res) {
+    const { params: { id }} = req
+    return this.Degree.update({ _id: id }, req.body)
+      .then((degree) => res.send(degree))
+  }
 }
 
 export default CourseController
