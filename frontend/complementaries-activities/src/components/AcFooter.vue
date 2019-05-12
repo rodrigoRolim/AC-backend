@@ -11,7 +11,7 @@ export default {
 
 <style scoped>
 #ac-footer {
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
   height: 10vh;
 }
 </style>

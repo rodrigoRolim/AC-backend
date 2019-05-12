@@ -179,6 +179,12 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
+        Degree.updatingDegree(this.editedItem._id, this.editedItem)
+          .then((res) => {
+            if (res.data.ok == 1) {
+              alert('atualizado com sucesso')
+            }
+          })
         Object.assign(this.degrees[this.editedIndex], this.editedItem)
       } else {
         Degree.addDegree(this.editedItem).then((degree) => {
