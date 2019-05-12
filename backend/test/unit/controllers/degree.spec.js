@@ -88,12 +88,12 @@ describe('Management course', () => {
       
       const { params : { id } } = request
       Course.update = sinon.stub()
-      Course.update.withArgs({ _id: id}, request.body).resolves({ name: 'engenharia da computação' })
+      Course.update.withArgs({ _id: id}, request.body).resolves({ ok: 1 })
   
       const courseController = new CourseController(Course)
       return courseController.updateDegree(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, { name: 'engenharia da computação' })
+          sinon.assert.calledWith(response.send, { ok: 1 })
         })
     })
   })
