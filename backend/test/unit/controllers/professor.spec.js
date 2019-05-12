@@ -9,6 +9,9 @@ describe('Management professor', () => {
     password: '12345',
     graduation: '5cd85d1b942d44d0ae60f2fb'
   }
+  const defaultRequest = {
+    params: {}
+  };
   describe('when adding professor to graduation', () => {
     it('should save professor into on database', () => {
       const request = Object.assign({}, { body: defaultProfessor })
@@ -28,6 +31,28 @@ describe('Management professor', () => {
         .then(() => {
           sinon.assert.calledWith(response.send)
         })
+    })
+    context('when an error occurs', () => {
+      it('should return 422', () => {
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+
+        class fakeProfessor {
+          save () {}
+        }
+
+        response.status.withArgs(422).returns(response)
+        sinon.stub(fakeProfessor.prototype, 'save').withArgs().rejects({ message: 'Error'})
+
+        const professorController = new ProfessorController(fakeProfessor)
+        
+        return professorController.createProfessor(defaultRequest, response)
+          .then(() => {
+            sinon.assert.calledWith(response.status, 422)
+          })
+      })
     })
   })
 })

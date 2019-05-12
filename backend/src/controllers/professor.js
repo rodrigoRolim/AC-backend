@@ -7,6 +7,7 @@ class ProfessorController {
 
     return professor.save()
       .then(() => res.status(201).send(professor))
+      .catch(err => res.status(422).send(err.message))
   }
 }
 
