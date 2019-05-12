@@ -61,14 +61,39 @@ describe('Management course', () => {
       const response = {
         send: sinon.spy()
       }
-      const { params : { id } }
+      const { params : { id } } = request
       Course.deleteOne = sinon.stub()
       Course.deleteOne.withArgs({ _id: id}).resolves('removed with success')
 
       const courseController = new CourseController(Course)
       return courseController.delete(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, 'removed with success')
+          sinon.assert.calledWith(response.send, {message: 'removed with success'})
+        })
+    })
+  }),
+  describe('when editing a graduation', () => {
+    it('should return updated object', () => {
+      const request = {
+        body: {
+          name: 'engenharia da computação'
+        },
+        params: {
+          id: '5cd76713d7d9ed1ce4e7a270'
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+      
+      const { params : { id } } = request
+      Course.update = sinon.stub()
+      Course.update.withArgs({ _id: id}, request.body).resolves({ name: 'engenharia da computação' })
+  
+      const courseController = new CourseController(Course)
+      return courseController.updateDegree(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, { name: 'engenharia da computação' })
         })
     })
   })
