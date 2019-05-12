@@ -62,4 +62,13 @@ describe('Routes: Degrees', () => {
       })
     })
   })
+  describe('PUT /admin/home', () => {
+    it('should return degree updated recently', done => {
+      request
+      .put(`/degrees/admin/home/${listDegree._id}`)
+      .end((err, res) => {
+        expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
+      })
+    })
+  })
 })
