@@ -5,7 +5,13 @@ const schema = new mongoose.Schema({
   password: String,
   admin: Boolean
 })
-schema.set('debug', true)
+schema.set('toJSON', {
+  transform: (doc, ret, options) => ({
+    _id: ret._id,
+    username: ret.username,
+    admin: ret.admin
+  })
+})
 const User = mongoose.model('User', schema)
 
 export default User
