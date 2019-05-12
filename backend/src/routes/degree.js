@@ -1,6 +1,6 @@
 import express from 'express'
 import DegreeController from '../controllers/degree'
-import Degree from '../models/degree'
+import Degree from '../models/graduation'
 import verify from '../auth'
 
 const router = express.Router()
