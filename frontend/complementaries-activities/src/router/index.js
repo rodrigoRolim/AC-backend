@@ -29,9 +29,9 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let user = JSON.parse(localStorage.getItem('user'))
+  let user = JSON.parse(localStorage.getItem('user')) 
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (user.token == null) {
+    if (user == null || user.token == null) {
       next({
         path: '/admin/login',
         params: { nextUrl: to.fullPath }
