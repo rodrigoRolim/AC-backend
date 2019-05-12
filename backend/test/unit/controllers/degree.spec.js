@@ -54,15 +54,16 @@ describe('Management course', () => {
   describe('when deleting a graduation', () => {
     it('should return an confirmation that it was deleted', () => {
       const request = {
-        body: {
-          _id: '5cd76713d7d9ed1ce4e7a270'
+        params: {
+          id: '5cd76713d7d9ed1ce4e7a270'
         }
       }
       const response = {
         send: sinon.spy()
       }
+      const { params : { id } }
       Course.deleteOne = sinon.stub()
-      Course.deleteOne.withArgs({ _id: request.body._id }).resolves('removed with success')
+      Course.deleteOne.withArgs({ _id: id}).resolves('removed with success')
 
       const courseController = new CourseController(Course)
       return courseController.delete(request, response)

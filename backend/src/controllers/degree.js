@@ -15,8 +15,9 @@ class CourseController {
       .catch(err => res.send(err.message))
   }
   delete (req, res) {
-    return this.Degree.deleteOne({ _id: req.body._id})
-      .then(() => res.send('removed with success'))
+    const { params: { id }} = req
+    return this.Degree.deleteOne({ _id: id})
+      .then(() => res.send({ message:'removed with success' }))
       .catch((err) => res.send(err.message))
   }
 }

@@ -12,7 +12,8 @@ describe('Routes: Authentication', () => {
     
   const defaultAdmin = {
     username: 'admin',
-    password: 'admin'
+    password: 'admin',
+    admin: true
   }
   
   beforeEach(() => {
@@ -31,7 +32,7 @@ describe('Routes: Authentication', () => {
       .send(defaultAdmin)
       .end((err, res) => {
         expect(res.body.auth).to.true
-        expect(res.body.is_admin).to.true
+        expect(res.body.admin).to.true
         done(err)
       })
     })
