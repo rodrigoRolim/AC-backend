@@ -27,7 +27,12 @@ export default {
     return http.put(`/degrees/admin/home/${id}`, degree)
   },
   addAdmin: ({ username, password }) => {
-    console.log({username, password})
+
     return http.post('/users/admin/secreto', { username, password })
+  },
+  addProfessor: ({ name, email, password }) => {
+    let user = JSON.parse(localStorage.getItem('user'))
+    http.defaults.headers.common['Authorization'] = `${user.token}`
+    return http.post('/professor/admin/home', { name, email, password })
   }
 }

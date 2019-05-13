@@ -9,9 +9,9 @@
         </v-card-title>
 
         <v-card-actions>
-          <v-btn color="info">Editar</v-btn>
-          <v-btn color="error">Excluir</v-btn>
-          <v-btn color="success" :disabled="!show">+ Item</v-btn>
+          <v-btn color="info" small>Editar</v-btn>
+          <v-btn color="error" small>Excluir</v-btn>
+          <v-btn color="success" small :disabled="!show">+ Item</v-btn>
           <v-spacer></v-spacer>
           <v-btn icon @click="show = !show">
             <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
@@ -20,7 +20,7 @@
 
         <v-slide-y-transition>
           <v-card-text v-show="show">
-           <v-layout row>
+    <v-layout row>
     <v-flex xs12 sm12>
         <v-list two-line>
           <template v-for="(item, index) in items">

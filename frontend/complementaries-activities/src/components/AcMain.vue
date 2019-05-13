@@ -58,6 +58,7 @@
         <template v-slot:items="props" >
           <td class="name-item">{{ props.item.name }}</td>
           <td class="justify-end layout px-6">
+          <btn-set-professor :professorId="props.item.professor"></btn-set-professor>
           <v-icon
             small
             color="success"
@@ -94,7 +95,9 @@
 
 <script>
 import Degree from '@/services/Admin.js'
+import BtnSetProfessor from './SetProfessor'
 export default {
+  components: {BtnSetProfessor},
   data () {
     return {
       dialog: false,
@@ -202,7 +205,6 @@ export default {
   width: 52%;
   max-height: 81vh;
 }
-
 .table {
   min-height: 50vh;
 }

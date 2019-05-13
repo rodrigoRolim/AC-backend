@@ -1,35 +1,32 @@
 <template>
-  <v-card class="v-card">
-  <v-container fluid>
-    <v-layout justify-space-around>
-      <v-flex xs5 sm12>
-        <v-layout column class="perfil">
-        </v-layout>
-        <div class="title mb-1">
-          Nome do professor
-        </div>
-        <div class="mb-6">
-          <strong>email: </strong> email do professor
-        </div>
-        <div class="actions">
-          <v-btn color="primary">Adcionar</v-btn>
-          <v-btn color="warning">Substituir</v-btn>
-        </div>
-      </v-flex>
+  <v-layout row>
+    <v-flex xs12 sm6 md12>
+      <v-card>
+        <v-card-title  primary-title>
+          <div class="informations">
+            <div class="headline">{{oneProfessor.name}}</div>
+            <span class="grey--text">{{oneProfessor.email}}</span>
+          </div>
+        </v-card-title>
 
-    </v-layout>
-  </v-container>
-  </v-card>
+        <v-card-actions>
+          <v-btn color="info" small>Editar</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
-
 <script>
 export default {
   name: 'AcPerfil',
+  props: ['oneProfessor'],
   data () {
     return {
-
+      show: false
     }
-  }
+  },
+
 }
 </script>
 
@@ -43,8 +40,9 @@ export default {
 .title {
   margin-top: 10px;
 }
-.v-card {
-  height: 81vh;
+.informations {
+  display: flex;
+  flex-direction: column;
 }
 .perfil {
   border: 1px solid;

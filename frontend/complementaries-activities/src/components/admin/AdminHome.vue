@@ -25,10 +25,15 @@ import AcFooter from '../AcFooter'
 export default {
   name: 'AdminHome',
   components: { AcNavbar, AcLeftbar, AcRightbar, AcMain, AcFooter },
+  data () {
+    return {
+      show: false
+    }
+  },
   methods: {
     logout () {
       localStorage.removeItem('user')
-      localStorage.removeItem('admin_token')
+      // localStorage.removeItem('admin_token')
       this.$router.replace('/admin/login')
     }
   }

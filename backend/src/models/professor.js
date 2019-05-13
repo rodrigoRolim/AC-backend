@@ -9,7 +9,13 @@ const schema = new mongoose.Schema({
   password: String,
   graduation: { type: mongoose.Schema.Types.ObjectId, ref: 'Graduation' }
 })
-
+schema.set('toJSON', {
+  transform: (doc, ret, options) => ({
+    _id: ret._id,
+    username: ret.username,
+    admin: ret.admin
+  })
+})
 schema.pre('save', function (next) {
   if (!this.password || !this.isModified('password')) {
     return next()

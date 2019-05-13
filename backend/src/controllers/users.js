@@ -11,7 +11,7 @@ class UsersController {
  
     return this.User.findOne({ username: username })
       .then(user => {
-
+        console.log(user)
         if (password == user.password) {
 
           const _id = user._id
