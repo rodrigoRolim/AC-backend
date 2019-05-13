@@ -90,4 +90,38 @@ describe('Management professor', () => {
       })
     })
   })
+  describe('update professor', () => {
+    it('should respond with 200 when the professor has been updated', () => {
+      const fakeId = 'a-fake-id'
+      const updatedProfessor = {
+        _id: fakeId,
+        name: 'Updated professor',
+        email: 'uptade@email',
+        graduation: 'engenharia',
+        password: '123456'
+      }
+      const request = {
+        params: {
+          id: fakeId
+        },
+        body: updatedProfessor
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+
+      class fakeProfessor {
+        static findOneAndUpdate() {}
+      }
+      const findOneAndUpdateStub = sinon.stub(fakeProfessor, 'findOneAndUpdate')
+      findOneAndUpdateStub.withArgs({ _id: fakeId }, updatedProfessor).resolves(updatedProfessor)
+      
+      const professorController = new ProfessorController(fakeProfessor);
+
+      return professorController.updateProfessor(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200);
+        });
+    })
+  })
 })
