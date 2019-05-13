@@ -60,10 +60,28 @@ describe('Routes: professor', () => {
         .get('/professor/admin/home')
         .end((err, res) => {
           console.log(res.body)
-          expect(res.body).to.eql([expectedProfessorUser]);
+          expect(res.body).to.eql({ auth: false, message: 'No token provided.'});
           done(err);
         });
       })
     })
+  })
+  describe('PUT /professor/admin/home/:id', () => {
+    context('when editing a professor', () => {
+      it('should update the professor and return 404 as status code', done => {
+        const customProfessor = {
+          name: 'Custom name'
+        };
+        const updatedProfessor = Object.assign({}, customProfessor, defaultProfessor)
+
+        request
+          .put(`/professor/admin/home/${defaultId}`)
+          .send(updatedProfessor)
+          .end((err, res) => {
+            expect(res.status).to.eql(401);
+            done(err);
+          });
+      });
+    });
   })
 })
