@@ -9,13 +9,19 @@ describe('Routes: professor', () => {
         request = supertest(app)
       })
   })
-  const defautlId = '56cb91bdc3464f14678934ca'
+  const defaultId = '56cb91bdc3464f14678934ca'
   const defaultProfessor = {
     name: 'roger john',
     email: 'roger@email.com',
+    password: '12345',
     graduation: '5cd87c81f9aedcbd1bb3a57d'
   }
-
+  const expectedProfessorUser = {
+    _id: defaultId,
+    name: 'roger jhon',
+    email: 'roger@email.com',
+    graduation: '5cd87c81f9aedcbd1bb3a57d'
+  };
   beforeEach(() => {
     const professor = new Professor(defaultProfessor)
     professor._id = '56cb91bdc3464f14678934ca'
@@ -46,6 +52,16 @@ describe('Routes: professor', () => {
             expect(res.body).to.eql({ auth: false, message: 'No token provided.'})
             done(err)
           })
+      })
+    })
+    context('when reading all professors', () => {
+      it('should return an list of professors with', done => {
+        request
+        .get('/professor/admin/home')
+        .end((err, res) => {
+          expect(res.body).to.eql([expectedProfessorUser]);
+          done(err);
+        });
       })
     })
   })
