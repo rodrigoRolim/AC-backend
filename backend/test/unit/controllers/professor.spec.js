@@ -55,4 +55,39 @@ describe('Management professor', () => {
       })
     })
   })
+  describe('when ask for all professor', () => {
+    it('should return list of professors', () => {
+      const request = {}
+      const response = {
+        send: sinon.spy()
+      }
+      Professor.find = sinon.stub()
+      Professor.find.withArgs({}).resolves([defaultProfessor])
+
+      const professorController = new ProfessorController(Professor)
+      return professorController.readAll(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultProfessor])
+      })
+    })
+    context('when an error occurs', () => {
+      it('should return 422', () => {
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        Professor.find = sinon.stub()
+        Professor.find.withArgs({}).rejects({ message: 'Error'})
+        
+        response.status.withArgs(422).returns(response)
+        
+        const professorController = new ProfessorController(Professor)
+        
+        return professorController.readAll(defaultRequest, response)
+          .then(() => {
+            sinon.assert.calledWith(response.status, 422)
+          })
+      })
+    })
+  })
 })
