@@ -11,7 +11,7 @@ describe('Routes: professor', () => {
   })
   const defaultId = '56cb91bdc3464f14678934ca'
   const defaultProfessor = {
-    name: 'roger john',
+    name: 'roger jhon',
     email: 'roger@email.com',
     password: '12345',
     graduation: '5cd87c81f9aedcbd1bb3a57d'
@@ -25,11 +25,11 @@ describe('Routes: professor', () => {
   beforeEach(() => {
     const professor = new Professor(defaultProfessor)
     professor._id = '56cb91bdc3464f14678934ca'
-    return Professor.remove({})
+    return Professor.deleteMany({})
       .then(() => professor.save())
   })
 
-  afterEach(() => Professor.remove({}))
+  afterEach(() => Professor.deleteMany({}))
 
   describe('POST /admin/home', () => {
     
@@ -59,6 +59,7 @@ describe('Routes: professor', () => {
         request
         .get('/professor/admin/home')
         .end((err, res) => {
+          console.log(res.body)
           expect(res.body).to.eql([expectedProfessorUser]);
           done(err);
         });

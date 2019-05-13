@@ -2,14 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AdminLogin from '@/components/admin/AdminLogin'
 import AdminHome from '@/components/admin/AdminHome'
-
+import AdminManagerProfessor from '@/components/admin/AdminManagerProfessor'
 Vue.use(Router)
 
 let router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/admin/login',
+      path: '/admin',
       name: 'AdminLogin',
       component: AdminLogin,
       meta: {
@@ -24,6 +24,14 @@ let router = new Router({
         requiresAuth: true,
         is_admin: true
       }
+    },
+    {
+      path: '/admin/professor/:id',
+      component: AdminManagerProfessor,
+    },
+    {
+      path: '/admin/professor',
+      component: AdminManagerProfessor,
     }
   ]
 })

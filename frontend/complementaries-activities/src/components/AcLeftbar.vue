@@ -1,22 +1,31 @@
 <template>
   <div id="ac-leftbar">
-    <create-professor></create-professor>
-    <ac-perfil v-for="professor in professors" :oneProfessor="professor"></ac-perfil>
+    <ac-list-professor :listProfessor="professors"></ac-list-professor>
   </div>
 </template>
 
 <script>
-import AcPerfil from './AcPerfil'
-import CreateProfessor from './CreateProfessor.vue'
+import AcListProfessor from './AcListProfessor'
+import AdminService from '@/services/Admin.js'
 export default {
   name: 'AcLeftBar',
-  components: { AcPerfil, CreateProfessor },
+  components: { AcListProfessor },
   data () {
     return {
-      professors: [{
-        name: 'nome do professor',
-        email: 'email do professor',
-      }]
+      professors: []
+    }
+  },
+  created () {
+    AdminService.readAllProfessors()
+      .then(professors => {
+        this.professors =  professors.data
+        this.$store.dispatch('professorStore', this.professors)
+      })
+      console.log(this.$store.getters.getUser)
+  },
+  methods: {
+    readProfessor (professor) {
+      this.professors.push(professor)
     }
   }
 }
@@ -28,6 +37,7 @@ export default {
   flex-direction: column;
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   width: 25%;
-  height: 81vh;
+  max-height: 81vh;
+  overflow-y: auto;
 }
 </style>

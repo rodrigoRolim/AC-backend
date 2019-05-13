@@ -23,7 +23,7 @@ export default {
   text-align: center;
   height: 9vh;
 }
-button {
+.lg {
   display: flex;
   flex-direction: row;
   padding: 9px 8px;

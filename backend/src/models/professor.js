@@ -12,8 +12,9 @@ const schema = new mongoose.Schema({
 schema.set('toJSON', {
   transform: (doc, ret, options) => ({
     _id: ret._id,
-    username: ret.username,
-    admin: ret.admin
+    name: ret.name,
+    email: ret.email,
+    graduation: ret.graduation
   })
 })
 schema.pre('save', function (next) {

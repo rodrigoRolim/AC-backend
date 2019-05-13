@@ -1,5 +1,5 @@
 export default {
-  LOGIN: (state, value) => {
+  ADD_PROFESSOR: (state, value) => {
     state.user = value
   }
 }

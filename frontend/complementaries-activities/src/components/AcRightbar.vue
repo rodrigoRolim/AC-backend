@@ -52,7 +52,7 @@ export default {
   flex-direction: column;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   max-height: 81vh;
-  width: 28%;
+  width: 40%;
   overflow-y: auto;
 }
 .new-group {

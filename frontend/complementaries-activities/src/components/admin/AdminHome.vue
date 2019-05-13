@@ -1,17 +1,19 @@
 <template>
   <v-app id="AdminHome">
     <ac-navbar>
-      <button @click="logout()">
-        <span class="rot-logout">logout</span>
+    <v-btn class="success" to="/admin/professor">professores</v-btn>
+      <v-btn class="error" @click="logout()">
+        sair
         <i class="material-icons">exit_to_app</i>
-      </button>
+      </v-btn>
+
     </ac-navbar>
     <div class="middle">
-      <ac-leftbar></ac-leftbar>
       <ac-main></ac-main>
       <ac-rightbar></ac-rightbar>
     </div>
     <ac-footer></ac-footer>
+    <router-view></router-view>
   </v-app>
 </template>
 
@@ -41,11 +43,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box
-}
 #AdminHome {
   display: flex;
   flex-direction: column;
@@ -54,5 +51,7 @@ export default {
 .middle {
   display: flex;
   flex-direction: row;
+  margin: 0 auto;
+  width: 80%;
 }
 </style>

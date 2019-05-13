@@ -129,15 +129,4 @@ export default {
   margin: 0;
   border: 1px solid rgba(0,0,0,0.01);
 }
-ol {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-li {
-  width: 100%;
-  list-style-type: none;
-  word-break: break-all;
-  padding: 5px 0px;
-}
 </style>

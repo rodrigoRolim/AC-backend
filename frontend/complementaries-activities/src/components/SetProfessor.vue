@@ -3,7 +3,7 @@
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn color="secondary" small dark v-on="on">Professor</v-btn>
+        <v-btn color="blue-grey" small dark v-on="on">Professor</v-btn>
       </template>
       <v-card>
         <v-card-title>
@@ -14,7 +14,7 @@
             <v-layout wrap>
               <v-flex md12>
                 <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
+                  :items="professors"
                   label="Age*"
                   required
                 ></v-select>
@@ -36,13 +36,23 @@
 </template>
 
 <script>
+import AdminService from '@/services/Admin.js'
 export default {
-  name: 'AddProfessom',
+  name: 'AddProfessor',
   data () {
     return {
-      dialog: false
+      dialog: false,
+      professors: []
     }
-  }
+  },
+  created () {
+    AdminService.readAllProfessors()
+      .then(professors => {
+        professors.data.map(item => {
+          this.professors.push(item.name)
+        })
+      })
+  },
 }
 </script>
 

@@ -59,21 +59,22 @@
           <td class="name-item">{{ props.item.name }}</td>
           <td class="justify-end layout px-6">
           <btn-set-professor :professorId="props.item.professor"></btn-set-professor>
-          <v-icon
+          <v-btn
             small
             color="success"
-            class="mr-2"
+            class="mr-10 tam"
             @click="editItem(props.item)"
           >
             edit
-          </v-icon>
-          <v-icon
+          </v-btn>
+          <v-btn
             small
-            color="#00BFFF"
+            color="error"
+            
             @click="deleteItem(props.item)"
           >
             delete
-          </v-icon>
+          </v-btn>
         </td>
         </template>
         <template v-slot:no-results  >
@@ -202,7 +203,10 @@ export default {
 
 <style scoped>
 #ac-main {
-  width: 52%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 70%;
   max-height: 81vh;
 }
 .table {
