@@ -123,5 +123,42 @@ describe('Management professor', () => {
           sinon.assert.calledWith(response.sendStatus, 200);
         });
     })
+    context('when an error occurs', () => {
+      it('should return 422', () => {
+        const fakeId = 'a-fake-id';
+        const updatedProfessor = {
+          _id: fakeId,
+          name: 'Updated professor',
+          email: 'uptade@email',
+          graduation: 'engenharia',
+          password: '123456'
+        }
+        const request = {
+          params: {
+            id: fakeId
+          },
+          body: updatedProfessor
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        };
+
+        class fakeProfessor {
+          static findOneAndUpdate() {}
+        }
+
+        const findOneAndUpdateStub = sinon.stub(fakeProfessor, 'findOneAndUpdate')
+        findOneAndUpdateStub.withArgs({ _id: fakeId }, updatedProfessor).rejects({ message: 'Error' })
+        response.status.withArgs(422).returns(response);
+
+        const professorController = new ProfessorController(fakeProfessor)
+
+        return professorController.updateProfessor(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error');
+          });
+      });
+    })
   })
 })
