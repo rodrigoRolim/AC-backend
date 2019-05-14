@@ -35,7 +35,19 @@ describe('Management groups', () => {
   })
 
   afterEach(() => Group.deleteMany({}))
-
+  describe('POST /group/admin', () => {
+    context('when add a new group', () => {
+      it('should added new item and return 201 and new group', done => {
+        request
+        .post('/group/admin')
+        .send(defaultGroup)
+        .end((err, res) => {
+          expect(res.status).to.eql(201)
+          done(err)
+        })
+      })
+    })
+  })
   describe('PUT  group/admin/:id', () => {
     context('when add a item in group', () => {
       it('should added new item in group and return 201', done => {
