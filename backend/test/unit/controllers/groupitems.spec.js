@@ -110,5 +110,41 @@ describe('controller: groups and items', () => {
       })
     })
   })
+  describe('getAll() groups', () => {
+    it('should return list of groups', () => {
+      const request = {}
+      const response = {
+        send: sinon.spy()
+      };
+      Group.find = sinon.stub();
+
+      Group.find.withArgs({}).resolves([defaultGroup]);
+
+      const groupItemsController = new GroupItemsController(Group)
+
+      return groupItemsController.getAll(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultGroup]);
+        });
+    })
+    context('when an error occurs', () => {
+      it('should return status 400', () => {
+        const request = {}
+        const response = {
+          send: sinon.spy()
+        }
+
+        Group.find = sinon.stub()
+        Group.find.withArgs({}).rejects({message: 'Error'})
+
+        const groupItemsController = new GroupItemsController(Group)
+
+        return groupItemsController.getAll(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })
 

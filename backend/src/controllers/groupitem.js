@@ -2,6 +2,10 @@ class GroupItemsController {
   constructor (Group) {
     this.Group = Group
   }
+  getAll (req, res) {
+    return this.Group.find({})
+      .then((groups) => res.send(groups))
+  }
   createGroup (req, res) {
     return this.Group.create(req.body)
       .then((newGroup) => res.status(201).send(newGroup))
