@@ -1,5 +1,5 @@
 import express from 'express'
-import DegreeController from '../controllers/degree'
+import DegreeController from '../controllers/graduation'
 import Degree from '../models/graduation'
 import verify from '../auth'
 
