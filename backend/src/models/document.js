@@ -7,6 +7,8 @@ const schema = new mongoose.Schema({
   path: String,
   evaluation: Boolean,
   course_name: String,
+  group: String,
+  item: String,
   student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student'}
 })
 
