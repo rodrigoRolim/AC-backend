@@ -1,5 +1,5 @@
 import express from 'express'
-import UsersController from '../controllers/users'
+import UsersController from '../controllers/admin'
 import User from '../models/users'
 import jwt from 'jsonwebtoken'
 
