@@ -5,6 +5,7 @@ class GroupItemsController {
   getAll (req, res) {
     return this.Group.find({})
       .then((groups) => res.send(groups))
+      .catch((err) => res.send(err.message))
   }
   createGroup (req, res) {
     return this.Group.create(req.body)
