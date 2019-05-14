@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import AdminLogin from '@/components/admin/AdminLogin'
 import AdminHome from '@/components/admin/AdminHome'
 import AdminManagerProfessor from '@/components/admin/AdminManagerProfessor'
+import AdminGroup from '@/components/admin/AdminGroup'
 Vue.use(Router)
 
 let router = new Router({
@@ -32,6 +33,10 @@ let router = new Router({
     {
       path: '/admin/professor',
       component: AdminManagerProfessor,
+    },
+    {
+      path: '/admin/grupo',
+      component: AdminGroup
     }
   ]
 })
@@ -41,7 +46,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (user == null || user.token == null) {
       next({
-        path: '/admin/login',
+        path: '/admin',
         params: { nextUrl: to.fullPath }
       })
     } else {

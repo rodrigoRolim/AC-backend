@@ -6,7 +6,7 @@ import Professor from '../models/professor'
 const router = express.Router()
 const professorController = new ProfessorController(Professor)
 
-router.post('/admin/home', verify.verifyJWT, (req, res) => professorController.createProfessor(req, res))
-router.get('/admin/home', verify.verifyJWT,(req, res) => professorController.readAll(req, res))
-router.put('/admin/home/:id', verify.verifyJWT,(req, res) => professorController.updateProfessor(req, res))
+router.post('/admin', verify.verifyJWT, (req, res) => professorController.createProfessor(req, res))
+router.get('/admin', verify.verifyJWT,(req, res) => professorController.readAll(req, res))
+router.put('/admin/:id', verify.verifyJWT,(req, res) => professorController.updateProfessor(req, res))
 export default router

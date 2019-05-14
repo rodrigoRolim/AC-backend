@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import Graduation from '../../../src/models/graduation'
-import GraduationController from '../../../src/controllers/degree'
+import GraduationController from '../../../src/controllers/graduation'
 
 describe('Management graduation', () => {
   const graduation = {

@@ -8,23 +8,23 @@ export default {
   addDegree: ({ name }) => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.post('/degrees/admin/home', { name })
+    return http.post('/degrees/admin', { name })
   },
   readAllDegrees: () => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.get('/degrees/admin/home')
+    return http.get('/degrees/admin')
   },
   deleteDegree: (degree) => {
     const id = degree._id
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.delete(`/degrees/admin/home/${id}`)
+    return http.delete(`/degrees/admin/${id}`)
   },
   updatingDegree: (id, degree) => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.put(`/degrees/admin/home/${id}`, degree)
+    return http.put(`/degrees/admin/${id}`, degree)
   },
   addAdmin: ({ username, password }) => {
 
@@ -33,11 +33,16 @@ export default {
   addProfessor: ({ name, email, password }) => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.post('/professor/admin/home', { name, email, password })
+    return http.post('/professor/admin', { name, email, password })
   },
   readAllProfessors: () => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.get('/professor/admin/home')
+    return http.get('/professor/admin')
+  },
+  updatingProfessorResponsible: (id, professor) => {
+    let user = JSON.parse(localStorage.getItem('user'))
+    http.defaults.headers.common['Authorization'] = `${user.token}`
+    return http.put(`/professor/admin${id}`, professor)
   }
 }

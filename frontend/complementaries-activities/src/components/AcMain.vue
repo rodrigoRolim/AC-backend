@@ -1,10 +1,10 @@
 <template>
-   <v-card id="ac-main">
+   <div id="ac-main">
     <v-toolbar flat color="white">
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" flat dark class="mb-1" v-on="on">Novo curso</v-btn>
+          <v-btn color="secondary" dark class="mb-1" v-on="on">Novo curso</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -36,8 +36,8 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-      <v-card-title>
-        Cursos de graduação
+      <v-card-title class="title">
+        <span class="headline"><strong>Cursos de graduação</strong></span>
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -53,28 +53,28 @@
         :search="search"
         hide-actions
         :pagination.sync="pagination"
-        class="table elevation-1"
+        class="table"
       >
         <template v-slot:items="props" >
           <td class="name-item">{{ props.item.name }}</td>
           <td class="justify-end layout px-6">
-          <btn-set-professor :professorId="props.item.professor"></btn-set-professor>
-          <v-btn
+          <btn-set-professor class="mr-3 tam" :degree="props.item"></btn-set-professor>
+          <v-icon
             small
             color="success"
-            class="mr-10 tam"
+            class="mr-3 tam"
             @click="editItem(props.item)"
           >
             edit
-          </v-btn>
-          <v-btn
+          </v-icon>
+          <v-icon
             small
             color="error"
-            
+            class="mr-3 tam"
             @click="deleteItem(props.item)"
           >
             delete
-          </v-btn>
+          </v-icon>
         </td>
         </template>
         <template v-slot:no-results  >
@@ -91,7 +91,7 @@
       <div class="text-xs-center pt-0">
         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
      </div>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -126,7 +126,7 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { text: 'Actions', value: 'name', sortable: false, align: 'right' }
+        { text: 'Actions', value: 'name', sortable: false, align: 'center' }
       ],
       degrees: []
     }
@@ -207,9 +207,18 @@ export default {
   flex-direction: column;
   justify-content: center;
   width: 70%;
-  max-height: 81vh;
+  margin: 0 auto;
+  max-height: 100vh;
 }
 .table {
-  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  height: 50vh;
+}
+.title {
+  background-color: white;
 }
 </style>

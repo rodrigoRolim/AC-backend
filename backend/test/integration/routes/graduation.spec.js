@@ -1,4 +1,4 @@
-import Degree from "../../../src/models/graduation";
+import Graduation from "../../../src/models/graduation";
 
 describe('Routes: Degrees', () => {
   let request
@@ -23,17 +23,17 @@ describe('Routes: Degrees', () => {
       })
   })
   beforeEach(() => {
-    let degree =  new Degree(listDegree)
-    Degree.deleteMany({})
+    let degree =  new Graduation(listDegree)
+    Graduation.deleteMany({})
     return degree.save()
   })
 
-  afterEach(() => Degree.deleteMany({}))
+  afterEach(() => Graduation.deleteMany({}))
   
   describe('POST /admin/home', () => {
     it('should return added last degree', done => {
       request
-      .post('/degrees/admin/home')
+      .post('/degrees/admin')
       .send(defaultDegree)
       .end((err, res) => {
         console.log(res.body)
@@ -45,7 +45,7 @@ describe('Routes: Degrees', () => {
   describe('GET /admin/home', () => {
     it('should return list of degrees', done => {
       request
-      .get('/degrees/admin/home')
+      .get('/degrees/admin')
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
         done(err)
@@ -55,7 +55,7 @@ describe('Routes: Degrees', () => {
   describe('DELETE /admin/home', () => {
     it('should return message of removed with success', done => {
       request
-      .del(`/degrees/admin/home/${listDegree._id}`)
+      .del(`/degrees/admin/${listDegree._id}`)
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
         done(err)
@@ -65,7 +65,7 @@ describe('Routes: Degrees', () => {
   describe('PUT /admin/home', () => {
     it('should return degree updated recently', done => {
       request
-      .put(`/degrees/admin/home/${listDegree._id}`)
+      .put(`/degrees/admin/${listDegree._id}`)
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
         done(err)

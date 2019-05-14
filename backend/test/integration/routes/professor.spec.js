@@ -31,7 +31,7 @@ describe('Routes: professor', () => {
 
   afterEach(() => Professor.deleteMany({}))
 
-  describe('POST /admin/home', () => {
+  describe('POST /admin', () => {
     
     context('when posting an professor', () => {
       it('should return a new professor with status code 201', done => {
@@ -45,7 +45,7 @@ describe('Routes: professor', () => {
         }
 
         request
-          .post('/professor/admin/home')
+          .post('/professor/admin')
           .send(newProfessor)
           .end((err, res) => {
             expect(res.statusCode).to.eql(401)
@@ -57,7 +57,7 @@ describe('Routes: professor', () => {
     context('when reading all professors', () => {
       it('should return an list of professors with', done => {
         request
-        .get('/professor/admin/home')
+        .get('/professor/admin')
         .end((err, res) => {
           console.log(res.body)
           expect(res.body).to.eql({ auth: false, message: 'No token provided.'});
@@ -66,7 +66,7 @@ describe('Routes: professor', () => {
       })
     })
   })
-  describe('PUT /professor/admin/home/:id', () => {
+  describe('PUT /professor/admin/:id', () => {
     context('when editing a professor', () => {
       it('should update the professor and return 404 as status code', done => {
         const customProfessor = {
@@ -75,7 +75,7 @@ describe('Routes: professor', () => {
         const updatedProfessor = Object.assign({}, customProfessor, defaultProfessor)
 
         request
-          .put(`/professor/admin/home/${defaultId}`)
+          .put(`/professor/admin/${defaultId}`)
           .send(updatedProfessor)
           .end((err, res) => {
             expect(res.status).to.eql(401);

@@ -1,7 +1,8 @@
 <template>
-  <div id="ac-navbar">
+  <v-toolbar>
+    <v-spacer></v-spacer>
     <slot></slot>
-  </div>
+  </v-toolbar>
 </template>
 
 <script>

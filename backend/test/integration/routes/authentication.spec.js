@@ -1,4 +1,4 @@
-import User from '../../../src/models/users'
+import Admin from '../../../src/models/admin'
 
 describe('Routes: Authentication', () => {
   let request
@@ -17,19 +17,19 @@ describe('Routes: Authentication', () => {
   }
   
   beforeEach(() => {
-    const user = new User(defaultAdmin)
+    const user = new Admin(defaultAdmin)
     user._id = '56cb91bdc3464f14678934ca'
-    User.deleteMany({})
+    Admin.deleteMany({})
       .then(() => user.save());
     // return user.save();
   })
 
-  afterEach(() => User.deleteMany({}))
+  afterEach(() => Admin.deleteMany({}))
   
   describe('POST /admin/login', () => {
     it('should return token for session admin user', done => {
       request
-      .post('/users/admin/login')
+      .post('/admin/login')
       .send(defaultAdmin)
       .end((err, res) => {
         console.log(res)

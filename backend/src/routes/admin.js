@@ -6,6 +6,6 @@ import jwt from 'jsonwebtoken'
 const router = express.Router()
 const usersController = new UsersController(User, jwt)
 
-router.post('/admin/login', (req, res) => usersController.post(req, res))
+router.post('login', (req, res) => usersController.post(req, res))
 
 export default router

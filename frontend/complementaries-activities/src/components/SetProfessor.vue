@@ -14,8 +14,9 @@
             <v-layout wrap>
               <v-flex md12>
                 <v-select
-                  :items="professors"
-                  label="Age*"
+                  :items="professorNames"
+                  label="Professor responsável*"
+                  v-model="selectedName"
                   required
                 ></v-select>
               </v-flex>
@@ -26,7 +27,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -39,20 +40,51 @@
 import AdminService from '@/services/Admin.js'
 export default {
   name: 'AddProfessor',
+  props: ['degree'],
   data () {
     return {
       dialog: false,
-      professors: []
+      professorNames: [],
+      professors: [],
+      selectedName: ''
     }
   },
   created () {
     AdminService.readAllProfessors()
       .then(professors => {
+        this.professors = professors.data
         professors.data.map(item => {
-          this.professors.push(item.name)
+          this.professorNames.push(item.name)
         })
+        this.initSetProfessor()
       })
   },
+  methods: {
+    initSetProfessor () {
+      this.professors.map(professor => {
+        if (professor._id === this.degree.professor){
+         this.selectedName = professor.name
+        } 
+      }) 
+    },
+    save () {
+      let professor = this.professors.filter((prof) => prof.name === this.selectedName)
+      this.degree.professor = professor[0]._id
+      AdminService.updatingDegree(this.degree._id, this.degree)
+        .then((res) => {
+          alert('salvo com sucesso')
+        })
+      this.updatingProfessor(professor[0], this.degree._id, professor[0]._id)
+      this.dialog = false
+    },
+    updatingProfessor (professor, degId, profId) {
+      professor.graduation = degId
+      AdminService.updatingProfessorResponsible(profId, professor)
+        .then((res) => {
+          console.log(res)
+        })
+    }
+  }
 }
 </script>
 

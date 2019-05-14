@@ -1,6 +1,6 @@
-import UsersController from '../../../src/controllers/users'
+import UsersController from '../../../src/controllers/admin'
 import sinon from 'sinon'
-import User from '../../../src/models/users'
+import Admin from '../../../src/models/admin'
 import jwt from 'jsonwebtoken'
 
 describe('Controllers: Users', () => {
@@ -31,10 +31,10 @@ describe('Controllers: Users', () => {
       jwt.sign.withArgs({ _id }, process.env.SECRET , {
         expiresIn: 86400
       }).returns('hash')
-      User.findOne = sinon.stub()
-      User.findOne.withArgs(userDefault).resolves(userResolves)
+      Admin.findOne = sinon.stub()
+      Admin.findOne.withArgs(userDefault).resolves(userResolves)
 
-      const userController = new UsersController(User, jwt)
+      const userController = new UsersController(Admin, jwt)
       return userController.post(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, { token: 'hash', auth: true, admin: true })
@@ -56,10 +56,10 @@ describe('Controllers: Users', () => {
       }
 
       response.status.withArgs(400).returns(response)
-      User.findOne = sinon.stub()
-      User.findOne.withArgs({ username: request.body.username }).rejects({message: 'Error'})
+      Admin.findOne = sinon.stub()
+      Admin.findOne.withArgs({ username: request.body.username }).rejects({message: 'Error'})
 
-      const userController = new UsersController(User)
+      const userController = new UsersController(Admin)
      
       return userController.post(request, response)
         .then(() => {
