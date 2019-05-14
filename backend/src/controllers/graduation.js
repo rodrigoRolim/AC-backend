@@ -24,6 +24,7 @@ class CourseController {
     const { params: { id }} = req
     return this.Degree.update({ _id: id }, req.body)
       .then((degree) => res.send(degree))
+      .catch((err) => res.status(422).send(err.message))
   }
 }
 
