@@ -21,7 +21,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" depressed dark class="mb-2" v-on="on">Novo professor</v-btn>
+            <v-btn color="secondary" depressed dark class="mb-2" v-on="on">Novo professor</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -49,15 +49,27 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
-      <v-data-table
+      <v-card>
+        <v-card-title >
+            Professores
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+         <v-data-table
         :headers="headers"
         :items="professors"
         class="elevation-1"
-      >
+         >
         <template v-slot:items="props">
           <td class="name">{{ props.item.name }}</td>
-          <td class="text-md-center">{{ props.item.email }}</td>
-          <td class="text-md-center">{{ props.item.graduation }}</td>
+          <td class="text-md-left">{{ props.item.email }}</td>
+          <td class="text-md-left">{{ props.item.graduation }}</td>
           <td class="justify-center layout px-0">
             <v-icon
               small
@@ -71,8 +83,19 @@
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">Reset</v-btn>
         </template>
-      </v-data-table>
-      </v-layout>
+         <template v-slot:no-results  >
+          <v-alert :value="true" color="error" icon="warning">
+            Sua pesquisa para "{{ search }}" não obteve resultados.
+          </v-alert>
+        </template>
+        <template v-slot:no-data>
+          <v-alert :value="true" color="error" icon="warning">
+            nenhum grupo cadastrado
+          </v-alert>
+        </template>
+        </v-data-table>
+      </v-card>
+    </v-layout>
   </v-app>
 </template>
 
@@ -91,9 +114,9 @@ import AcNavbar from '../AcNavbar'
           sortable: false,
           value: 'name'
         },
-        { text: 'email', value: 'email', sortable: false, align: 'center' },
-        { text: 'curso (responsável)', value: 'curso', sortable: false, align: 'center' },
-        { text: 'Actions', value: 'name', sortable: false, align: 'center' }
+        { text: 'email', value: 'email', sortable: false, align: 'left' },
+        { text: 'curso (responsável)', value: 'curso', sortable: false, align: 'left' },
+        { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
       professors: [],
       graduations: [],
@@ -102,11 +125,13 @@ import AcNavbar from '../AcNavbar'
         name: '',
         email: '',
         graduation: '',
+        _id: ''
       },
       defaultItem: {
         name: '',
         email: '',
         graduation: '',
+        _id: ''
       }
     }),
 
@@ -128,6 +153,10 @@ import AcNavbar from '../AcNavbar'
     },
 
     methods: {
+      logout () {
+        localStorage.removeItem('user')
+        this.$router.replace('/admin')
+      },
       getGraduations () {
         AdminService.readAllDegrees()
           .then(graduations => {
@@ -145,7 +174,7 @@ import AcNavbar from '../AcNavbar'
               let name = (typeof graduationName[0].name === undefined) ? '':  graduationName[0].name
               
               this.professors.push(Object.assign({}, 
-                {name: item.name, email: item.email, graduation: name}))
+                {_id: item._id, name: item.name, email: item.email, graduation: name}))
             })
 
         })
@@ -172,6 +201,14 @@ import AcNavbar from '../AcNavbar'
 
       save () {
         if (this.editedIndex > -1) {
+          const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email}
+          AdminService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
+            .then((res) => {
+              console.log(res)
+              if (res.data == 'OK') {
+                alert('atualizado com sucesso')
+              }
+            })
           Object.assign(this.professors[this.editedIndex], this.editedItem)
         } else {
            AdminService.addProfessor(this.editedItem).

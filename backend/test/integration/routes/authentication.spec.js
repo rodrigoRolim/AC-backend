@@ -18,6 +18,7 @@ describe('Routes: Authentication', () => {
   
   beforeEach(() => {
     const user = new Admin(defaultAdmin)
+    console.log(user)
     user._id = '56cb91bdc3464f14678934ca'
     Admin.deleteMany({})
       .then(() => user.save());
@@ -32,7 +33,7 @@ describe('Routes: Authentication', () => {
       .post('/admin/login')
       .send(defaultAdmin)
       .end((err, res) => {
-        console.log(res)
+        console.log(res.body)
         expect(res.body.auth).to.true
         expect(res.body.admin).to.true
         done(err)

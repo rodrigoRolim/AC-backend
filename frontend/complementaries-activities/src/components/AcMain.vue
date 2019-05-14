@@ -1,10 +1,11 @@
 <template>
    <div id="ac-main">
     <v-toolbar flat color="white">
+      <v-toolbar-title>Lista de cursos</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-          <v-btn color="secondary" dark class="mb-1" v-on="on">Novo curso</v-btn>
+          <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -36,18 +37,20 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-      <v-card-title class="title">
-        <span class="headline"><strong>Cursos de graduação</strong></span>
+
+      <v-card>
+        <v-card-title >
+          Cursos
         <v-spacer></v-spacer>
-        <v-text-field
+         <v-text-field
           v-model="search"
           append-icon="search"
           label="Search"
           single-line
           hide-details
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table
+         ></v-text-field>
+        </v-card-title>
+        <v-data-table
         :headers="headers"
         :items="degrees"
         :search="search"
@@ -91,6 +94,8 @@
       <div class="text-xs-center pt-0">
         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
      </div>
+    </v-card>
+
   </div>
 </template>
 
@@ -98,7 +103,7 @@
 import Degree from '@/services/Admin.js'
 import BtnSetProfessor from './SetProfessor'
 export default {
-  components: {BtnSetProfessor},
+  components: { BtnSetProfessor },
   data () {
     return {
       dialog: false,
@@ -217,6 +222,7 @@ export default {
   justify-content: center;
   width: 100%;
   height: 50vh;
+  background-color: white;
 }
 .title {
   background-color: white;

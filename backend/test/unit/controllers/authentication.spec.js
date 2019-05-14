@@ -1,4 +1,4 @@
-import UsersController from '../../../src/controllers/admin'
+import AdminController from '../../../src/controllers/admin'
 import sinon from 'sinon'
 import Admin from '../../../src/models/admin'
 import jwt from 'jsonwebtoken'
@@ -23,9 +23,7 @@ describe('Controllers: Users', () => {
       }
       const response = {
         send: sinon.spy(),
-   
       }
-      
       const _id = '12345'
       jwt.sign = sinon.stub()
       jwt.sign.withArgs({ _id }, process.env.SECRET , {
@@ -34,7 +32,7 @@ describe('Controllers: Users', () => {
       Admin.findOne = sinon.stub()
       Admin.findOne.withArgs(userDefault).resolves(userResolves)
 
-      const userController = new UsersController(Admin, jwt)
+      const userController = new AdminController(Admin, jwt)
       return userController.post(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, { token: 'hash', auth: true, admin: true })
@@ -59,7 +57,7 @@ describe('Controllers: Users', () => {
       Admin.findOne = sinon.stub()
       Admin.findOne.withArgs({ username: request.body.username }).rejects({message: 'Error'})
 
-      const userController = new UsersController(Admin)
+      const userController = new AdminController(Admin)
      
       return userController.post(request, response)
         .then(() => {

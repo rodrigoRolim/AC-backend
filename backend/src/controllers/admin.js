@@ -1,5 +1,5 @@
 
-class UsersController {
+class AdminController {
   constructor (User, jwt) {
     this.User = User
     this.jwt = jwt
@@ -11,7 +11,7 @@ class UsersController {
  
     return this.User.findOne({ username: username })
       .then(user => {
-        console.log(user)
+        console.log('oi')
         if (password == user.password) {
 
           const _id = user._id
@@ -26,4 +26,4 @@ class UsersController {
   }
 }
 
-export default UsersController
+export default AdminController

@@ -15,8 +15,11 @@ class ProfessorController {
       .catch(err => res.status(422).send(err.message))
   }
   updateProfessor (req, res) {
-    return this.Professor.findOneAndUpdate({ _id: req.params.id}, req.body)
-      .then(() => res.sendStatus(200))
+    const { params: { id }} = req
+    console.log(req.params.id)
+    console.log(req.body)
+    return this.Professor.findOneAndUpdate({ _id: id}, req.body)
+      .then((professor) => res.sendStatus(200))
       .catch(err => res.status(422).send(err.message));
   }
 }

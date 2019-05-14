@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AdminLogin from '@/components/admin/AdminLogin'
 import AdminHome from '@/components/admin/AdminHome'
-import AdminManagerProfessor from '@/components/admin/AdminManagerProfessor'
+import AdminProfessor from '@/components/admin/AdminProfessor'
 import AdminGroup from '@/components/admin/AdminGroup'
 Vue.use(Router)
 
@@ -28,15 +28,27 @@ let router = new Router({
     },
     {
       path: '/admin/professor/:id',
-      component: AdminManagerProfessor,
+      component: AdminProfessor,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
     },
     {
       path: '/admin/professor',
-      component: AdminManagerProfessor,
+      component: AdminProfessor,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
     },
     {
       path: '/admin/grupo',
-      component: AdminGroup
+      component: AdminGroup,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
     }
   ]
 })

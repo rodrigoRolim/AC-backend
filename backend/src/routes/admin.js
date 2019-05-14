@@ -1,11 +1,11 @@
 import express from 'express'
-import UsersController from '../controllers/admin'
-import User from '../models/users'
+import AdminController from '../controllers/admin'
+import Admin from '../models/admin'
 import jwt from 'jsonwebtoken'
 
 const router = express.Router()
-const usersController = new UsersController(User, jwt)
+const adminController = new AdminController(Admin, jwt)
 
-router.post('login', (req, res) => usersController.post(req, res))
+router.post('/login', (req, res) => adminController.post(req, res))
 
 export default router

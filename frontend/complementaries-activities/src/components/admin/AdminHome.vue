@@ -41,7 +41,7 @@ export default {
 #AdminHome {
   display: flex;
   flex-direction: column;
- 
+  
 }
 .middle {
   display: flex;

@@ -3,7 +3,7 @@ import { http } from './config'
 export default {
   loginAdmin: ({ username, password }) => {
     console.log({username, password})
-    return http.post('/users/admin/login', { username, password })
+    return http.post('/admin/login', { username, password })
   },
   addDegree: ({ name }) => {
     let user = JSON.parse(localStorage.getItem('user'))
@@ -43,6 +43,6 @@ export default {
   updatingProfessorResponsible: (id, professor) => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.put(`/professor/admin${id}`, professor)
+    return http.put(`/professor/admin/${id}`, professor)
   }
 }
