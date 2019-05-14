@@ -10,6 +10,9 @@ class GroupItemsController {
   addItem (req, res) {
     const { params: { id }} = req
     const item = req.body
+    console.log('aqui')
+    console.log(item)
+    console.log(id)
     return this.Group.findByIdAndUpdate(id, { $push: { items: item }})
       .then((updatedGroup) => res.status(201).send(updatedGroup))
       .catch((err) => res.status(400).send(err.message))
