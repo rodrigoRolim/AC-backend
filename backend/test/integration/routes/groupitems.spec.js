@@ -12,7 +12,14 @@ describe('Management groups', () => {
   const defaultGroup = {
     name: 'Default group',
     description: 'group description',
-    item: []
+    items: []
+  }
+  const defaultGroupCreate = {
+    __v: 0,
+    _id: '56cb91bdc3464f14678934ca',
+    name: 'Default group',
+    description: 'group description',
+    items: []
   }
   before(() => {
     return setupApp()
@@ -37,6 +44,18 @@ describe('Management groups', () => {
         .send(defaultItem)
         .end((err, res) => {
           expect(res.status).to.eql(201)
+          done(err)
+        })
+      })
+    })
+  })
+  describe('GET /group/admin', () => {
+    context('when get all groups', () => {
+      it('should return all groups', done => {
+        request
+        .get('/group/admin')
+        .end((err, res) => {
+          expect(res.body).to.eql([defaultGroupCreate])
           done(err)
         })
       })
