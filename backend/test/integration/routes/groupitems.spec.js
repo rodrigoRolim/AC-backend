@@ -53,11 +53,11 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('PUT  group/admin/:id', () => {
+  describe('PUT  group/admin/add/item/:id', () => {
     context('when add a item in group', () => {
       it('should added new item in group and return 201', done => {
         request
-        .put(`/group/admin/${defaultId}`)
+        .put(`/group/admin/add/item/${defaultId}`)
         .send(defaultItem)
         .end((err, res) => {
           expect(res.status).to.eql(201)
