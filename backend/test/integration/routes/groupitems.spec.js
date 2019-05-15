@@ -117,4 +117,17 @@ describe('Management groups', () => {
       })
     })
   })
+  describe('PUT grou/admin/remove/item/:id', () => {
+    context('when remove a item from a group', () => {
+      it('should removing a item in group and return 200', done => {
+        request
+          .put(`/group/admin/remove/item/${defaultId}`)
+          .send(defaultItem)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
 })
