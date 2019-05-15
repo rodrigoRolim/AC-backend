@@ -53,6 +53,19 @@ describe('Management groups', () => {
       })
     })
   })
+  describe('PUT /group/admin/:id', () => {
+    context('when updating a group', () => {
+      it('should return 200 when the group has been update', done => {
+        request
+          .put(`/group/admin/${defaultId}`)
+          .send(defaultGroupWithItem)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
   describe('PUT  group/admin/add/item/:id', () => {
     context('when add a item in group', () => {
       it('should added new item in group and return 201', done => {

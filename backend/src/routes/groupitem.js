@@ -10,4 +10,6 @@ router.put('/admin/add/item/:id', (req, res) => groupItemsController.addItem(req
 router.get('/admin', (req, res) => groupItemsController.getAll(req, res))
 router.delete('/admin/:id', (req, res) => groupItemsController.remove(req, res))
 router.put('/admin/update/item/:id', (req, res) => groupItemsController.updateItem(req, res))
+router.put('/admin/:id', (req, res) => groupItemsController.updateGroup(req, res))
+
 export default router
