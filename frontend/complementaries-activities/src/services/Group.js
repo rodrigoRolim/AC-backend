@@ -8,7 +8,7 @@ export default {
     return http.post('/group/admin', group)
   },
   addItemInGroup: (idGroup, item) => {
-    return http.put(`/group/admin/${idGroup}`, item)
+    return http.put(`/group/admin/add/item/${idGroup}`, item)
   },
   deleteGroup: (idGroup) => {
     return http.delete(`/group/admin/${idGroup}`)
