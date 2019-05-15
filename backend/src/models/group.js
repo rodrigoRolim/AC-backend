@@ -3,12 +3,13 @@ import mongoose from 'mongoose'
 
 
 const schemaItem = new mongoose.Schema({
-  order: Number,
   description: String
 })
 
 const schemaGroup = new mongoose.Schema({
   name: String,
+  scoreMin: Number,
+  scoreMax: Number,
   description: String,
   items: [schemaItem]
 })
