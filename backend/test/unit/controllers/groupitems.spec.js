@@ -146,5 +146,33 @@ describe('controller: groups and items', () => {
       })
     })
   })
+  describe('delete() group', () => {
+    it('should respond with 204 when the group has been deleted', () => {
+      const fakeId = 'a-fake-id';
+      const request = {
+        params: {
+          id: fakeId
+        }
+      };
+      const response = {
+        sendStatus: sinon.spy()
+      };
+
+      class fakeGroup {
+        static remove() {}
+      }
+
+      const removeStub = sinon.stub(fakeGroup, 'remove');
+
+      removeStub.withArgs({ _id: fakeId }).resolves([1]);
+
+      const groupItemsController = new GroupItemsController(fakeGroup);
+
+      return groupItemsController.remove(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 204);
+        })
+    })
+  })
 })
 
