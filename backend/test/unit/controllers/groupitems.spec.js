@@ -173,6 +173,36 @@ describe('controller: groups and items', () => {
           sinon.assert.calledWith(response.sendStatus, 204);
         })
     })
+    context('when an error occurs', () => {
+      it('should return 400', () => {
+        const fakeId = 'a-fake-id';
+        const request = {
+          params: {
+            id: fakeId
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        };
+
+        class fakeGroup {
+          static remove() {}
+        }
+
+        const removeStub = sinon.stub(fakeGroup, 'remove');
+
+        removeStub.withArgs({ _id: fakeId }).rejects({message: 'Error'});
+        response.status.withArgs(400).returns(response)
+        
+        const groupItemsController = new GroupItemsController(fakeGroup);
+
+        return groupItemsController.remove(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error');
+          })
+      })
+    })
   })
 })
 
