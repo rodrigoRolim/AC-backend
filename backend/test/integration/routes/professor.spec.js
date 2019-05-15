@@ -84,4 +84,20 @@ describe('Routes: professor', () => {
       });
     });
   })
+  describe('PUT /professor/admin/unset/graduation/:id', () => {
+    context('when unset graduation reference into professor', () => {
+      it('should unset graduation and return 200 as status code', done => {
+        const idGraduation = defaultProfessor.graduation
+        let updatedProfessor = defaultProfessor
+        updatedProfessor.graduation = undefined
+        
+        request
+          .put(`/professor/admin/unset/graduation/${idGraduation}`)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
 })

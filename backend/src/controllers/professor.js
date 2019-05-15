@@ -23,6 +23,7 @@ class ProfessorController {
       .catch(err => res.status(422).send(err.message));
   }
   unsetGraduation (req, res) {
+    console.log(req.params.id)
     return this.Professor.findOneAndUpdate({graduation: req.params.id}, { $unset: { graduation: req.params.id }})
       .then((professor) => res.sendStatus(200))
       .catch((err) => res.status(400).send(err.message))

@@ -9,12 +9,17 @@ describe('Management groups', () => {
     order: 1,
     description: 'item description'
   }
-  const defaultGroup = {
+  const defaultGroupWithItem = {
     name: 'Default group',
     description: 'group description',
     items: []
   }
-  const defaultGroupCreate = {
+  const defaultGroupWithItemWithItem = {
+    name: 'Default group',
+    description: 'group description',
+    items: [defaultItem]
+  }
+  const defaultGroupWithItemCreate = {
     __v: 0,
     _id: '56cb91bdc3464f14678934ca',
     name: 'Default group',
@@ -28,7 +33,7 @@ describe('Management groups', () => {
       })
   })
   beforeEach(() => {
-    const group = new Group(defaultGroup)
+    const group = new Group(defaultGroupWithItem)
     group._id = '56cb91bdc3464f14678934ca'
     return Group.deleteMany({})
       .then(() => group.save())
@@ -40,7 +45,7 @@ describe('Management groups', () => {
       it('should added new item and return 201 and new group', done => {
         request
         .post('/group/admin')
-        .send(defaultGroup)
+        .send(defaultGroupWithItem)
         .end((err, res) => {
           expect(res.status).to.eql(201)
           done(err)
@@ -67,7 +72,7 @@ describe('Management groups', () => {
         request
         .get('/group/admin')
         .end((err, res) => {
-          expect(res.body).to.eql([defaultGroupCreate])
+          expect(res.body).to.eql([defaultGroupWithItemCreate])
           done(err)
         })
       })
@@ -83,6 +88,19 @@ describe('Management groups', () => {
             expect(res.status).to.eql(204)
             done(err)
           })
+      })
+    })
+  })
+  describe('PUT  group/admin/update/item/:id', () => {
+    context('when uptade a item from a group', () => {
+      it('should upadating item in group and return 200', done => {
+        request
+        .put(`/group/admin/update/item/${defaultId}`)
+        .send(defaultItem)
+        .end((err, res) => {
+          expect(res.status).to.eql(200)
+          done(err)
+        })
       })
     })
   })

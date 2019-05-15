@@ -12,5 +12,8 @@ export default {
   },
   deleteGroup: (idGroup) => {
     return http.delete(`/group/admin/${idGroup}`)
+  },
+  updatingItem: (idGroup, item) => {
+    return http.put(`/group/admin/update/item/${idGroup}`, item)
   }
 }

@@ -24,6 +24,13 @@ class GroupItemsController {
       .then(() => res.sendStatus(204))
       .catch((err) => res.status(400).send(err.message))
   }
+  updateItem (req, res) {
+    console.log(req)
+    return this.Group.findOneAndUpdate({ _id: req.params.id, "items._id": req.body._id },
+      { "items.$.description": req.body.description })
+      .then(() => res.sendStatus(200))
+      .catch((err) => res.status(422).send(err.message))
+  }
 }
 
 export default GroupItemsController

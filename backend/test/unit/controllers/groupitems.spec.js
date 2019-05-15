@@ -204,5 +204,76 @@ describe('controller: groups and items', () => {
       })
     })
   })
+  describe('update() item from the group', () => {
+    it('should respond with 200 when the item by group has been updated', () => {
+      const fakeIdItem = 'a-fake-id-item';
+      const fakeIdGroup = 'a-fake-id-group'
+      const updatedItem = {
+        _id: fakeIdItem,
+        description: 'Updated description'
+      };
+      const request = {
+        params: {
+          id: fakeIdGroup
+        },
+        body: updatedItem
+      };
+      const response = {
+        sendStatus: sinon.spy()
+      };
+
+      class fakeProduct {
+        static findOneAndUpdate() {}
+      }
+
+      const findOneAndUpdateStub = sinon.stub(fakeProduct, 'findOneAndUpdate');
+      findOneAndUpdateStub.withArgs({ _id: fakeIdGroup, "items._id": fakeIdItem },
+       { "items.$.description" : updatedItem.description }).resolves(updatedItem);
+
+      const groupItemsController = new GroupItemsController(fakeProduct);
+
+      return groupItemsController.updateItem(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200);
+        });
+    });
+
+    context('when an error occurs', () => {
+      it('should return 422', () => {
+        const fakeIdItem = 'a-fake-id-item';
+        const fakeIdGroup = 'a-fake-id-group'
+        const updatedItem = {
+          _id: fakeIdItem,
+          description: 'Updated description'
+        };
+        const request = {
+          params: {
+            id: fakeIdGroup
+          },
+          body: updatedItem
+        };
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        };
+  
+        class fakeProduct {
+          static findOneAndUpdate() {}
+        }
+  
+        const findOneAndUpdateStub = sinon.stub(fakeProduct, 'findOneAndUpdate');
+        findOneAndUpdateStub.withArgs({ _id: fakeIdGroup, "items._id": fakeIdItem },
+         { "items.$.description" : updatedItem.description }).rejects({ message: 'Error' });
+        response.status.withArgs(422).returns(response)
+
+        const groupItemsController = new GroupItemsController(fakeProduct);
+  
+        return groupItemsController.updateItem(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error');
+          });
+      })
+    })
+  })
 })
 
