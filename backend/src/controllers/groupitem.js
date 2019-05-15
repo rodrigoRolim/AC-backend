@@ -34,6 +34,7 @@ class GroupItemsController {
   updateGroup (req, res) {
     return this.Group.findOneAndUpdate({ _id: req.params.id }, req.body)
       .then(() => res.sendStatus(200))
+      .catch((err) => res.status(400).send(err.message))
   }
 }
 

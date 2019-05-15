@@ -308,6 +308,42 @@ describe('controller: groups and items', () => {
           sinon.assert.calledWith(response.sendStatus, 200)
         })
     })
+    context('when an error occurs', () => {
+      it('should return 400', () => {
+        const fakeId = 'a-fake-id';
+        const updateGroup = {
+          _id: fakeId,
+          name: 'Updated group',
+          description: 'Updated description',
+          item: []
+        };
+        const request = {
+          params: {
+            id: fakeId
+          },
+          body: updateGroup
+        };
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        };
+
+        class fakeGroup {
+          static findOneAndUpdate() {}
+        }
+
+        const findOneAndUpdateStub = sinon.stub(fakeGroup, 'findOneAndUpdate')
+        findOneAndUpdateStub.withArgs({ _id: fakeId }, updateGroup).rejects({ message: 'Error' })
+        response.status.withArgs(400).returns(response)
+        
+        const groupItemsController = new GroupItemsController(fakeGroup)
+
+        return groupItemsController.updateGroup(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
   })
 })
 
