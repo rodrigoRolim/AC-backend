@@ -222,15 +222,15 @@ describe('controller: groups and items', () => {
         sendStatus: sinon.spy()
       };
 
-      class fakeProduct {
+      class fakeGroup {
         static findOneAndUpdate() {}
       }
 
-      const findOneAndUpdateStub = sinon.stub(fakeProduct, 'findOneAndUpdate');
+      const findOneAndUpdateStub = sinon.stub(fakeGroup, 'findOneAndUpdate');
       findOneAndUpdateStub.withArgs({ _id: fakeIdGroup, "items._id": fakeIdItem },
        { "items.$.description" : updatedItem.description }).resolves(updatedItem);
 
-      const groupItemsController = new GroupItemsController(fakeProduct);
+      const groupItemsController = new GroupItemsController(fakeGroup);
 
       return groupItemsController.updateItem(request, response)
         .then(() => {
@@ -257,22 +257,56 @@ describe('controller: groups and items', () => {
           status: sinon.stub()
         };
   
-        class fakeProduct {
+        class fakeGroup {
           static findOneAndUpdate() {}
         }
   
-        const findOneAndUpdateStub = sinon.stub(fakeProduct, 'findOneAndUpdate');
+        const findOneAndUpdateStub = sinon.stub(fakeGroup, 'findOneAndUpdate');
         findOneAndUpdateStub.withArgs({ _id: fakeIdGroup, "items._id": fakeIdItem },
          { "items.$.description" : updatedItem.description }).rejects({ message: 'Error' });
         response.status.withArgs(422).returns(response)
 
-        const groupItemsController = new GroupItemsController(fakeProduct);
+        const groupItemsController = new GroupItemsController(fakeGroup);
   
         return groupItemsController.updateItem(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error');
           });
       })
+    })
+  })
+  describe('update() group', () => {
+    it('should respond with 200 when the group has been updated', () => {
+      const fakeId = 'a-fake-id';
+      const updateGroup = {
+        _id: fakeId,
+        name: 'Updated group',
+        description: 'Updated description',
+        item: []
+      };
+      const request = {
+        params: {
+          id: fakeId
+        },
+        body: updateGroup
+      };
+      const response = {
+        sendStatus: sinon.spy()
+      };
+
+      class fakeGroup {
+        static findOneAndUpdate() {}
+      }
+
+      const findOneAndUpdateStub = sinon.stub(fakeGroup, 'findOneAndUpdate')
+      findOneAndUpdateStub.withArgs({ _id: fakeId }, updateGroup).resolves(updateGroup)
+
+      const groupItemsController = new GroupItemsController(fakeGroup)
+
+      return groupItemsController.updateGroup(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200)
+        })
     })
   })
 })
