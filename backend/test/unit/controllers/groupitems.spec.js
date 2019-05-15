@@ -345,5 +345,76 @@ describe('controller: groups and items', () => {
       })
     })
   })
+  describe('removeItem() item of group', () => {
+    it('should respond with 204 when the item has been deleted', () => {
+      const fakeIdItem = 'a-fake-id-item'
+      const fakeIdGroup = 'a-fake-id-group'
+      const updatedItem = {
+        _id: fakeIdItem,
+        description: 'Updated description'
+      };
+      const request = {
+        params: {
+          id: fakeIdGroup
+        },
+        body: updatedItem
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+
+      class fakeGroup {
+        static update() {}
+      }
+
+      const removeStub = sinon.stub(fakeGroup, 'update');
+
+      removeStub.withArgs({ _id: fakeIdGroup }, { $pull: { items: { _id: fakeIdItem}}}).resolves([1]);
+
+      const groupItemsController = new GroupItemsController(fakeGroup);
+
+      return groupItemsController.removeItem(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 204);
+        });
+    });
+
+    context('when an error occurs', () => {
+      it('should return 400', () => {
+        const fakeIdItem = 'a-fake-id-item'
+        const fakeIdGroup = 'a-fake-id-group'
+        const updatedItem = {
+          _id: fakeIdItem,
+          description: 'Updated description'
+        }
+        const request = {
+          params: {
+            id: fakeIdGroup
+          },
+          body: updatedItem
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+
+        class fakeGroup {
+          static update() {}
+        }
+
+        const removeStub = sinon.stub(fakeGroup, 'update');
+
+        removeStub.withArgs({ _id: fakeIdGroup }, { $pull: { items: { _id: fakeIdItem}}}).rejects({message: 'Error'});
+        response.status.withArgs(400).returns(response)
+
+        const groupItemsController = new GroupItemsController(fakeGroup)
+
+        return groupItemsController.removeItem(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })
 

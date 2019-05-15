@@ -36,6 +36,11 @@ class GroupItemsController {
       .then(() => res.sendStatus(200))
       .catch((err) => res.status(400).send(err.message))
   }
+  removeItem (req, res) {
+    return this.Group.update({ _id: req.params.id }, { $pull: { items: { _id: req.body._id} } })
+      .then(() => res.sendStatus(204))
+      .catch((err) => res.status(400).send(err.message))
+  }
 }
 
 export default GroupItemsController
