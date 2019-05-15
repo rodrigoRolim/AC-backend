@@ -26,10 +26,16 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex md12>
-                    <v-text-field v-model="editedItem.name" label="Nome do professor"></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Nome do grupo"></v-text-field>
+                  </v-flex>
+                   <v-flex md12>
+                    <v-text-field v-model="editedItem.description" label="Descrição do grupo"></v-text-field>
                   </v-flex>
                   <v-flex md12>
-                    <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
+                    <v-text-field type="number"  v-model="editedItem.scoreMin" label="Pontuação mínima"></v-text-field>
+                  </v-flex>
+                  <v-flex md12>
+                    <v-text-field type="number" v-model="editedItem.scoreMax" label="Pontuação máxima"></v-text-field>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -66,8 +72,9 @@
           <td>{{ props.item.name }}</td>
           <td class="text-xs-left">{{ props.item.scoreMin }}</td>
           <td class="text-xs-left">{{ props.item.scoreMax }}</td>
-          <td class="text-xs-left">{{ props.item.nItems }}</td>
-          <td class="justify-center layout px-0">
+          <td class="text-xs-left">{{ props.item.description }}</td>
+          <td class="justify-center layout px-3">
+            <add-item @refresh="reloadTable" :group="props.item"></add-item>
             <v-icon
               small
               class="mr-2"
@@ -86,8 +93,8 @@
         </tr>
       </template>
       <template v-slot:expand="props">
-        <v-card flat v-for="arr in props.item.array" :key="arr">
-          <v-card-text>{{arr}}</v-card-text>
+        <v-card flat v-for="item in props.item.items" :key="item._id">
+          <v-card-text>{{item.description}}</v-card-text>
         </v-card>
       </template>
        <template v-slot:no-results  >
@@ -102,31 +109,36 @@
         </template>
     </v-data-table>
     </v-card>
-    
+
     </v-layout>
   </v-app>
 </template>
 
 <script>
 import AcNavbar from '../AcNavbar'
+import AddItem from '../AddItem.vue'
+import GroupService from '@/services/Group.js'
   export default {
-    components: { AcNavbar },
+    components: { AcNavbar, AddItem },
     data () {
       return {
         expand: false,
         dialog: false,
         editedIndex: -1,
+        search: '',
         editedItem: {
           name: '',
-          email: '',
-          graduation: '',
-          _id: ''
+          description: '',
+          scoreMin: 0,
+          scoreMax: 0,
+          items: []
         },
         defaultItem: {
           name: '',
-          email: '',
-          graduation: '',
-          _id: ''
+          description: '',
+          scoreMin: 0,
+          scoreMax: 0,
+          items: []
         },
         headers: [
           {
@@ -137,33 +149,14 @@ import AcNavbar from '../AcNavbar'
           },
           { text: 'pontuação mínima', value: 'minimo', align: 'left' },
           { text: 'pontuação máxima', value: 'maximo', align: 'left' },
-          { text: 'itens (nº)', value: 'items', align: 'left' },
+          { text: 'description', value: 'description', align: 'left' },
           {text: 'Actions', value: 'name', sortable: false, align: 'center' }
         ],
-        groups: [
-          {
-            name: 'Grupo 1',
-            scoreMin: 20,
-            scoreMax: 30,
-            nItems: 24,
-            array: [1,2,3,4,5]
-          },
-          {
-            name: 'Grupo 2',
-            scoreMin: 20,
-            scoreMax: 40,
-            nItems: 24,
-            array: [1,2,3,4,5]
-          },
-          {
-            name: 'Grupo 3',
-            scoreMin: 20,
-            scoreMax: 30,
-            nItems: 24,
-            array: [1,2,3,4,5]
-          }
-        ]
+        groups: []
       }
+    },
+    created () {
+      this.initializeGroup()
     },
     computed: {
       formTitle () {
@@ -177,6 +170,16 @@ import AcNavbar from '../AcNavbar'
       }
     },
     methods: {
+      reloadTable (value) {
+        this.initializeGroup()
+      },
+      initializeGroup () {
+        GroupService.readAll()
+          .then((res) => {
+            this.groups = res.data
+          })
+      },
+
       logout () {
         localStorage.removeItem('user')
         this.$router.replace('/admin')
@@ -188,8 +191,17 @@ import AcNavbar from '../AcNavbar'
       },
 
       deleteItem (item) {
-        const index = this.groups.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.groups.splice(index, 1)
+        const response = confirm('Are you sure you want to delete this item?')
+        if (response) {
+          GroupService.deleteGroup(item._id)
+          .then((res) => {
+            if (res.status == 204) {
+              const index = this.groups.indexOf(item)
+              this.groups.splice(index, 1)
+            }
+          })
+        }
+     
       },
 
       close () {
@@ -202,8 +214,8 @@ import AcNavbar from '../AcNavbar'
 
       save () {
         if (this.editedIndex > -1) {
-          const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email}
-          AdminService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
+          
+          GroupService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
             .then((res) => {
               console.log(res)
               if (res.data == 'OK') {
@@ -212,7 +224,7 @@ import AcNavbar from '../AcNavbar'
             })
           Object.assign(this.groups[this.editedIndex], this.editedItem)
         } else {
-          AdminService.addProfessor(this.editedItem).
+          GroupService.addGroup(this.editedItem).
             then((res) => {
               this.groups.push(res.data)
               alert('cadastrado com sucesso')

@@ -44,5 +44,8 @@ export default {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
     return http.put(`/professor/admin/${id}`, professor)
+  },
+  unsetGraduationOfProfessor: (idGraduation) => {
+    return http.put(`/professor/admin/unset/graduation/${idGraduation}`)
   }
 }

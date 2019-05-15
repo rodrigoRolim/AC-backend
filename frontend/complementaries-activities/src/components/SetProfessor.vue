@@ -48,18 +48,24 @@ export default {
       professors: [],
       selectedName: ''
     }
-  },
+  }, // this.degree.graduation === professor._id || typeof professor.graduation === 'undefined'
   created () {
-    AdminService.readAllProfessors()
+   this.initialize()
+  },
+  methods: {
+    initialize () {
+       AdminService.readAllProfessors()
       .then(professors => {
         this.professors = professors.data
         professors.data.map(item => {
-          this.professorNames.push(item.name)
+          console.log(item)
+          //if (this.degree.professor === item._id || typeof item.graduation === 'undefined') {
+            this.professorNames.push(item.name)
+          //}
         })
         this.initSetProfessor()
       })
-  },
-  methods: {
+    },
     initSetProfessor () {
       this.professors.map(professor => {
         if (professor._id === this.degree.professor){
@@ -73,9 +79,11 @@ export default {
       AdminService.updatingDegree(this.degree._id, this.degree)
         .then((res) => {
           alert('salvo com sucesso')
+          this.updatingProfessor(professor[0], this.degree._id, professor[0]._id)
+          this.dialog = false
+          this.initialize()
         })
-      this.updatingProfessor(professor[0], this.degree._id, professor[0]._id)
-      this.dialog = false
+      
     },
     updatingProfessor (professor, degId, profId) {
       professor.graduation = degId

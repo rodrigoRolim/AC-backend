@@ -9,5 +9,8 @@ export default {
   },
   addItemInGroup: (idGroup, item) => {
     return http.put(`/group/admin/${idGroup}`, item)
+  },
+  deleteGroup: (idGroup) => {
+    return http.delete(`/group/admin/${idGroup}`)
   }
 }

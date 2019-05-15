@@ -161,4 +161,78 @@ describe('Management professor', () => {
       });
     })
   })
+  describe('unset graduation of professor', () => {
+    it('should unset graduation of professor and return 200', () => {
+      const fakeIdGraduation = 'a-fake-id'
+      const fakeId = 'a-fake-id-again'
+      const updatedProfessor = {
+        _id: fakeId,
+        name: 'Updated professor',
+        email: 'uptade@email',
+        graduation: fakeIdGraduation,
+        password: '123456'
+      }
+      const request = {
+        params: {
+          id: fakeIdGraduation
+        },
+        body: {}
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+
+      class fakeProfessor {
+        static findOneAndUpdate() {}
+      }
+      const findOneAndUpdateStub = sinon.stub(fakeProfessor, 'findOneAndUpdate')
+      findOneAndUpdateStub.withArgs({ graduation: fakeIdGraduation },
+         { $unset: { graduation: fakeIdGraduation}}).resolves(updatedProfessor)
+      
+      const professorController = new ProfessorController(fakeProfessor);
+
+      return professorController.unsetGraduation(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200);
+        });
+    })
+    context('when an error occurs', () => {
+      it('should return 400', () => {
+        const fakeIdGraduation = 'a-fake-id'
+      const fakeId = 'a-fake-id-again'
+      const updatedProfessor = {
+        _id: fakeId,
+        name: 'Updated professor',
+        email: 'uptade@email',
+        graduation: fakeIdGraduation,
+        password: '123456'
+      }
+      const request = {
+        params: {
+          id: fakeIdGraduation
+        },
+        body: {}
+      }
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      }
+
+      class fakeProfessor {
+        static findOneAndUpdate() {}
+      }
+      response.status.withArgs(400).returns(response)
+      const findOneAndUpdateStub = sinon.stub(fakeProfessor, 'findOneAndUpdate')
+      findOneAndUpdateStub.withArgs({ graduation: fakeIdGraduation },
+         { $unset: { graduation: fakeIdGraduation}}).rejects({message: 'Error'})
+      
+      const professorController = new ProfessorController(fakeProfessor);
+
+      return professorController.unsetGraduation(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, 'Error');
+        });
+      })
+    })
+  })
 })

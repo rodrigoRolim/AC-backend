@@ -73,4 +73,17 @@ describe('Management groups', () => {
       })
     })
   })
+  describe('DELETE /group/admin/:id', () => {
+    context('when deleting a group', () => {
+      it('should delete a group and return 204 as status code', done => {
+
+        request
+          .delete(`/group/admin/${defaultId}`)
+          .end((err, res) => {
+            expect(res.status).to.eql(204)
+            done(err)
+          })
+      })
+    })
+  })
 })

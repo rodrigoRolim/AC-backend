@@ -173,10 +173,25 @@ export default {
     },
     deleteItem (item) {
       const index = this.degrees.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.degrees.splice(index, 1)
-      Degree.deleteDegree(item).then((res) => {
+      const userResponse = confirm('Are you sure you want to delete this item?')
+      if (userResponse) {
+        Degree.deleteDegree(item).then((res) => {
         alert(res.data.message)
-      })
+        })
+        .then(() => {
+          console.log('e aqui')
+          console.log(item)
+          if (typeof item.professor !== 'undefined') {
+            Degree.unsetGraduationOfProfessor(item._id)
+              .then((res) => {
+                console.log('entrou aqui')
+                console.log(res)
+              })
+          }
+          this.degrees.splice(index, 1)
+        })
+      }
+      
      
     },
     close () {

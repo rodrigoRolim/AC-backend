@@ -107,6 +107,7 @@ import AcNavbar from '../AcNavbar'
     components: { AcNavbar },
     data: () => ({
       dialog: false,
+      search: '',
       headers: [
         {
           text: 'nome (professor responsável)',
@@ -149,7 +150,6 @@ import AcNavbar from '../AcNavbar'
 
     created () {
       this.getGraduations()
-      this.initialize()
     },
 
     methods: {
@@ -162,17 +162,20 @@ import AcNavbar from '../AcNavbar'
           .then(graduations => {
             this.graduations = graduations.data
           })
+          .then(() => {
+            this.initialize()
+          })
       },
       initialize () {
         AdminService.readAllProfessors()
           .then(professors => {
+            console.log(professors)
             professors.data.map((item) => {
-
+  
               let graduationName = this.graduations
                 .filter(graduation => graduation.professor === item._id)
-              console.log(graduationName)
-              let name = (typeof graduationName[0].name === undefined) ? '':  graduationName[0].name
-              
+              let name = (typeof graduationName[0] === 'undefined') ? '':  graduationName[0].name
+
               this.professors.push(Object.assign({}, 
                 {_id: item._id, name: item.name, email: item.email, graduation: name}))
             })
