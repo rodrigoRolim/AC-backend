@@ -30,10 +30,10 @@ export default {
 
     return http.post('/users/admin/secreto', { username, password })
   },
-  addProfessor: ({ name, email, password }) => {
+  addProfessor: ({ admin, name, email, password }) => {
     let user = JSON.parse(localStorage.getItem('user'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.post('/professor/admin', { name, email, password })
+    return http.post('/professor/admin', { name, email, password, admin })
   },
   readAllProfessors: () => {
     let user = JSON.parse(localStorage.getItem('user'))
