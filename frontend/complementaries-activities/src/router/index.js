@@ -4,11 +4,18 @@ import AdminLogin from '@/components/admin/AdminLogin'
 import AdminHome from '@/components/admin/AdminHome'
 import AdminProfessor from '@/components/admin/AdminProfessor'
 import AdminGroup from '@/components/admin/AdminGroup'
+import ProfessorLogin from '@/components/professor/ProfessorLogin'
+import ProfessorHome from '@/components/professor/ProfessorHome'
+import Home from '@/components/Home'
 Vue.use(Router)
 
 let router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/',
+      component: Home
+    },
     {
       path: '/admin',
       name: 'AdminLogin',
@@ -49,12 +56,21 @@ let router = new Router({
         requiresAuth: true,
         is_admin: true
       }
+    },
+    {
+      path: '/professor',
+      component: ProfessorLogin
+    },
+    {
+      path: '/professor/home',
+      component: ProfessorHome
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  let user = JSON.parse(localStorage.getItem('user')) 
+  let user = JSON.parse(localStorage.getItem('user'))
+  console.log(user) 
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (user == null || user.token == null) {
       next({
@@ -63,6 +79,7 @@ router.beforeEach((to, from, next) => {
       })
     } else {
       if (to.matched.some(record => record.meta.is_admin)) {
+        console.log(user.admin)
         if (user.admin) {
           next()
         } else {
