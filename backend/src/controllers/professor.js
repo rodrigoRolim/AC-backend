@@ -5,19 +5,19 @@ class ProfessorController {
     this.compare = compare
   }
   loginProfessor (req, res) {
-    console.log(req.body)
+
     return this.Professor.findOne({ name: req.body.name })
       .then((professor) => {
-        console.log(professor)
+
         this.compare(req.body.password, professor.password)
           .then((resp) => {
-            console.log(resp)
+
             if (resp) {
-              console.log(resp)
+
               const _id = professor._id
               const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
-              console.log(resp)
-              res.send({ token: token, auth: resp })
+
+              res.send({ token: token, auth: resp, admin: professor.admin })
             } else {
               res.status(404).send('No authorization')
             }
@@ -28,7 +28,7 @@ class ProfessorController {
   createProfessor (req, res) {
       
     const professor = new this.Professor(req.body)
-
+    console.log(professor)
     return professor.save()
       .then((professor) => {
         res.status(201).send(professor)
@@ -37,7 +37,9 @@ class ProfessorController {
   }
   readAll (req, res) {
     return this.Professor.find({})
-      .then((professors) => res.send(professors))
+      .then((professors) => {
+        console.log(professors) 
+        res.send(professors)})
       .catch(err => res.status(422).send(err.message))
   }
   updateProfessor (req, res) {
