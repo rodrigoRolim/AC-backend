@@ -50,7 +50,7 @@
         </v-dialog>
       </v-toolbar>
       <v-card>
-        <v-card-title >
+        <v-card-title>
             Professores
           <v-spacer></v-spacer>
           <v-text-field
@@ -216,6 +216,7 @@ import AcNavbar from '../AcNavbar'
         } else {
            AdminService.addProfessor(this.editedItem).
             then((res) => {
+              console.log(res)
               this.professors.push(res.data)
               alert('cadastrado com sucesso')
             })

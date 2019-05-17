@@ -4,7 +4,10 @@ import bcrypt from 'bcrypt'
 
 const hashAsync = Util.promisify(bcrypt.hash)
 const schema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   email: String,
   password: String,
   graduation: { type: mongoose.Schema.Types.ObjectId, ref: 'Graduation' }

@@ -1,13 +1,38 @@
-import mongoose from 'mongoose'
 class ProfessorController {
-  constructor (Professor) {
+  constructor (Professor, jwt, compare) {
     this.Professor = Professor
+    this.jwt = jwt
+    this.compare = compare
+  }
+  loginProfessor (req, res) {
+    console.log(req.body)
+    return this.Professor.findOne({ name: req.body.name })
+      .then((professor) => {
+        console.log(professor)
+        this.compare(req.body.password, professor.password)
+          .then((resp) => {
+            console.log(resp)
+            if (resp) {
+              console.log(resp)
+              const _id = professor._id
+              const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
+              console.log(resp)
+              res.send({ token: token, auth: resp })
+            } else {
+              res.status(404).send('No authorization')
+            }
+          })
+      })
+      .catch((err) => res.status(400).send(err.message))
   }
   createProfessor (req, res) {
+      
     const professor = new this.Professor(req.body)
 
     return professor.save()
-      .then(() => res.status(201).send(professor))
+      .then((professor) => {
+        res.status(201).send(professor)
+      })
       .catch(err => res.status(422).send(err.message))
   }
   readAll (req, res) {

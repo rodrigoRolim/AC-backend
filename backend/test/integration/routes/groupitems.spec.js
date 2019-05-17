@@ -1,8 +1,13 @@
 import Group from '../../../src/models/group'
+import jwt from 'jsonwebtoken'
 
 describe('Management groups', () => {
+
   let request
   const defaultId = '56cb91bdc3464f14678934ca'
+  let token = jwt.sign({ defaultId }, 'mysecret', {
+    expiresIn: 86400
+  })
   const defaultItem = {
     __v: 0,
     _id: '5cdb31b01872e0c67bb54ed9',
@@ -45,6 +50,7 @@ describe('Management groups', () => {
       it('should added new item and return 201 and new group', done => {
         request
         .post('/group/admin')
+        .set('authorization', token)
         .send(defaultGroupWithItem)
         .end((err, res) => {
           expect(res.status).to.eql(201)
@@ -58,6 +64,7 @@ describe('Management groups', () => {
       it('should return 200 when the group has been update', done => {
         request
           .put(`/group/admin/${defaultId}`)
+          .set('authorization', token)
           .send(defaultGroupWithItem)
           .end((err, res) => {
             expect(res.status).to.eql(200)
@@ -71,6 +78,7 @@ describe('Management groups', () => {
       it('should added new item in group and return 201', done => {
         request
         .put(`/group/admin/add/item/${defaultId}`)
+        .set('authorization', token)
         .send(defaultItem)
         .end((err, res) => {
           expect(res.status).to.eql(201)
@@ -84,7 +92,9 @@ describe('Management groups', () => {
       it('should return all groups', done => {
         request
         .get('/group/admin')
+        .set(`authorization`, token)
         .end((err, res) => {
+          console.log(res.body)
           expect(res.body).to.eql([defaultGroupWithItemCreate])
           done(err)
         })
@@ -97,6 +107,7 @@ describe('Management groups', () => {
 
         request
           .delete(`/group/admin/${defaultId}`)
+          .set('authorization', token)
           .end((err, res) => {
             expect(res.status).to.eql(204)
             done(err)
@@ -109,6 +120,7 @@ describe('Management groups', () => {
       it('should upadating item in group and return 200', done => {
         request
         .put(`/group/admin/update/item/${defaultId}`)
+        .set('authorization', token)
         .send(defaultItem)
         .end((err, res) => {
           expect(res.status).to.eql(200)
@@ -119,12 +131,13 @@ describe('Management groups', () => {
   })
   describe('PUT grou/admin/remove/item/:id', () => {
     context('when remove a item from a group', () => {
-      it('should removing a item in group and return 200', done => {
+      it('should removing a item in group and return 204', done => {
         request
           .put(`/group/admin/remove/item/${defaultId}`)
+          .set('authorization', token)
           .send(defaultItem)
           .end((err, res) => {
-            expect(res.status).to.eql(200)
+            expect(res.status).to.eql(204)
             done(err)
           })
       })

@@ -16,6 +16,10 @@ describe('Routes: professor', () => {
     password: '12345',
     graduation: '5cd87c81f9aedcbd1bb3a57d'
   }
+  const loginProfessor = {
+    name: 'roger jhon',
+    password: '12345'
+  }
   const expectedProfessorUser = {
     _id: defaultId,
     name: 'roger jhon',
@@ -63,6 +67,19 @@ describe('Routes: professor', () => {
           expect(res.body).to.eql({ auth: false, message: 'No token provided.'});
           done(err);
         });
+      })
+    })
+  })
+  describe('POST /professor/login', () => {
+    context('when login professor', () => {
+      it('should return a token of authorization', done => {
+        request
+          .post('/professor/login')
+          .send(loginProfessor)
+          .end((err, res) => {
+            expect(res.body.auth).to.be.true
+            done(err)
+          })
       })
     })
   })

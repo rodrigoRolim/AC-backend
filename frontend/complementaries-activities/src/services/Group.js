@@ -18,5 +18,8 @@ export default {
   },
   updatingGroup: (idGroup, group) => {
     return http.put(`/group/admin/${idGroup}`, group)
+  },
+  removeItem: (idGroup, item) => {
+    return http.put(`/group/admin/remove/item/${idGroup}`, item)
   }
 }

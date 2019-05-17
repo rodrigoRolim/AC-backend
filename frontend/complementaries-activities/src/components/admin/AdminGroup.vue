@@ -94,7 +94,10 @@
       </template>
       <template v-slot:expand="props">
         <v-card flat v-for="item in props.item.items" :key="item._id">
-          <v-card-text>{{item.description}}</v-card-text>
+          <v-card-text class="item">{{item.description}}
+            <edit-item  :item="item" :idGroup="props.item._id" class="edit" small></edit-item>
+            <v-icon small dark color="secondary" @click="removeItem(props.item, item)">delete</v-icon>
+          </v-card-text>
         </v-card>
       </template>
        <template v-slot:no-results  >
@@ -116,10 +119,11 @@
 
 <script>
 import AcNavbar from '../AcNavbar'
-import AddItem from '../AddItem.vue'
+import AddItem from '../AddItem'
+import EditItem from '../EditItem'
 import GroupService from '@/services/Group.js'
   export default {
-    components: { AcNavbar, AddItem },
+    components: { AcNavbar, AddItem, EditItem },
     data () {
       return {
         expand: false,
@@ -211,18 +215,32 @@ import GroupService from '@/services/Group.js'
           this.editedIndex = -1
         }, 300)
       },
-
+      removeItem (group, item) {
+        const userResponse = confirm('Are you sure you want to delete this item?')
+        if (userResponse) {
+           GroupService.removeItem(group._id, item)
+            .then((res) => {
+              if (res.status == 204) {
+                const indexGroup = this.groups.indexOf(group)
+                const indexItem = this.groups[indexGroup].items.indexOf(item)
+                this.groups[indexGroup].items.splice(indexItem, 1)
+              }
+            })
+        }
+       
+      },
       save () {
         if (this.editedIndex > -1) {
           
-          GroupService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
+          GroupService.updatingGroup(this.editedItem._id, this.editItem)
             .then((res) => {
               console.log(res)
               if (res.data == 'OK') {
                 alert('atualizado com sucesso')
+                Object.assign(this.groups[this.editedIndex], this.editedItem)
               }
             })
-          Object.assign(this.groups[this.editedIndex], this.editedItem)
+          
         } else {
           GroupService.addGroup(this.editedItem).
             then((res) => {
@@ -244,5 +262,11 @@ import GroupService from '@/services/Group.js'
   width: 75%;
   margin: 0 auto;
   height: 70vh;
+}
+.item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 </style>
