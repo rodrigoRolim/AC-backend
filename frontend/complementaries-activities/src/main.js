@@ -7,6 +7,7 @@ import store from './store/root'
 import Vuetify from 'vuetify'
 import AdminLogin from '@/components/admin/AdminLogin'
 import AdminHome from '@/components/admin/AdminHome'
+import ProfessorLogin from '@/components/professor/ProfessorLogin'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
@@ -17,6 +18,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App, AdminLogin, AdminHome },
+  components: { App, AdminLogin, AdminHome, ProfessorLogin },
   template: '<App/>'
 })
