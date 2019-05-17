@@ -48,7 +48,7 @@ export default {
       professors: [],
       selectedName: ''
     }
-  }, // this.degree.graduation === professor._id || typeof professor.graduation === 'undefined'
+  }, 
   created () {
    this.initialize()
   },
@@ -59,9 +59,9 @@ export default {
         this.professors = professors.data
         professors.data.map(item => {
           console.log(item)
-          //if (this.degree.professor === item._id || typeof item.graduation === 'undefined') {
+          
             this.professorNames.push(item.name)
-          //}
+
         })
         this.initSetProfessor()
       })
