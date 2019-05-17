@@ -1,5 +1,6 @@
 <template>
   <v-toolbar>
+    <v-btn  icon to="/"><v-icon class="icon" x-large>access_time</v-icon> </v-btn> 
     <v-spacer></v-spacer>
     <slot></slot>
   </v-toolbar>
@@ -16,25 +17,5 @@ export default {
 </script>
 
 <style scoped>
-#ac-navbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  text-align: center;
-  height: 9vh;
-}
-.lg {
-  display: flex;
-  flex-direction: row;
-  padding: 9px 8px;
-  margin: 5px 100px 5px;
-  background-color:#f03a685e;
-  border: 1px solid #f03a67;
-  color: white;
-  border-radius: 4px;
-}
-.rot-logout {
-  align-self: center;
-}
+
 </style>

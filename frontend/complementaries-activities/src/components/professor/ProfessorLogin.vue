@@ -1,11 +1,12 @@
 <template>
   <v-app>
     <ac-navbar>
-      <v-toolbar-items>
-        <v-btn flat to="/admin">admin</v-btn>
-        <v-btn flat to="/professor">professor</v-btn>
-        <v-btn flat to="/aluno">aluno</v-btn>
-      </v-toolbar-items>
+     
+        <v-toolbar-items>
+          <v-btn flat to="/admin">admin</v-btn>
+          <v-btn flat to="/professor">professor</v-btn>
+          <v-btn flat to="/aluno">aluno</v-btn>
+        </v-toolbar-items>
     </ac-navbar>
     <div class="container-lg-ad">
       <form
@@ -13,17 +14,17 @@
         @submit.prevent="login"
         method="post"
         >
-        <h3>Administrador</h3>
+        <h3>Professor responsável</h3>
         <div class="form-row-name">
           <div class="input-label">
             <label for="username">nome de usuário</label>
-            <input type="text" v-model="admin.username" id="username"/>
+            <input type="text" v-model="professor.name" id="username"/>
             </div>
         </div>
         <div class="form-row-password">
           <div class="input-label">
             <label for="password">senha</label>
-            <input type="password" v-model="admin.password" id="password"/>
+            <input type="password" v-model="professor.password" id="password"/>
           </div>
         </div>
         <div class="form-row">
@@ -39,26 +40,27 @@
 
 <script>
 import AcNavbar from '../AcNavbar'
+import ProfessorService from '@/services/Professor.js'
 import router from '@/router/index'
-import Admin from '@/services/Admin.js'
 export default {
-  name: 'AdminLogin',
+  name: 'ProfessorLogin',
   components: { AcNavbar },
   data () {
     return {
-      admin: {
-        username: '',
+      professor: {
+        name: '',
         password: ''
       }
     }
   },
   methods: {
     login () {
-      Admin.loginAdmin(this.admin).then(response => {
+      ProfessorService.login(this.professor).then(response => {
+        console.log(response)
         if (response.data.auth) {
           localStorage.removeItem('user')
           localStorage.setItem('user', JSON.stringify(response.data))
-          router.replace('/admin/home')
+          router.replace('/professor/home')
         }
       })
     }
@@ -139,5 +141,8 @@ h3 {
   align-self: center;
   margin-top: 0;
   margin-bottom: 30px;
+}
+.icon {
+  align-self: center;
 }
 </style>

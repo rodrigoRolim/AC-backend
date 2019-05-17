@@ -31,12 +31,20 @@
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
-                  <v-flex md12>
+                  <v-flex md12 sm12>
                     <v-text-field v-model="editedItem.name" label="Nome do professor"></v-text-field>
                   </v-flex>
-                  <v-flex md12>
+                  <v-flex md12 sm12>
                     <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
                   </v-flex>
+                   <v-flex md12 sm12>
+                    <v-text-field type="password" v-model="editedItem.password" label="Senha"></v-text-field>
+                  </v-flex>
+                  <v-checkbox
+                  md12
+                  v-model="editedItem.admin"
+                  label="Admin"
+                  ></v-checkbox>
                 </v-layout>
               </v-container>
             </v-card-text>
@@ -70,6 +78,9 @@
           <td class="name">{{ props.item.name }}</td>
           <td class="text-md-left">{{ props.item.email }}</td>
           <td class="text-md-left">{{ props.item.graduation }}</td>
+          <td class="text-md-left">
+            <v-icon color="success" small class="mr-2">{{ props.item.admin ? 'lens': ''}}</v-icon>
+          </td>
           <td class="justify-center layout px-0">
             <v-icon
               small
@@ -117,6 +128,7 @@ import AcNavbar from '../AcNavbar'
         },
         { text: 'email', value: 'email', sortable: false, align: 'left' },
         { text: 'curso (responsável)', value: 'curso', sortable: false, align: 'left' },
+        { text: 'admin', value: 'admin', sortable: false, align: 'left'},
         { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
       professors: [],
@@ -126,13 +138,17 @@ import AcNavbar from '../AcNavbar'
         name: '',
         email: '',
         graduation: '',
-        _id: ''
+        _id: '',
+        password: '',
+        admin: false
       },
       defaultItem: {
         name: '',
         email: '',
         graduation: '',
-        _id: ''
+        _id: '',
+        password: '',
+        admin: false
       }
     }),
 
@@ -171,15 +187,14 @@ import AcNavbar from '../AcNavbar'
           .then(professors => {
             console.log(professors)
             professors.data.map((item) => {
-  
+              console.log(item)
               let graduationName = this.graduations
                 .filter(graduation => graduation.professor === item._id)
               let name = (typeof graduationName[0] === 'undefined') ? '':  graduationName[0].name
-
+              console.log(item.admin)
               this.professors.push(Object.assign({}, 
-                {_id: item._id, name: item.name, email: item.email, graduation: name}))
+                {_id: item._id, name: item.name, email: item.email, graduation: name, admin: item.admin}))
             })
-
         })
       },
 
@@ -204,7 +219,8 @@ import AcNavbar from '../AcNavbar'
 
       save () {
         if (this.editedIndex > -1) {
-          const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email}
+          const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email, 
+                                    admin: this.editedItem.admin}
           AdminService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
             .then((res) => {
               console.log(res)
@@ -214,11 +230,14 @@ import AcNavbar from '../AcNavbar'
             })
           Object.assign(this.professors[this.editedIndex], this.editedItem)
         } else {
+          console.log(this.editedItem)
            AdminService.addProfessor(this.editedItem).
             then((res) => {
-              console.log(res)
-              this.professors.push(res.data)
               alert('cadastrado com sucesso')
+              this.professors.push(res.data)
+            })
+            .catch((err) => {
+              alert('nomes duplicados')
             })
         }
         this.close()
