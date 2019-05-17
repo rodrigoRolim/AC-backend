@@ -10,14 +10,19 @@ const schema = new mongoose.Schema({
   },
   email: String,
   password: String,
-  graduation: { type: mongoose.Schema.Types.ObjectId, ref: 'Graduation' }
+  graduation: { type: mongoose.Schema.Types.ObjectId, ref: 'Graduation' },
+  admin: {
+    type: Boolean,
+    required: true
+  }
 })
 schema.set('toJSON', {
   transform: (doc, ret, options) => ({
     _id: ret._id,
     name: ret.name,
     email: ret.email,
-    graduation: ret.graduation
+    graduation: ret.graduation,
+    admin: ret.admin
   })
 })
 schema.pre('save', function (next) {
