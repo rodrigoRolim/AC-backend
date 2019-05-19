@@ -1,7 +1,11 @@
 import Graduation from "../../../src/models/graduation";
+import jwt from 'jsonwebtoken'
 
 describe('Routes: Degrees', () => {
   let request
+  let token = jwt.sign({ defaultId }, 'mysecret', {
+    expiresIn: 86400
+  })
   const defaultDegree = {
     body: {
       _id: '5cd5b8b352e7a721c141a2e9',
@@ -34,6 +38,7 @@ describe('Routes: Degrees', () => {
     it('should return added last degree', done => {
       request
       .post('/degrees/admin')
+      .set('authorization', token)
       .send(defaultDegree)
       .end((err, res) => {
         console.log(res.body)
@@ -46,6 +51,7 @@ describe('Routes: Degrees', () => {
     it('should return list of degrees', done => {
       request
       .get('/degrees/admin')
+      .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
         done(err)
@@ -56,6 +62,7 @@ describe('Routes: Degrees', () => {
     it('should return message of removed with success', done => {
       request
       .del(`/degrees/admin/${listDegree._id}`)
+      .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
         done(err)
@@ -66,6 +73,7 @@ describe('Routes: Degrees', () => {
     it('should return degree updated recently', done => {
       request
       .put(`/degrees/admin/${listDegree._id}`)
+      .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql({ auth: false, message: 'No token provided.' })
         done(err)
