@@ -1,8 +1,11 @@
 import Professor from "../../../src/models/professor";
+import jwt from 'jsonwebtoken'
 
 describe('Routes: professor', () => {
   let request
-
+  let token = jwt.sign({ defaultId }, 'mysecret', {
+    expiresIn: 86400
+  })
   before(() => {
     return setupApp()
       .then(app => {
@@ -50,6 +53,7 @@ describe('Routes: professor', () => {
 
         request
           .post('/professor/admin')
+          .set('authorization', token)
           .send(newProfessor)
           .end((err, res) => {
             expect(res.statusCode).to.eql(401)
@@ -62,6 +66,7 @@ describe('Routes: professor', () => {
       it('should return an list of professors with', done => {
         request
         .get('/professor/admin')
+        .set('authorization', token)
         .end((err, res) => {
           console.log(res.body)
           expect(res.body).to.eql({ auth: false, message: 'No token provided.'});
@@ -93,6 +98,7 @@ describe('Routes: professor', () => {
 
         request
           .put(`/professor/admin/${defaultId}`)
+          .set('authorization', token)
           .send(updatedProfessor)
           .end((err, res) => {
             expect(res.status).to.eql(401);
@@ -110,6 +116,7 @@ describe('Routes: professor', () => {
         
         request
           .put(`/professor/admin/unset/graduation/${idGraduation}`)
+          .set('authorization', token)
           .end((err, res) => {
             expect(res.status).to.eql(200)
             done(err)
