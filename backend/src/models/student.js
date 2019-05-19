@@ -52,7 +52,8 @@ schema.set('toJSON', {
     graduation: ret.graduation,
     group_one: ret.group_one,
     group_two: ret.group_two,
-    group_three: ret.group_three
+    group_three: ret.group_three,
+    total: ret.total
   })
 })
 schema.pre('save', function (next) {

@@ -9,7 +9,9 @@ class StudentController {
 
     return student.save()
       .then(() => res.status(201).send(student))
-      .catch((err) => res.status(400).send(err.message))
+      .catch((err) => {
+        console.log(err.message)
+        res.status(400).send(err.message)})
   }
 }
 
