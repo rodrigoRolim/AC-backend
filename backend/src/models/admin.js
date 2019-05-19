@@ -9,7 +9,7 @@ schema.set('toJSON', {
   transform: (doc, ret, options) => ({
     _id: ret._id,
     username: ret.username,
-    admin: ret.admin
+    admin: ret.admin,
   })
 })
 const User = mongoose.model('User', schema)

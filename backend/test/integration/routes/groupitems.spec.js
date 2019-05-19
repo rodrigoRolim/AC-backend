@@ -19,11 +19,6 @@ describe('Management groups', () => {
     description: 'group description',
     items: []
   }
-  const defaultGroupWithItemWithItem = {
-    name: 'Default group',
-    description: 'group description',
-    items: [defaultItem]
-  }
   const defaultGroupWithItemCreate = {
     __v: 0,
     _id: '56cb91bdc3464f14678934ca',
@@ -94,7 +89,6 @@ describe('Management groups', () => {
         .get('/group/admin')
         .set(`authorization`, token)
         .end((err, res) => {
-          console.log(res.body)
           expect(res.body).to.eql([defaultGroupWithItemCreate])
           done(err)
         })

@@ -4,9 +4,8 @@ class CourseController {
   }
   createDegree (req, res) {
     const course = req.body
-    console.log(course)
     return this.Degree.create(course)
-      .then((course) => res.send(course))
+      .then((course) => res.status(201).send(course))
       .catch(err => res.status(400).send(err.message))
   }
   readAll (req, res) {
@@ -23,7 +22,7 @@ class CourseController {
   updateDegree (req, res) {
     const { params: { id }} = req
     return this.Degree.update({ _id: id }, req.body)
-      .then((degree) => res.send(degree))
+      .then((resp) => res.status(201).send(resp))
       .catch((err) => res.status(422).send(err.message))
   }
 }

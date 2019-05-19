@@ -26,19 +26,22 @@ class ProfessorController {
       .catch((err) => res.status(400).send(err.message))
   }
   createProfessor (req, res) {
-      
+    console.log(req.body)
     const professor = new this.Professor(req.body)
     console.log(professor)
     return professor.save()
-      .then((professor) => {
+      .then(() => {
+        console.log("asd")
         res.status(201).send(professor)
       })
-      .catch(err => res.status(422).send(err.message))
+      .catch(err => {
+        console.log(err.message)
+        res.status(422).send(err.message)
+      })
   }
   readAll (req, res) {
     return this.Professor.find({})
       .then((professors) => {
-        console.log(professors) 
         res.send(professors)})
       .catch(err => res.status(422).send(err.message))
   }
@@ -50,7 +53,6 @@ class ProfessorController {
       .catch(err => res.status(422).send(err.message));
   }
   unsetGraduation (req, res) {
-    console.log(req.params.id)
     return this.Professor.findOneAndUpdate({graduation: req.params.id}, { $unset: { graduation: req.params.id }})
       .then((professor) => res.sendStatus(200))
       .catch((err) => res.status(400).send(err.message))
