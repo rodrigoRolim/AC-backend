@@ -7,6 +7,9 @@ import AdminGroup from '@/components/admin/AdminGroup'
 import ProfessorLogin from '@/components/professor/ProfessorLogin'
 import ProfessorHome from '@/components/professor/ProfessorHome'
 import Home from '@/components/Home'
+import StudentLogin from '@/components/student/StudentLogin'
+import AddStudent from '@/components/student/AddStudent'
+
 Vue.use(Router)
 
 let router = new Router({
@@ -59,11 +62,28 @@ let router = new Router({
     },
     {
       path: '/professor',
-      component: ProfessorLogin
+      component: ProfessorLogin,
+      meta: {
+        quest: true
+      }
     },
     {
       path: '/professor/home',
-      component: ProfessorHome
+      component: ProfessorHome,
+      meta: {
+        quest: true
+      }
+    },
+    {
+      path: '/aluno',
+      component: StudentLogin,
+      meta: {
+        quest: true
+      }
+    },
+    {
+      path: '/aluno/registrar',
+      component: AddStudent
     }
   ]
 })
