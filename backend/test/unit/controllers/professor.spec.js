@@ -3,7 +3,7 @@ import Professor from  '../../../src/models/professor'
 import ProfessorController from '../../../src/controllers/professor'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import Util from 'util'
+
 
 describe('Management professor', () => {
   const defaultProfessor = {
@@ -11,7 +11,8 @@ describe('Management professor', () => {
     name: 'eduardo siqueira',
     email: 'eduardo@email.com',
     password: '12345',
-    graduation: '5cd85d1b942d44d0ae60f2fb'
+    graduation: '5cd85d1b942d44d0ae60f2fb',
+    admin: true
   }
   const defaultRequest = {
     params: {}
@@ -265,7 +266,7 @@ describe('Management professor', () => {
       const professorController = new ProfessorController(Professor, jwt, bcrypt.compare)
       return professorController.loginProfessor(request, response) 
         .then(() => {
-          sinon.assert.calledWith(response.send, { token: 'hashToken', auth: true })
+          sinon.assert.calledWith(response.send, { admin: true, token: 'hashToken', auth: true })
         })
     })
     context('when an error occurs', () => {
