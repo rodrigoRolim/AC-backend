@@ -243,7 +243,7 @@ describe('Management professor', () => {
   describe('login() professor', () => {
     it('should call send with a token for professor user', () => {
       const expectedResponse = {
-        access: { admin: true, token: 'hashToken', auth: true },
+        access: { token: 'hashToken', auth: true, tag: 1 },
         user: defaultProfessor 
       }
       const request = {

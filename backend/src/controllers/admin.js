@@ -16,7 +16,7 @@ class AdminController {
           let token = this.jwt.sign({ _id }, process.env.SECRET, {
             expiresIn: 86400
           })
-          res.status(201).send({ access: { token: token, auth: true, admin: true }, user: user })
+          res.status(201).send({ access: { token: token, auth: true, tag: 0 }, user: user })
         } else {
           res.status(201).send({ auth: false })
         }

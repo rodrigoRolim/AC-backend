@@ -8,13 +8,19 @@
       </v-toolbar-items>
     </ac-navbar>
     <div class="container">
+    
       <v-layout justify-center class="container">
       <v-flex xs12 sm10 md8 lg6>
-
+        <v-alert
+        :value="validatedUser"
+        type="error"
+        >
+        Usuário inválido.
+        </v-alert>
         <v-card ref="form"> 
           <v-toolbar
             card
-            color="accent"
+            color="secondary"
             dark
             >
             <v-toolbar-title>Login de Estudante</v-toolbar-title>
@@ -32,7 +38,7 @@
             ></v-text-field>    
             <v-text-field
               :append-icon="show ? 'visibility' : 'visibility_off'"
-              :rules="[rules.required, rules.min]"
+              :rules="[rules.required]"
               :type="show ? 'text' : 'password'"
               name="input-10-2"
               label="Senha"
@@ -40,6 +46,7 @@
               v-model="student.password"
               class="input-group--focused"
               @click:append="show = !show"
+              required
             ></v-text-field>
           </v-card-text>
           <v-divider class="mt-5"></v-divider>
@@ -47,7 +54,7 @@
             <v-btn color="success" to="/aluno/registrar">Registrar</v-btn>
             <v-spacer></v-spacer>
             <v-btn color="secondary" dark depressed @click="reset">Resetar</v-btn>
-            <v-btn color="primary" dark depressed @click="loginStudent">Submit</v-btn>
+            <v-btn color="primary" depressed @click="loginStudent" :disabled="validated">Submit</v-btn>
           </v-card-actions>
       </v-card>
     </v-flex>
@@ -67,36 +74,46 @@ export default {
   data () {
     return {
       show: false,
+      validatedUser: false,
       errorMessages: '',
       student: {
-        ra: null,
+        ra: '',
         password: ''
       },
       rules: {
         required: value => !!value || 'Required',
-        min: v => v.length >= 8 || 'Min 8 characters'
       },
     }
   },
   computed: {
     form () {
       return this.student
+    },
+    validated () {
+      return this.student.ra === '' || this.student.password == ''
     }
   },
   methods: {
     loginStudent () {
      
       Student.login(this.student).then(response => {
-        console.log(response)
+        this.removeSession()
         this.setUser(response.data.user)
-        this.setToken(response.data.acess)
+        this.setToken(response.data.access)
         if (response.status == 201) {
           this.$router.replace('/aluno/home')
         }
       })
       .catch((err) => {
-        alert(`Error: ${err.message}`)
+        this.validatedUser = true
+        setTimeout(() => {
+          this.validatedUser = false
+        }, 10000)
       })
+    },
+    removeSession () {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
     },
     setUser(user) {
       localStorage.setItem('user', JSON.stringify(user))

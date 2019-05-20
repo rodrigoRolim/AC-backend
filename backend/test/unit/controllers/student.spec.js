@@ -66,7 +66,7 @@ describe('Management student', () => {
   describe('login student', () => {
     it('should return token of authorization', () => {
       const expectedResponse = {
-        access: { token: 'hashToken', auth: true, admin: false },
+        access: { token: 'hashToken', auth: true, tag: 2 },
         user: defaultStudent 
       }
       const request = {

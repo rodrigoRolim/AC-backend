@@ -17,7 +17,7 @@ class ProfessorController {
               const _id = professor._id
               const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
 
-              res.status(201).send({ access: { token: token, auth: resp, admin: professor.admin }, user: professor })
+              res.status(201).send({ access: { token: token, auth: resp, tag: 1 }, user: professor })
             } else {
               res.status(404).send('No authorization')
             }
