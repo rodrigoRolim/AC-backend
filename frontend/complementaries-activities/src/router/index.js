@@ -9,7 +9,9 @@ import ProfessorHome from '@/components/professor/ProfessorHome'
 import Home from '@/components/Home'
 import StudentLogin from '@/components/student/StudentLogin'
 import AddStudent from '@/components/student/AddStudent'
+import StudentHome from '@/components/student/StudentHome'
 
+import Denied from '@/components/Denied'
 Vue.use(Router)
 
 let router = new Router({
@@ -71,7 +73,8 @@ let router = new Router({
       path: '/professor/home',
       component: ProfessorHome,
       meta: {
-        quest: true
+        requiresAuth: true,
+        is_professor: true,
       }
     },
     {
@@ -83,37 +86,69 @@ let router = new Router({
     },
     {
       path: '/aluno/registrar',
-      component: AddStudent
-    }
+      component: AddStudent,
+      meta: {
+        quest: true
+      }
+    },
+    {
+      path: '/aluno/home',
+      component: StudentHome,
+      meta: {
+        requiresAuth: true,
+        is_student: true
+      }
+    },
+    {
+      path: '/denied-access',
+      name: 'DeniedAccess',
+      component: Denied
+    },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  let user = JSON.parse(localStorage.getItem('token'))
-  console.log(user) 
+  let access = JSON.parse(localStorage.getItem('token'))
+  console.log(access) 
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (user == null || user.token == null) {
+    if (access == null || access.token == null) {
       next({
-        path: '/admin',
+        path: '/',
         params: { nextUrl: to.fullPath }
       })
     } else {
       if (to.matched.some(record => record.meta.is_admin)) {
-        console.log(user.admin)
-        if (user.admin) {
+        console.log(access.admin)
+        if (access.tag == 0) {
           next()
         } else {
-          next({ name: 'AdminHome' })
+          next({ name: 'DeniedAccess' })
         }
       } else {
         next()
       }
+      if (to.matched.some(record => record.meta.is_professor)) {
+        if (access.tag == 1) {
+          next()
+        } else {
+          next({ name: 'DeniedAccess' })
+        }
+      } else {
+        next()
+      }
+      if (to.matched.some(record => record.meta.is_student)) {
+        if (access.tag == 2) {
+          next()
+        } else {
+          next({ name: 'DeniedAccess' })
+        }
+      }
     }
   } else if (to.matched.some(record => record.meta.guest)) {
-    if(user.token == null){
+    if(access.token == null){
       next()
     } else{
-      next({ name: 'userboard'})
+      next({ name: 'DeniedAccess' })
     }
   } else {
     next()
