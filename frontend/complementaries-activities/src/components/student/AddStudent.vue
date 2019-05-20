@@ -72,6 +72,8 @@
 import AcNavbar from '../AcNavbar'
 import router from '@/router/index'
 import Student from '@/services/Student.js'
+import AdminService from '@/services/Admin.js'
+
 export default {
   name: 'AdminLogin',
   components: { AcNavbar },
@@ -94,8 +96,16 @@ export default {
         },
         min: v => v.length >= 8 || 'Min 8 characters'
       },
-      graduations: ['engenharia']
+      graduations: []
     }
+  },
+  created () {
+    AdminService.readAllDegrees()
+      .then((resp) => {
+        resp.data.map(graduation => {
+          this.graduations.push(graduation.name)
+        })
+      })
   },
   computed: {
     form () {

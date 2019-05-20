@@ -24,8 +24,10 @@ describe('Management graduation', () => {
         }
       }
       const response = {
-        send: sinon.spy()
+        send: sinon.spy(),
+        status: sinon.stub()
       }
+      response.status.withArgs(201).returns(response)
       Graduation.create = sinon.stub()
       Graduation.create.withArgs(graduation.body).resolves('success')
 
@@ -83,9 +85,11 @@ describe('Management graduation', () => {
         }
       }
       const response = {
-        send: sinon.spy()
+        send: sinon.spy(),
+        status: sinon.stub()
       }
       
+      response.status.withArgs(201).returns(response)
       const { params : { id } } = request
       Graduation.update = sinon.stub()
       Graduation.update.withArgs({ _id: id}, request.body).resolves({ ok: 1 })

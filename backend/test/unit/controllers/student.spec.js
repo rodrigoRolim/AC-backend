@@ -1,8 +1,12 @@
 import sinon from 'sinon'
 import StudentController from '../../../src/controllers/student'
+import Student from  '../../../src/models/student'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 describe('Management student', () => {
   const defaultStudent = {
+    _id: '12345',
     ra: 'a12345',
     name: 'Student',
     email: 'student@mail',
@@ -53,6 +57,68 @@ describe('Management student', () => {
         const studentController = new StudentController(fakeStudent)
 
         return studentController.create(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
+  describe('login student', () => {
+    it('should return token of authorization', () => {
+      const request = {
+        body: {
+          ra: 'a123456',
+          password: '12345'
+        }
+      }
+      bcrypt.compare = sinon.stub()
+      bcrypt.compare.withArgs(request.body.password, '12345').resolves(true)
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      }
+      response.status.withArgs(201).returns(response)
+      const _id = '12345'
+      jwt.sign = sinon.stub()
+      jwt.sign.withArgs({ _id }, process.env.SECRET , {
+        expiresIn: 86400
+      }).returns('hashToken')
+
+      Student.findOne = sinon.stub()
+      Student.findOne.withArgs({ name: request.body.name }).resolves(defaultStudent)
+
+      const studentController = new StudentController(Student, jwt, bcrypt.compare)
+      return studentController.login(request, response) 
+        .then(() => {
+          sinon.assert.calledWith(response.send, { token: 'hashToken', auth: true })
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return code 400', () => {
+        const request = {
+          body: {
+            ra: 'a123456',
+            password: '12345'
+          }
+        }
+        bcrypt.compare = sinon.stub()
+        bcrypt.compare.withArgs(request.body.password, '12345').resolves(true)
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        response.status.withArgs(400).returns(response)
+        const _id = '12345'
+        jwt.sign = sinon.stub()
+        jwt.sign.withArgs({ _id }, process.env.SECRET , {
+          expiresIn: 86400
+        }).returns('hashToken')
+  
+        Student.findOne = sinon.stub()
+        Student.findOne.withArgs({ name: request.body.name }).rejects({ message: 'Error' })
+  
+        const studentController = new StudentController(Student, jwt, bcrypt.compare)
+        return studentController.login(request, response) 
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
