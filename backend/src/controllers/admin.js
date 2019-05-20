@@ -8,19 +8,19 @@ class AdminController {
     
     const username = req.body.username
     const password = req.body.password
-    console.log(username)
+
     return this.User.findOne({ username: username })
       .then(user => {
-        console.log(user)
         if (password == user.password) {
-          console.log('oi')
           const _id = user._id
           let token = this.jwt.sign({ _id }, process.env.SECRET, {
             expiresIn: 86400
           })
-          res.send({ token: token, auth: true, admin: true })
+          res.status(201).send({ access: { token: token, auth: true, admin: true }, user: user })
+        } else {
+          res.status(201).send({ auth: false })
         }
-        res.send({ auth: false })
+       
       })
       .catch(err => res.status(400).send(err.message))
   }

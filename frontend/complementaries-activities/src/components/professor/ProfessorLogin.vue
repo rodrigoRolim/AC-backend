@@ -56,13 +56,24 @@ export default {
   methods: {
     login () {
       ProfessorService.login(this.professor).then(response => {
-        console.log(response)
-        if (response.data.auth) {
-          localStorage.removeItem('user')
-          localStorage.setItem('user', JSON.stringify(response.data))
-          router.replace('/professor/home')
-        }
+        this.removeSession()
+        this.setUser(response.data.user)
+        this.setToken(response.data.access)
+        router.replace('/professor/home')
       })
+      .catch((err) => {
+        
+      })
+    },
+    removeSession () {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+    },
+    setUser (user) {
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+    setToken (token) {
+      localStorage.setItem('token', JSON.stringify(token))
     }
   }
 }

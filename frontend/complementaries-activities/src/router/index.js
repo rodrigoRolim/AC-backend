@@ -89,7 +89,7 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let user = JSON.parse(localStorage.getItem('user'))
+  let user = JSON.parse(localStorage.getItem('token'))
   console.log(user) 
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (user == null || user.token == null) {

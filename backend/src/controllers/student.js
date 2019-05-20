@@ -15,7 +15,7 @@ class StudentController {
   }
   login (req, res) {
     
-    return this.Student.findOne({ name: req.body.name })
+    return this.Student.findOne({ ra: req.body.ra })
       .then((student) => {
 
         this.compare(req.body.password, student.password)
@@ -25,8 +25,8 @@ class StudentController {
 
               const _id = student._id
               const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
-
-              res.status(201).send({ token: token, auth: resp })
+   
+              res.status(201).send({ access: {token: token, auth: resp, admin: false}, user: student })
             } else {
               res.status(404).send('No authorization')
             }

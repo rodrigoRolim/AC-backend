@@ -2,7 +2,7 @@
   <v-app>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/student">student</v-btn>
+        <v-btn flat to="/admin">admin</v-btn>
         <v-btn flat to="/professor">professor</v-btn>
         <v-btn flat to="/aluno">aluno</v-btn>
       </v-toolbar-items>
@@ -59,6 +59,8 @@
         </v-card-text>
         <v-divider class="mt-5"></v-divider>
         <v-card-actions class="justify-end">
+          <v-btn color="success" dark depressed to="/aluno">voltar</v-btn>
+          <v-spacer></v-spacer>
           <v-btn color="secondary" dark depressed @click="reset">Resetar</v-btn>
           <v-btn color="primary" dark depressed @click="createStudent">Submit</v-btn>
         </v-card-actions>
@@ -75,7 +77,7 @@ import Student from '@/services/Student.js'
 import AdminService from '@/services/Admin.js'
 
 export default {
-  name: 'AdminLogin',
+  name: 'AddStudent',
   components: { AcNavbar },
   data () {
     return {
@@ -129,7 +131,7 @@ export default {
       this.student.ra = null
       this.student.name = null
       this.student.email = null
-      this.student.password = null
+      this.student.password = ''
       this.student.graduation = ''
       this.errorMessages = ''
     }

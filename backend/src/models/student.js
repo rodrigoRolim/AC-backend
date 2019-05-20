@@ -41,6 +41,10 @@ const schema = new mongoose.Schema({
   total: { 
     type: Number,
     default: 0
+  },
+  admin: {
+    tupe: Boolean,
+    default: false
   }
 })
 schema.set('toJSON', {

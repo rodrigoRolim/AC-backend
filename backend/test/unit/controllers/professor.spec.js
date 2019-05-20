@@ -242,7 +242,10 @@ describe('Management professor', () => {
   })
   describe('login() professor', () => {
     it('should call send with a token for professor user', () => {
-
+      const expectedResponse = {
+        access: { admin: true, token: 'hashToken', auth: true },
+        user: defaultProfessor 
+      }
       const request = {
         body: {
           name: 'professor',
@@ -253,7 +256,9 @@ describe('Management professor', () => {
       bcrypt.compare.withArgs(request.body.password, '12345').resolves(true)
       const response = {
         send: sinon.spy(),
+        status: sinon.stub()
       }
+      response.status.withArgs(201).returns(response)
       const _id = '12345'
       jwt.sign = sinon.stub()
       jwt.sign.withArgs({ _id }, process.env.SECRET , {
@@ -266,7 +271,7 @@ describe('Management professor', () => {
       const professorController = new ProfessorController(Professor, jwt, bcrypt.compare)
       return professorController.loginProfessor(request, response) 
         .then(() => {
-          sinon.assert.calledWith(response.send, { admin: true, token: 'hashToken', auth: true })
+          sinon.assert.calledWith(response.send, expectedResponse)
         })
     })
     context('when an error occurs', () => {

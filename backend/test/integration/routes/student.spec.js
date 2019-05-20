@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 
 describe('Route: Student', () => {
   let request
+  const defaultId = '56cb91bdc3464f14678934ca'
   let token = jwt.sign({ defaultId }, 'mysecret', {
     expiresIn: 86400
   })
@@ -32,17 +33,16 @@ describe('Route: Student', () => {
     group_three: 0, 
     total: 0
   }
-  const defaultId = '56cb91bdc3464f14678934ca'
+ 
   before(() => {
     return setupApp()
       .then(app => {
         request = supertest(app)
       })
   })
-
   beforeEach(() => {
     const student = new Student(defaultStudent)
-    student._id = defaultId
+    student._id = '56cb91bdc3464f14678934ca'
     return Student.remove({})
       .then(() => student.save())
   })
@@ -59,12 +59,27 @@ describe('Route: Student', () => {
 
         request
         .post('/student/add')
-        .set('authorization', token)
         .send(newStudent)
         .end((err, res) => {
-          console.log(res.body)
           expect(res.statusCode).to.eql(201)
           expect(res.body).to.eql(expectedSaveStudent)
+          done(err)
+        })
+      })
+    })
+  })
+  describe('POST /student/login', () => {
+    context('when trying to login student', () =>{
+      it('should return token of authorization', done => {
+        const requestStudent = {
+          ra: 'a12345',
+          password: '12345'
+        }
+        request
+        .post('/student/login')
+        .send(requestStudent)
+        .end((err, res) => {
+          expect(res.body.auth).to.true
           done(err)
         })
       })

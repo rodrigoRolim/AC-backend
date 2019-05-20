@@ -65,6 +65,10 @@ describe('Management student', () => {
   })
   describe('login student', () => {
     it('should return token of authorization', () => {
+      const expectedResponse = {
+        access: { token: 'hashToken', auth: true, admin: false },
+        user: defaultStudent 
+      }
       const request = {
         body: {
           ra: 'a123456',
@@ -85,12 +89,12 @@ describe('Management student', () => {
       }).returns('hashToken')
 
       Student.findOne = sinon.stub()
-      Student.findOne.withArgs({ name: request.body.name }).resolves(defaultStudent)
+      Student.findOne.withArgs({ ra: request.body.ra }).resolves(defaultStudent)
 
       const studentController = new StudentController(Student, jwt, bcrypt.compare)
       return studentController.login(request, response) 
         .then(() => {
-          sinon.assert.calledWith(response.send, { token: 'hashToken', auth: true })
+          sinon.assert.calledWith(response.send, expectedResponse)
         })
     })
     context('when an error occurs', () => {
@@ -115,7 +119,7 @@ describe('Management student', () => {
         }).returns('hashToken')
   
         Student.findOne = sinon.stub()
-        Student.findOne.withArgs({ name: request.body.name }).rejects({ message: 'Error' })
+        Student.findOne.withArgs({ ra: request.body.ra }).rejects({ message: 'Error' })
   
         const studentController = new StudentController(Student, jwt, bcrypt.compare)
         return studentController.login(request, response) 

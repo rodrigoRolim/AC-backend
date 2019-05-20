@@ -15,6 +15,10 @@ describe('Controllers: Users', () => {
   }
   describe('post() users', () => {
     it('should call send with a token for admin user', () => {
+      const expectedResponse = {
+        access: { admin: true, token: 'hash', auth: true },
+        user: userResolves
+      }
       const request = {
         body: {
           username: 'admin',
@@ -23,7 +27,9 @@ describe('Controllers: Users', () => {
       }
       const response = {
         send: sinon.spy(),
+        status: sinon.stub()
       }
+      response.status.withArgs(201).returns(response)
       const _id = '12345'
       jwt.sign = sinon.stub()
       jwt.sign.withArgs({ _id }, process.env.SECRET , {
@@ -35,7 +41,7 @@ describe('Controllers: Users', () => {
       const userController = new AdminController(Admin, jwt)
       return userController.post(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, { token: 'hash', auth: true, admin: true })
+          sinon.assert.calledWith(response.send, expectedResponse)
         })
     })
     it('should return auth false when the login is invalid', () => {

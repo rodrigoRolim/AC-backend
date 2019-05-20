@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
   score: Number,
   path: String,
   evaluation: Boolean,
+  sent: Boolean,
   course_name: String,
   group: String,
   item: String,

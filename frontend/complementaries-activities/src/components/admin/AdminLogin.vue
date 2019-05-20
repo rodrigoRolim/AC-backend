@@ -55,12 +55,24 @@ export default {
   methods: {
     login () {
       Admin.loginAdmin(this.admin).then(response => {
-        if (response.data.auth) {
-          localStorage.removeItem('user')
-          localStorage.setItem('user', JSON.stringify(response.data))
+        console.log(response)
+        if (response.data.access.auth) {
+          this.removeSession()
+          this.setUser(response.data.user)
+          this.setToken(response.data.access)
           router.replace('/admin/home')
         }
       })
+    },
+    removeSession () {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+    },
+    setUser (user) {
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+    setToken (token) {
+      localStorage.setItem('token', JSON.stringify(token))
     }
   }
 }

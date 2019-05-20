@@ -17,7 +17,7 @@ class ProfessorController {
               const _id = professor._id
               const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
 
-              res.send({ token: token, auth: resp, admin: professor.admin })
+              res.status(201).send({ access: { token: token, auth: resp, admin: professor.admin }, user: professor })
             } else {
               res.status(404).send('No authorization')
             }
@@ -26,16 +26,13 @@ class ProfessorController {
       .catch((err) => res.status(400).send(err.message))
   }
   createProfessor (req, res) {
-    console.log(req.body)
     const professor = new this.Professor(req.body)
-    console.log(professor)
+
     return professor.save()
       .then(() => {
-        console.log("asd")
         res.status(201).send(professor)
       })
       .catch(err => {
-        console.log(err.message)
         res.status(422).send(err.message)
       })
   }
