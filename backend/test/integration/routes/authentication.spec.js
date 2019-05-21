@@ -35,8 +35,7 @@ describe('Routes: Authentication', () => {
       .post('/admin/login')
       .send(defaultAdmin)
       .end((err, res) => {
-        expect(res.body.auth).to.true
-        expect(res.body.admin).to.true
+        expect(res.body.access.auth).to.true
         done(err)
       })
     })

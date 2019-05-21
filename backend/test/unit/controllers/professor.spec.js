@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt'
 describe('Management professor', () => {
   const defaultProfessor = {
     _id: '12345',
+    siape: 'a12345',
     name: 'eduardo siqueira',
     email: 'eduardo@email.com',
     password: '12345',
@@ -100,6 +101,7 @@ describe('Management professor', () => {
       const fakeId = 'a-fake-id'
       const updatedProfessor = {
         _id: fakeId,
+        siape: 'a12345',
         name: 'Updated professor',
         email: 'uptade@email',
         graduation: 'engenharia',
@@ -133,6 +135,7 @@ describe('Management professor', () => {
         const fakeId = 'a-fake-id';
         const updatedProfessor = {
           _id: fakeId,
+          siape: 'a12345',
           name: 'Updated professor',
           email: 'uptade@email',
           graduation: 'engenharia',
@@ -172,6 +175,7 @@ describe('Management professor', () => {
       const fakeId = 'a-fake-id-again'
       const updatedProfessor = {
         _id: fakeId,
+        siape: 'a12345',
         name: 'Updated professor',
         email: 'uptade@email',
         graduation: fakeIdGraduation,
@@ -204,9 +208,10 @@ describe('Management professor', () => {
     context('when an error occurs', () => {
       it('should return 400', () => {
         const fakeIdGraduation = 'a-fake-id'
-      const fakeId = 'a-fake-id-again'
-      const updatedProfessor = {
+        const fakeId = 'a-fake-id-again'
+        const updatedProfessor = {
         _id: fakeId,
+        siape: 'a12345',
         name: 'Updated professor',
         email: 'uptade@email',
         graduation: fakeIdGraduation,
@@ -248,7 +253,7 @@ describe('Management professor', () => {
       }
       const request = {
         body: {
-          name: 'professor',
+          siape: 'a12345',
           password: '12345'
         }
       }
@@ -279,7 +284,7 @@ describe('Management professor', () => {
 
         const request = {
           body: {
-            name: 'professor',
+            siape: 'a12345',
             password: '12345'
           }
         }

@@ -19,7 +19,7 @@ export default {
     return http.delete(`/degrees/admin/${id}`)
   },
   updatingDegree: (id, degree) => {
-    let user = JSON.parse(localStorage.getItem('user'))
+    let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
     return http.put(`/degrees/admin/${id}`, degree)
   },

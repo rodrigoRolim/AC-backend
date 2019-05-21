@@ -28,10 +28,6 @@ describe('Route: Student', () => {
     name: 'name student again',
     email: 'nameagain@mail',
     graduation: 'graduation description again',
-    group_one: 0, 
-    group_two: 0, 
-    group_three: 0, 
-    total: 0
   }
  
   before(() => {
@@ -79,7 +75,7 @@ describe('Route: Student', () => {
         .post('/student/login')
         .send(requestStudent)
         .end((err, res) => {
-          expect(res.body.auth).to.true
+          expect(res.body.access.auth).to.true
           done(err)
         })
       })

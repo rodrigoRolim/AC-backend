@@ -2,7 +2,8 @@
   <v-app id="ManagerProfessor">
     <ac-navbar>
     <v-toolbar-items>
-      <v-btn flat to="/admin/home">home</v-btn>
+      <v-btn flat to="/admin/home">cursos</v-btn>
+      <v-btn flat to="/admin/departamentos">departamentos</v-btn>
       <v-btn flat to="/admin/professor">professores</v-btn>
       <v-btn flat to="/admin/grupo">grupos</v-btn>
       <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
@@ -25,7 +26,7 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
+              <span class="headline">Novo professor</span>
             </v-card-title>
 
             <v-card-text>
@@ -35,7 +36,18 @@
                     <v-text-field v-model="editedItem.name" label="Nome do professor"></v-text-field>
                   </v-flex>
                   <v-flex md12 sm12>
+                    <v-text-field v-model="editedItem.name" label="Siape"></v-text-field>
+                  </v-flex>
+                  <v-flex md12 sm12>
                     <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
+                  </v-flex>
+                   <v-flex md12 sm12>
+                     <v-select
+                      :items="departaments"
+                      label="departamento responsável*"
+                      v-model="selectedName"
+                      required
+                     ></v-select>
                   </v-flex>
                    <v-flex md12 sm12>
                     <v-text-field type="password" v-model="editedItem.password" label="Senha"></v-text-field>
@@ -127,10 +139,11 @@ import AcNavbar from '../AcNavbar'
           value: 'name'
         },
         { text: 'email', value: 'email', sortable: false, align: 'left' },
-        { text: 'curso (responsável)', value: 'curso', sortable: false, align: 'left' },
+        { text: 'departamento (responsável)', value: 'curso', sortable: false, align: 'left' },
         { text: 'admin', value: 'admin', sortable: false, align: 'left'},
         { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
+      departaments: [],
       professors: [],
       graduations: [],
       editedIndex: -1,

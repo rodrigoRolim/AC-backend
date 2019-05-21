@@ -10,8 +10,9 @@ import Home from '@/components/Home'
 import StudentLogin from '@/components/student/StudentLogin'
 import AddStudent from '@/components/student/AddStudent'
 import StudentHome from '@/components/student/StudentHome'
-
+import AdminDepartment from '@/components/admin/AdminDepartment'
 import Denied from '@/components/Denied'
+
 Vue.use(Router)
 
 let router = new Router({
@@ -98,6 +99,10 @@ let router = new Router({
         requiresAuth: true,
         is_student: true
       }
+    },
+    {
+      path: '/admin/departamentos',
+      component: AdminDepartment
     },
     {
       path: '/denied-access',

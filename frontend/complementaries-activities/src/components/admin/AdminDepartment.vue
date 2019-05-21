@@ -12,15 +12,15 @@
       </ac-navbar>
       <v-layout class="table">
         <v-toolbar flat color="white">
-      <v-toolbar-title>Lista de cursos</v-toolbar-title>
+      <v-toolbar-title>Lista de departamentos</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-          <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
+          <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo departmento</v-btn>
         </template>
         <v-card>
           <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
+            <span class="headline">novo departamento</span>
           </v-card-title>
 
           <v-card-text>
@@ -28,17 +28,11 @@
               <v-layout wrap>
                 <v-flex xs12 sm12 md12>
                   <v-text-field
-                    v-model="editedItem.name"
-                    :rules="nameRules"
-                    label="nome do curso"
-                    required
+                  v-model="editedItem.name"
+                  :rules="nameRules"
+                  label="nome do departamento"
+                  required
                   ></v-text-field>
-                  <v-select
-                    :items="departaments"
-                    label="departamento responsável*"
-                    v-model="selectedName"
-                    required
-                  ></v-select>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -57,7 +51,7 @@
 
       <v-card>
         <v-card-title >
-          Cursos
+          Departamentos
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -69,13 +63,13 @@
         </v-card-title>
         <v-data-table
         :headers="headers"
-        :items="degrees"
+        :items="departments"
         :search="search"
         hide-actions
         :pagination.sync="pagination"
-        >
+        
+      >
         <template v-slot:items="props" >
-          <td class="name-item">{{ props.item.name }}</td>
           <td class="name-item">{{ props.item.name }}</td>
           <td class="justify-end layout px-6">
           <v-icon
@@ -103,7 +97,7 @@
         </template>
         <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">
-          nenhum curso cadastrado
+          nenhum departamento cadastrado
         </v-alert>
         </template>
       </v-data-table>
@@ -119,15 +113,13 @@
 <script>
 import AcNavbar from '../AcNavbar.vue'
 import Degree from '@/services/Admin.js'
-import BtnSetProfessor from '../SetProfessor'
 export default {
-  components: { BtnSetProfessor, AcNavbar },
+  components: { AcNavbar },
   data () {
     return {
       dialog: false,
       editedIndex: -1,
       valid: true,
-      departaments: [],
       nameRules: [
         v => !!v || 'Name is required'
       ],
@@ -145,20 +137,19 @@ export default {
       selected: [],
       headers: [
         {
-          text: 'Cursos',
+          text: 'Departamento',
           align: 'left',
           sortable: false,
           value: 'name'
         },
-         { text: 'Departamento', value: 'name', sortable: false, align: 'left' },
         { text: 'Actions', value: 'name', sortable: false, align: 'center' }
       ],
-      degrees: []
+      departments: []
     }
   },
   computed: {
     pages () {
-      this.pagination.totalItems = this.degrees.length
+      this.pagination.totalItems = this.departments.length
       if (this.pagination.rowsPerPage == null ||
         this.pagination.totalItems == null
       ) {
@@ -181,18 +172,18 @@ export default {
   methods: {
     initialize () {
       Degree.readAllDegrees()
-        .then((degrees) => {
-          this.degrees = degrees.data
-          console.log(this.degrees)
+        .then((departments) => {
+          this.departments = departments.data
+          console.log(this.departments)
         })
     },
     editItem (item) {
-      this.editedIndex = this.degrees.indexOf(item)
+      this.editedIndex = this.departments.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
     deleteItem (item) {
-      const index = this.degrees.indexOf(item)
+      const index = this.departments.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
         Degree.deleteDegree(item).then((res) => {
@@ -208,7 +199,7 @@ export default {
                 console.log(res)
               })
           }
-          this.degrees.splice(index, 1)
+          this.departments.splice(index, 1)
         })
       }
     },
@@ -232,10 +223,10 @@ export default {
               alert('atualizado com sucesso')
             }
           })
-        Object.assign(this.degrees[this.editedIndex], this.editedItem)
+        Object.assign(this.departments[this.editedIndex], this.editedItem)
       } else {
         Degree.addDegree(this.editedItem).then((degree) => {
-          this.degrees.push(degree.data)
+          this.departments.push(degree.data)
         })
       }
       this.close()

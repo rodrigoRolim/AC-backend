@@ -7,9 +7,8 @@ const schema = new mongoose.Schema({
   path: String,
   evaluation: Boolean,
   sent: Boolean,
-  course_name: String,
-  group: String,
-  item: String,
+  graduation: { type: mongoose.Schema.Types.ObjectId, ref: 'Graduation' },
+  groupItem: { type: mongoose.Schema.Types.ObjectId, ref: 'Group'},
   student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student'}
 })
 

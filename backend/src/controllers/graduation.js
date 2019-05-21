@@ -1,27 +1,28 @@
 class CourseController {
-  constructor (Degree) {
-    this.Degree = Degree
+  constructor (Graduation) {
+    this.Graduation = Graduation
   }
   createDegree (req, res) {
     const course = req.body
-    return this.Degree.create(course)
+    console.log(course)
+    return this.Graduation.create(course)
       .then((course) => res.status(201).send(course))
       .catch(err => res.status(400).send(err.message))
   }
   readAll (req, res) {
-    return this.Degree.find({})
+    return this.Graduation.find({})
       .then((degrees) => res.send(degrees))
       .catch(err => res.send(err.message))
   }
   delete (req, res) {
     const { params: { id }} = req
-    return this.Degree.deleteOne({ _id: id})
+    return this.Graduation.deleteOne({ _id: id})
       .then(() => res.send({ message:'removed with success' }))
       .catch((err) => res.send(err.message))
   }
   updateDegree (req, res) {
     const { params: { id }} = req
-    return this.Degree.update({ _id: id }, req.body)
+    return this.Graduation.update({ _id: id }, req.body)
       .then((resp) => res.status(201).send(resp))
       .catch((err) => res.status(422).send(err.message))
   }

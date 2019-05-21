@@ -12,10 +12,6 @@ describe('Management student', () => {
     email: 'student@mail',
     password: '12345',
     graduation: 'engenharia',
-    gruop_one: 0,
-    group_two: 0,
-    group_three: 0,
-    total: 0
   }
   const defaultRequest = {
     params: {}

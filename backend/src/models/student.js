@@ -26,22 +26,6 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  group_one: {
-    type: Number,
-    default: 0
-  },
-  group_two: { 
-    type: Number,
-    default: 0
-  },
-  group_three: { 
-    type: Number,
-    default: 0 
-  },
-  total: { 
-    type: Number,
-    default: 0
-  },
   admin: {
     tupe: Boolean,
     default: false
@@ -53,11 +37,7 @@ schema.set('toJSON', {
     ra: ret.ra,
     name: ret.name,
     email: ret.email,
-    graduation: ret.graduation,
-    group_one: ret.group_one,
-    group_two: ret.group_two,
-    group_three: ret.group_three,
-    total: ret.total
+    graduation: ret.graduation
   })
 })
 schema.pre('save', function (next) {

@@ -1,4 +1,4 @@
-import Graduation from "../../../src/models/graduation";
+import Department from "../../../src/models/department";
 import jwt from 'jsonwebtoken'
 
 describe('Routes: Degrees', () => {
@@ -7,23 +7,20 @@ describe('Routes: Degrees', () => {
     expiresIn: 86400
   })
   const defaultId = '5cd60a0312c3e687ea34667f'
-  const defaultDegree = {
+  const defaultDepartment = {
     _id: '5cd60a0312c3e687ea34667f',
     __v: 0,
-    name: 'engenharia de software',
-    department: '5cd5b4d3939ac63f4957dce7'
+    name: 'DACOMP',
   }
   const expectedGraduation = {
     _id: '5cd60a0312c3e687ea34667f',
     __v: 0,
-    name: 'engenharia de software',
-    department: '5cd5b4d3939ac63f4957dce7'
+    name: 'DACOMP',
   }
-  const listDegree = {
+  const listDepartment = {
     _id: '56cb91bdc3464f14678934ca',
     __v: 0,
-    name: 'engenharia da computação',
-    department: '5cd5b4d3939ac63f4957dce7'
+    name: 'DACOMP',
   }
   before(() => {
     return setupApp()
@@ -32,40 +29,40 @@ describe('Routes: Degrees', () => {
       })
   })
   beforeEach(() => {
-    let degree =  new Graduation(listDegree)
-    Graduation.deleteMany({})
-    return degree.save()
+    let department =  new Department(listDepartment)
+    Department.deleteMany({})
+    return department.save()
   })
 
-  afterEach(() => Graduation.deleteMany({}))
+  afterEach(() => Department.deleteMany({}))
   
-  describe('POST /admin/home', () => {
-    it('should return added last degree', done => {
+  describe('POST /admin/department', () => {
+    it('should return added last department', done => {
       request
-      .post('/degrees/admin')
+      .post('/department/admin')
       .set('authorization', token)
-      .send(defaultDegree)
+      .send(defaultDepartment)
       .end((err, res) => {
         expect(res.status).to.be.eql(201)
         done(err)
       })
     })
   })
-  describe('GET /admin/home', () => {
-    it('should return list of degrees', done => {
+  describe('GET /admin/department', () => {
+    it('should return list of department', done => {
       request
-      .get('/degrees/admin')
+      .get('/department/admin')
       .set('authorization', token)
       .end((err, res) => {
-        expect(res.body).to.be.eql([listDegree])
+        expect(res.body).to.be.eql([listDepartment])
         done(err)
       })
     })
   })
-  describe('DELETE /admin/home', () => {
+  describe('DELETE /admin/department', () => {
     it('should return message of removed with success', done => {
       request
-      .del(`/degrees/admin/${listDegree._id}`)
+      .del(`/department/admin/${listDepartment._id}`)
       .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql({ message: 'removed with success' })
@@ -73,10 +70,10 @@ describe('Routes: Degrees', () => {
       })
     })
   })
-  describe('PUT /admin/home', () => {
-    it('should return degree updated recently', done => {
+  describe('PUT /admin/department', () => {
+    it('should return department updated recently', done => {
       request
-      .put(`/degrees/admin/${listDegree._id}`)
+      .put(`/department/admin/${listDepartment._id}`)
       .set('authorization', token)
       .end((err, res) => {
         expect(res.status).to.be.eql(201)

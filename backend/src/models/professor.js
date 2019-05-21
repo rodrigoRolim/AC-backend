@@ -8,9 +8,14 @@ const schema = new mongoose.Schema({
     type: String,
     unique: true
   },
+  siape: {
+    type: String,
+    required: true,
+    unique: true
+  },
   email: String,
   password: String,
-  graduation: { type: mongoose.Schema.Types.ObjectId, ref: 'Graduation' },
+  department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department'},
   admin: {
     type: Boolean,
     required: true

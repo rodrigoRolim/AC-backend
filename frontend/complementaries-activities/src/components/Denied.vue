@@ -6,6 +6,10 @@
       >
       acesso negado.
     </v-alert>
+    <div>
+      <v-btn color="success" depressed dark to="/">voltar</v-btn>
+    </div>
+    
   </v-app>
 </template>
 
