@@ -26,10 +26,14 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  admin: {
-    tupe: Boolean,
-    default: false
-  }
+  user_type: {
+    type: String,
+    enum: ['aluno'], 
+    default: 'aluno'
+  },
+  documents:[{
+    type: mongoose.Schema.Types.ObjectId, ref: 'Department'
+  }]
 })
 schema.set('toJSON', {
   transform: (doc, ret, options) => ({
