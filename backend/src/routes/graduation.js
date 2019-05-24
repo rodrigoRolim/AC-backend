@@ -1,14 +1,14 @@
 import express from 'express'
-import DegreeController from '../controllers/graduation'
-import Degree from '../models/graduation'
+import GraduationController from '../controllers/graduation'
+import Graduation from '../models/graduation'
 import verify from '../auth'
 
 const router = express.Router()
-const degreeController = new DegreeController(Degree)
+const graduationController = new GraduationController(Graduation)
 
-router.post('/admin', verify.verifyJWT, (req, res) => degreeController.createDegree(req, res))
-router.get('/admin', (req, res) => degreeController.readAll(req, res))
-router.delete('/admin/:id', verify.verifyJWT, (req, res) => degreeController.delete(req, res))
-router.put('/admin/:id', verify.verifyJWT, (req, res) => degreeController.updateDegree(req, res))
+router.post('/admin', verify.verifyJWT, (req, res) => graduationController.create(req, res))
+router.get('/admin', (req, res) => graduationController.readAll(req, res))
+router.delete('/admin/:id', verify.verifyJWT, (req, res) => graduationController.delete(req, res))
+router.put('/admin/:id', verify.verifyJWT, (req, res) => graduationController.update(req, res))
 
 export default router

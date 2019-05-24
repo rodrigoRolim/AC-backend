@@ -1,11 +1,16 @@
 import express from 'express'
-import AdminController from '../controllers/admin'
-import Admin from '../models/admin'
+import ProfessorController from '../../src/controllers/professor';
+import Professor from '../models/professor'
+import Util from 'util'
+import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+const compare = Util.promisify(bcrypt.compare)
 const router = express.Router()
-const adminController = new AdminController(Admin, jwt)
 
-router.post('/login', (req, res) => adminController.post(req, res))
+const professorController = new ProfessorController(Professor, jwt, compare)
+
+router.post('/login', (req, res) => professorController.login(req, res))
+router.post('/create', (req, res) => professorController.create(req, res)) // crie os testes
 
 export default router

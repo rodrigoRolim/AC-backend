@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AdminLogin from '@/components/admin/AdminLogin'
-import AdminHome from '@/components/admin/AdminHome'
-import AdminProfessor from '@/components/admin/AdminProfessor'
-import AdminGroup from '@/components/admin/AdminGroup'
+import AdminGraduation from '@/components/professor/AdminGraduation'
+import AdminProfessor from '@/components/professor/AdminProfessor'
+import AdminGroup from '@/components/professor/AdminGroup'
+import AdminDepartment from '@/components/professor/AdminDepartment'
 import ProfessorLogin from '@/components/professor/ProfessorLogin'
 import ProfessorHome from '@/components/professor/ProfessorHome'
 import Home from '@/components/Home'
 import StudentLogin from '@/components/student/StudentLogin'
 import AddStudent from '@/components/student/AddStudent'
 import StudentHome from '@/components/student/StudentHome'
-import AdminDepartment from '@/components/admin/AdminDepartment'
 import Denied from '@/components/Denied'
+import AddFirstProfessor from '../../only-development/AddFirstProfessor'
 
 Vue.use(Router)
 
@@ -23,24 +23,16 @@ let router = new Router({
       component: Home
     },
     {
-      path: '/admin',
-      name: 'AdminLogin',
-      component: AdminLogin,
-      meta: {
-        quest: true
-      }
-    },
-    {
-      path: '/admin/home',
+      path: '/professor/home',
       name: 'AdminHome',
-      component: AdminHome,
+      component: AdminGraduation,
       meta: {
         requiresAuth: true,
         is_admin: true
       }
     },
     {
-      path: '/admin/professor/:id',
+      path: '/admin/professores/:id',
       component: AdminProfessor,
       meta: {
         requiresAuth: true,
@@ -48,7 +40,7 @@ let router = new Router({
       }
     },
     {
-      path: '/admin/professor',
+      path: '/admin/professores',
       component: AdminProfessor,
       meta: {
         requiresAuth: true,
@@ -56,7 +48,7 @@ let router = new Router({
       }
     },
     {
-      path: '/admin/grupo',
+      path: '/admin/grupos',
       component: AdminGroup,
       meta: {
         requiresAuth: true,
@@ -64,14 +56,14 @@ let router = new Router({
       }
     },
     {
-      path: '/professor',
+      path: '/admin',
       component: ProfessorLogin,
       meta: {
         quest: true
       }
     },
     {
-      path: '/professor/home',
+      path: '/admin/home',
       component: ProfessorHome,
       meta: {
         requiresAuth: true,
@@ -109,10 +101,15 @@ let router = new Router({
       name: 'DeniedAccess',
       component: Denied
     },
+    {
+      path: '/primeiro',
+      name: 'FirstProfessor',
+      component: AddFirstProfessor
+    }
   ]
 })
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   let access = JSON.parse(localStorage.getItem('token'))
   console.log(access) 
   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -158,5 +155,5 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-})
+}) */
 export default router

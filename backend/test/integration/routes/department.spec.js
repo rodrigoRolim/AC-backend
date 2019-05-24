@@ -1,20 +1,13 @@
 import Department from "../../../src/models/department";
 import jwt from 'jsonwebtoken'
 
-describe('Routes: Degrees', () => {
+describe('Routes: Department', () => {
   let request
   let token = jwt.sign({ defaultId }, 'mysecret', {
     expiresIn: 86400
   })
   const defaultId = '5cd60a0312c3e687ea34667f'
   const defaultDepartment = {
-    _id: '5cd60a0312c3e687ea34667f',
-    __v: 0,
-    name: 'DACOMP',
-  }
-  const expectedGraduation = {
-    _id: '5cd60a0312c3e687ea34667f',
-    __v: 0,
     name: 'DACOMP',
   }
   const listDepartment = {
@@ -29,7 +22,8 @@ describe('Routes: Degrees', () => {
       })
   })
   beforeEach(() => {
-    let department =  new Department(listDepartment)
+    let department =  new Department(defaultDepartment)
+    department._id = '56cb91bdc3464f14678934ca'
     Department.deleteMany({})
     return department.save()
   })
@@ -38,12 +32,19 @@ describe('Routes: Degrees', () => {
   
   describe('POST /admin/department', () => {
     it('should return added last department', done => {
+      const newDepartment = Object.assign({}, { _id: defaultId, __v: 0}, { name: 'DAEL' })
+      const expectedDepartment = {
+        _id: defaultId,
+        __v: 0,
+        name: 'DAEL',
+      }
       request
       .post('/department/admin')
       .set('authorization', token)
-      .send(defaultDepartment)
+      .send(newDepartment)
       .end((err, res) => {
         expect(res.status).to.be.eql(201)
+        expect(res.body).to.be.eql(expectedDepartment)
         done(err)
       })
     })

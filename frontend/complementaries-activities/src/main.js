@@ -5,9 +5,9 @@ import App from './App'
 import router from './router'
 import store from './store/root'
 import Vuetify from 'vuetify'
-import AdminLogin from '@/components/admin/AdminLogin'
-import AdminHome from '@/components/admin/AdminHome'
+import AdminGraduation from '@/components/professor/AdminGraduation'
 import ProfessorLogin from '@/components/professor/ProfessorLogin'
+import ProfessorHome from '@/components/professor/ProfessorHome'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
@@ -18,6 +18,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App, AdminLogin, AdminHome, ProfessorLogin },
+  components: { App, AdminGraduation, ProfessorLogin, ProfessorHome  },
   template: '<App/>'
 })

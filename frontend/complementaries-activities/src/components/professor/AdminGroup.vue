@@ -2,10 +2,11 @@
   <v-app>
   <ac-navbar>
     <v-toolbar-items>
-      <v-btn flat to="/admin/home">home</v-btn>
-      <v-btn flat to="/admin/professor">professores</v-btn>
-      <v-btn flat to="/admin/grupo">grupos</v-btn>
-      <v-btn color="error" @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
+      <v-btn flat to="/professor/home">cursos</v-btn>
+      <v-btn flat to="/admin/departamentos">departamentos</v-btn>
+      <v-btn flat to="/admin/professores">professores</v-btn>
+      <v-btn flat to="/admin/grupos">grupos</v-btn>
+      <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
     </v-toolbar-items>
 
     </ac-navbar>
@@ -186,7 +187,7 @@ import GroupService from '@/services/Group.js'
 
       logout () {
         localStorage.removeItem('user')
-        this.$router.replace('/admin')
+        this.$router.replace('/professor')
       },
       editItem (item) {
         this.editedIndex = this.groups.indexOf(item)

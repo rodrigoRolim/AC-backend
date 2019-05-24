@@ -12,7 +12,8 @@ describe('Management professor', () => {
     name: 'eduardo siqueira',
     email: 'eduardo@email.com',
     password: '12345',
-    graduation: '5cd85d1b942d44d0ae60f2fb',
+    department: '5cd85d1b942d44d0ae60f2fb',
+    type_user: 'professor',
     admin: true
   }
   const defaultRequest = {
@@ -33,7 +34,7 @@ describe('Management professor', () => {
       sinon.stub(fakeProfessor.prototype, 'save').withArgs().resolves()
 
       const professorController = new ProfessorController(fakeProfessor)
-      return professorController.createProfessor(request, response)
+      return professorController.create(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send)
         })
@@ -54,7 +55,7 @@ describe('Management professor', () => {
 
         const professorController = new ProfessorController(fakeProfessor)
         
-        return professorController.createProfessor(defaultRequest, response)
+        return professorController.create(defaultRequest, response)
           .then(() => {
             sinon.assert.calledWith(response.status, 422)
           })
@@ -104,7 +105,8 @@ describe('Management professor', () => {
         siape: 'a12345',
         name: 'Updated professor',
         email: 'uptade@email',
-        graduation: 'engenharia',
+        department: '5cd85d1b942d44d0ae60f2fb',
+        type_user: 'professor',
         password: '123456'
       }
       const request = {
@@ -125,7 +127,7 @@ describe('Management professor', () => {
       
       const professorController = new ProfessorController(fakeProfessor);
 
-      return professorController.updateProfessor(request, response)
+      return professorController.update(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 200);
         });
@@ -138,7 +140,8 @@ describe('Management professor', () => {
           siape: 'a12345',
           name: 'Updated professor',
           email: 'uptade@email',
-          graduation: 'engenharia',
+          department: '5cd85d1b942d44d0ae60f2fb',
+          type_user: 'professor',
           password: '123456'
         }
         const request = {
@@ -162,93 +165,18 @@ describe('Management professor', () => {
 
         const professorController = new ProfessorController(fakeProfessor)
 
-        return professorController.updateProfessor(request, response)
+        return professorController.update(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error');
           });
       });
     })
   })
-  describe('unset graduation of professor', () => {
-    it('should unset graduation of professor and return 200', () => {
-      const fakeIdGraduation = 'a-fake-id'
-      const fakeId = 'a-fake-id-again'
-      const updatedProfessor = {
-        _id: fakeId,
-        siape: 'a12345',
-        name: 'Updated professor',
-        email: 'uptade@email',
-        graduation: fakeIdGraduation,
-        password: '123456'
-      }
-      const request = {
-        params: {
-          id: fakeIdGraduation
-        },
-        body: {}
-      }
-      const response = {
-        sendStatus: sinon.spy()
-      }
-
-      class fakeProfessor {
-        static findOneAndUpdate() {}
-      }
-      const findOneAndUpdateStub = sinon.stub(fakeProfessor, 'findOneAndUpdate')
-      findOneAndUpdateStub.withArgs({ graduation: fakeIdGraduation },
-         { $unset: { graduation: fakeIdGraduation}}).resolves(updatedProfessor)
-      
-      const professorController = new ProfessorController(fakeProfessor);
-
-      return professorController.unsetGraduation(request, response)
-        .then(() => {
-          sinon.assert.calledWith(response.sendStatus, 200);
-        });
-    })
-    context('when an error occurs', () => {
-      it('should return 400', () => {
-        const fakeIdGraduation = 'a-fake-id'
-        const fakeId = 'a-fake-id-again'
-        const updatedProfessor = {
-        _id: fakeId,
-        siape: 'a12345',
-        name: 'Updated professor',
-        email: 'uptade@email',
-        graduation: fakeIdGraduation,
-        password: '123456'
-      }
-      const request = {
-        params: {
-          id: fakeIdGraduation
-        },
-        body: {}
-      }
-      const response = {
-        send: sinon.spy(),
-        status: sinon.stub()
-      }
-
-      class fakeProfessor {
-        static findOneAndUpdate() {}
-      }
-      response.status.withArgs(400).returns(response)
-      const findOneAndUpdateStub = sinon.stub(fakeProfessor, 'findOneAndUpdate')
-      findOneAndUpdateStub.withArgs({ graduation: fakeIdGraduation },
-         { $unset: { graduation: fakeIdGraduation}}).rejects({message: 'Error'})
-      
-      const professorController = new ProfessorController(fakeProfessor);
-
-      return professorController.unsetGraduation(request, response)
-        .then(() => {
-          sinon.assert.calledWith(response.send, 'Error');
-        });
-      })
-    })
-  })
   describe('login() professor', () => {
     it('should call send with a token for professor user', () => {
       const expectedResponse = {
-        access: { token: 'hashToken', auth: true, tag: 1 },
+        token: 'hashToken', 
+        auth: true, 
         user: defaultProfessor 
       }
       const request = {
@@ -257,14 +185,17 @@ describe('Management professor', () => {
           password: '12345'
         }
       }
+
       bcrypt.compare = sinon.stub()
       bcrypt.compare.withArgs(request.body.password, '12345').resolves(true)
+      
       const response = {
         send: sinon.spy(),
         status: sinon.stub()
       }
       response.status.withArgs(201).returns(response)
       const _id = '12345'
+
       jwt.sign = sinon.stub()
       jwt.sign.withArgs({ _id }, process.env.SECRET , {
         expiresIn: 86400
@@ -274,7 +205,7 @@ describe('Management professor', () => {
       Professor.findOne.withArgs({ name: request.body.name }).resolves(defaultProfessor)
 
       const professorController = new ProfessorController(Professor, jwt, bcrypt.compare)
-      return professorController.loginProfessor(request, response) 
+      return professorController.login(request, response) 
         .then(() => {
           sinon.assert.calledWith(response.send, expectedResponse)
         })
@@ -306,7 +237,7 @@ describe('Management professor', () => {
         Professor.findOne.withArgs({ name: request.body.name }).rejects({ message: 'Error' })
   
         const professorController = new ProfessorController(Professor, jwt, bcrypt.compare)
-        return professorController.loginProfessor(request, response) 
+        return professorController.login(request, response) 
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })

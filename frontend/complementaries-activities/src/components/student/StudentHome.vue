@@ -2,7 +2,7 @@
   <v-app>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/admin/home">Home</v-btn>
+        <v-btn flat to="/aluno/home">Home</v-btn>
         <v-btn flat color="blue-grey" to="/aluno/documento/add">
         documento <v-icon right dark>cloud_upload</v-icon>
         </v-btn>

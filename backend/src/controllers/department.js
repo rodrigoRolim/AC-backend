@@ -7,7 +7,10 @@ class DepartmentController {
 
     return department.save() 
       .then(() => res.status(201).send(department))
-      .catch((err) => res.status(400).send(err.message))
+      .catch((err) => {
+        console.log(err.message)
+        res.status(400).send(err.message)
+      })
   }
   readAll (req, res) {
     return this.Department.find({})

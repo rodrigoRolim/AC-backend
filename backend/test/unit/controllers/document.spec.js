@@ -33,7 +33,7 @@ describe('Controller: Document', () => {
 
       const documentController = new DocumentController(fakeDocument)
 
-      return documentController.saveDocument(request, response)
+      return documentController.create(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, 'salvo com sucesso.')
         })
@@ -54,7 +54,7 @@ describe('Controller: Document', () => {
 
         const documentController = new DocumentController(fakeDocument)
 
-        return documentController.saveDocument(request, response)
+        return documentController.create(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })

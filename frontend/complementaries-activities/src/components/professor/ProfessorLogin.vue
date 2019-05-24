@@ -9,7 +9,7 @@
     </ac-navbar>
     <div class="container">
     
-      <v-layout justify-center class="container">
+    <v-layout justify-center class="container">
       <v-flex xs12 sm10 md8 lg6>
         <v-alert
         :value="validatedUser"

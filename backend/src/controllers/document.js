@@ -2,7 +2,7 @@ class DocumentController {
   constructor (Document) {
     this.Document = Document
   }
-  saveDocument (req, res) {
+  create (req, res) {
     const document = new this.Document(req.body)
 
     return document.save()

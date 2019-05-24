@@ -38,7 +38,7 @@ describe('controller: groups and items', () => {
       Group.create.withArgs(requestWithBody.body).resolves(defaultGroup)
 
       const groupItemsController = new GroupItemsController(Group)
-      return groupItemsController.createGroup(requestWithBody, response)
+      return groupItemsController.create(requestWithBody, response)
         .then(() => {
           sinon.assert.calledWith(response.send, defaultGroup)
         })
@@ -55,7 +55,7 @@ describe('controller: groups and items', () => {
         Group.create.withArgs(requestWithBody.body).rejects({message: 'Error'})
 
         const groupItemsController = new GroupItemsController(Group)
-        return groupItemsController.createGroup(requestWithBody, response)
+        return groupItemsController.create(requestWithBody, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
@@ -80,7 +80,7 @@ describe('controller: groups and items', () => {
       Group.findByIdAndUpdate.withArgs(id, { $push: { items: defaultItem }}).resolves(defaultGroupWithItems)
 
       const groupItemsController = new GroupItemsController(Group)
-      return groupItemsController.addItem(request, response)
+      return groupItemsController.pushItem(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, defaultGroupWithItems)
         })
@@ -103,7 +103,7 @@ describe('controller: groups and items', () => {
         Group.findByIdAndUpdate.withArgs(id, { $push: { items: defaultItem }}).rejects({message: 'Error'})
   
         const groupItemsController = new GroupItemsController(Group)
-        return groupItemsController.addItem(request, response)
+        return groupItemsController.pushItem(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
@@ -122,7 +122,7 @@ describe('controller: groups and items', () => {
 
       const groupItemsController = new GroupItemsController(Group)
 
-      return groupItemsController.getAll(request, response)
+      return groupItemsController.readAll(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, [defaultGroup]);
         });
@@ -139,7 +139,7 @@ describe('controller: groups and items', () => {
 
         const groupItemsController = new GroupItemsController(Group)
 
-        return groupItemsController.getAll(request, response)
+        return groupItemsController.readAll(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
@@ -168,7 +168,7 @@ describe('controller: groups and items', () => {
 
       const groupItemsController = new GroupItemsController(fakeGroup);
 
-      return groupItemsController.remove(request, response)
+      return groupItemsController.delete(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 204);
         })
@@ -197,7 +197,7 @@ describe('controller: groups and items', () => {
         
         const groupItemsController = new GroupItemsController(fakeGroup);
 
-        return groupItemsController.remove(request, response)
+        return groupItemsController.delete(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error');
           })
@@ -303,7 +303,7 @@ describe('controller: groups and items', () => {
 
       const groupItemsController = new GroupItemsController(fakeGroup)
 
-      return groupItemsController.updateGroup(request, response)
+      return groupItemsController.update(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 200)
         })
@@ -338,7 +338,7 @@ describe('controller: groups and items', () => {
         
         const groupItemsController = new GroupItemsController(fakeGroup)
 
-        return groupItemsController.updateGroup(request, response)
+        return groupItemsController.update(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
@@ -373,7 +373,7 @@ describe('controller: groups and items', () => {
 
       const groupItemsController = new GroupItemsController(fakeGroup);
 
-      return groupItemsController.removeItem(request, response)
+      return groupItemsController.pullItem(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 204);
         });
@@ -409,7 +409,7 @@ describe('controller: groups and items', () => {
 
         const groupItemsController = new GroupItemsController(fakeGroup)
 
-        return groupItemsController.removeItem(request, response)
+        return groupItemsController.pullItem(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })

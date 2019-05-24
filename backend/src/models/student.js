@@ -19,8 +19,7 @@ const schema = new mongoose.Schema({
     required: true
   },
   graduation: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId, ref: 'Graduation',
   },
   password: {
     type: String,
@@ -32,7 +31,7 @@ const schema = new mongoose.Schema({
     default: 'aluno'
   },
   documents:[{
-    type: mongoose.Schema.Types.ObjectId, ref: 'Department'
+    type: mongoose.Schema.Types.ObjectId, ref: 'Document'
   }]
 })
 schema.set('toJSON', {
@@ -41,7 +40,8 @@ schema.set('toJSON', {
     ra: ret.ra,
     name: ret.name,
     email: ret.email,
-    graduation: ret.graduation
+    graduation: ret.graduation,
+    documents: ret.documents
   })
 })
 schema.pre('save', function (next) {

@@ -18,7 +18,8 @@ describe('Routes: professor', () => {
     siape: 'a12345',
     email: 'roger@email.com',
     password: '12345',
-    departament: '5ce368dd06edcb3fabd6cea3',
+    department: '5ce368dd06edcb3fabd6cea3',
+    type_user: 'professor',
     admin: false
   }
   const newDefaultProfessor = {
@@ -26,21 +27,23 @@ describe('Routes: professor', () => {
     siape: 'a123458',
     email: 'roger@email.com',
     password: '12345',
-    departament: '5cd87c81f9aedcbd1bb3a57d',
+    type_user: 'professor',
+    department: '5cd87c81f9aedcbd1bb3a57d',
+    admin: false
+  } 
+  const expectedProfessorUser = {
+    _id: defaultId,
+    name: 'roger jhon',
+    siape: 'a12345',
+    email: 'roger@email.com',
+    type_user: 'professor',
+    department: '5ce368dd06edcb3fabd6cea3',
     admin: false
   }
   const loginProfessor = {
     name: 'roger jhon',
     password: '12345'
   }
-  const expectedProfessorUser = {
-    _id: defaultId,
-    name: 'roger jhon',
-    siape: 'a123458',
-    email: 'roger@email.com',
-    departament: '5cd87c81f9aedcbd1bb3a57d',
-    admin: false
-  };
   beforeEach(() => {
     const professor = new Professor(defaultProfessor)
     professor._id = '56cb91bdc3464f14678934ca'
@@ -55,14 +58,16 @@ describe('Routes: professor', () => {
     context('when posting an professor', () => {
       it('should return a new professor with status code 201', done => {
         const customId = '56cb91bdc3464f14678934ba'
-        const newProfessor = Object.assign({}, {_id: customId, __v: 0}, newDefaultProfessor)
+        const newProfessor = Object.assign({}, {_id: customId}, newDefaultProfessor)
+
         const expectedSavedProfessor = {
           _id: '56cb91bdc3464f14678934ba',
-          admin: false, 
-          departament: '5cd87c81f9aedcbd1bb3a57d',
-          email: 'roger@email.com',
           name: 'roger jhonn',
           siape: 'a123458',
+          email: 'roger@email.com',
+          type_user: 'professor',
+          department: '5cd87c81f9aedcbd1bb3a57d',
+          admin: false
         }
 
         request
@@ -70,9 +75,8 @@ describe('Routes: professor', () => {
           .set('authorization', token)
           .send(newProfessor)
           .end((err, res) => {
-            console.log(res.body)
-            expect(res.status).to.eql(201)
-            // expect(res.body).to.eql(expectedSavedProfessor)
+            expect(res.status).to.eql(201)        
+            expect(res.body).to.eql(expectedSavedProfessor)
             done(err)
           })
       })
@@ -83,7 +87,7 @@ describe('Routes: professor', () => {
         .get('/professor/admin')
         .set('authorization', token)
         .end((err, res) => {
-          // expect(res.body).to.eql([expectedProfessorUser]);
+          expect(res.body).to.eql([expectedProfessorUser]);
           done(err);
         });
       })
@@ -96,7 +100,7 @@ describe('Routes: professor', () => {
           .post('/professor/login')
           .send(loginProfessor)
           .end((err, res) => {
-            expect(res.body.access.auth).to.be.true
+            expect(res.body.auth).to.be.true
             done(err)
           })
       })
@@ -120,22 +124,5 @@ describe('Routes: professor', () => {
           });
       });
     });
-  })
-  describe('PUT /professor/admin/unset/graduation/:id', () => {
-    context('when unset graduation reference into professor', () => {
-      it('should unset graduation and return 200 as status code', done => {
-        const idGraduation = defaultProfessor.graduation
-        let updatedProfessor = defaultProfessor
-        updatedProfessor.graduation = undefined
-        
-        request
-          .put(`/professor/admin/unset/graduation/${idGraduation}`)
-          .set('authorization', token)
-          .end((err, res) => {
-            expect(res.status).to.eql(200)
-            done(err)
-          })
-      })
-    })
   })
 })

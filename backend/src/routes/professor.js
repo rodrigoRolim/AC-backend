@@ -11,10 +11,10 @@ const router = express.Router()
 
 const professorController = new ProfessorController(Professor, jwt, compare)
 
-router.post('/admin', verify.verifyJWT, (req, res) => professorController.createProfessor(req, res))
-router.post('/login', (req, res) => professorController.loginProfessor(req, res))
+router.post('/admin', verify.verifyJWT, (req, res) => professorController.create(req, res)) // mudar para create
+router.post('/login', (req, res) => professorController.login(req, res))
 router.get('/admin', verify.verifyJWT, (req, res) => professorController.readAll(req, res))
-router.put('/admin/:id', verify.verifyJWT, (req, res) => professorController.updateProfessor(req, res))
-router.put('/admin/unset/graduation/:id', (req, res) => professorController.unsetGraduation(req, res))
+router.put('/admin/:id', verify.verifyJWT, (req, res) => professorController.update(req, res)) // mudar para /:id
+router.put('/admin/unset/graduation/:id', (req, res) => professorController.unsetGraduation(req, res)) // excluir!
 
 export default router

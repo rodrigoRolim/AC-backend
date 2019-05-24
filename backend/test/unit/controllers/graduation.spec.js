@@ -2,7 +2,7 @@ import sinon from 'sinon'
 import Graduation from '../../../src/models/graduation'
 import GraduationController from '../../../src/controllers/graduation'
 
-describe('Management graduation', () => {
+describe('Controller: graduation', () => {
   const graduation = {
     body: {
       name: 'engenharia de software',
@@ -32,7 +32,7 @@ describe('Management graduation', () => {
       Graduation.create.withArgs(graduation.body).resolves('success')
 
       const graduationController = new GraduationController(Graduation)
-      return graduationController.createDegree(request, response).then(() => {
+      return graduationController.create(request, response).then(() => {
         sinon.assert.calledWith(response.send, 'success')
       })
     })
@@ -95,7 +95,7 @@ describe('Management graduation', () => {
       Graduation.update.withArgs({ _id: id}, request.body).resolves({ ok: 1 })
   
       const graduationController = new GraduationController(Graduation)
-      return graduationController.updateDegree(request, response)
+      return graduationController.update(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, { ok: 1 })
         })

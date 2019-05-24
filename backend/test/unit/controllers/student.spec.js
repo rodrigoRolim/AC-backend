@@ -12,6 +12,8 @@ describe('Management student', () => {
     email: 'student@mail',
     password: '12345',
     graduation: 'engenharia',
+    user_type: 'aluno',
+    documents: []
   }
   const defaultRequest = {
     params: {}
@@ -62,7 +64,7 @@ describe('Management student', () => {
   describe('login student', () => {
     it('should return token of authorization', () => {
       const expectedResponse = {
-        access: { token: 'hashToken', auth: true, tag: 2 },
+        access: { token: 'hashToken', auth: true, tag: 2 }, // {token: 'hastoken', user: defaultStudent }
         user: defaultStudent 
       }
       const request = {

@@ -2,10 +2,10 @@
   <v-app id="ManagerProfessor">
     <ac-navbar>
     <v-toolbar-items>
-      <v-btn flat to="/admin/home">cursos</v-btn>
+      <v-btn flat to="/professor/home">cursos</v-btn>
       <v-btn flat to="/admin/departamentos">departamentos</v-btn>
-      <v-btn flat to="/admin/professor">professores</v-btn>
-      <v-btn flat to="/admin/grupo">grupos</v-btn>
+      <v-btn flat to="/admin/professores">professores</v-btn>
+      <v-btn flat to="/admin/grupos">grupos</v-btn>
       <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
     </v-toolbar-items>
       </v-btn>
@@ -20,7 +20,7 @@
           vertical
         ></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn color="secondary" depressed dark class="mb-2" v-on="on">Novo professor</v-btn>
           </template>
@@ -54,7 +54,7 @@
                   </v-flex>
                   <v-checkbox
                   md12
-                  v-model="editedItem.admin"
+                  v-model="editedItem.professor"
                   label="Admin"
                   ></v-checkbox>
                 </v-layout>
@@ -91,7 +91,7 @@
           <td class="text-md-left">{{ props.item.email }}</td>
           <td class="text-md-left">{{ props.item.graduation }}</td>
           <td class="text-md-left">
-            <v-icon color="success" small class="mr-2">{{ props.item.admin ? 'lens': ''}}</v-icon>
+            <v-icon color="success" small class="mr-2">{{ props.item.professor ? 'lens': ''}}</v-icon>
           </td>
           <td class="justify-center layout px-0">
             <v-icon
@@ -140,7 +140,7 @@ import AcNavbar from '../AcNavbar'
         },
         { text: 'email', value: 'email', sortable: false, align: 'left' },
         { text: 'departamento (responsável)', value: 'curso', sortable: false, align: 'left' },
-        { text: 'admin', value: 'admin', sortable: false, align: 'left'},
+        { text: 'professor', value: 'professor', sortable: false, align: 'left'},
         { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
       departaments: [],
@@ -153,7 +153,7 @@ import AcNavbar from '../AcNavbar'
         graduation: '',
         _id: '',
         password: '',
-        admin: false
+        professor: false
       },
       defaultItem: {
         name: '',
@@ -161,7 +161,7 @@ import AcNavbar from '../AcNavbar'
         graduation: '',
         _id: '',
         password: '',
-        admin: false
+        professor: false
       }
     }),
 
@@ -184,7 +184,7 @@ import AcNavbar from '../AcNavbar'
     methods: {
       logout () {
         localStorage.removeItem('user')
-        this.$router.replace('/admin')
+        this.$router.replace('/professor')
       },
       getGraduations () {
         AdminService.readAllDegrees()
@@ -204,9 +204,9 @@ import AcNavbar from '../AcNavbar'
               let graduationName = this.graduations
                 .filter(graduation => graduation.professor === item._id)
               let name = (typeof graduationName[0] === 'undefined') ? '':  graduationName[0].name
-              console.log(item.admin)
+              console.log(item.professor)
               this.professors.push(Object.assign({}, 
-                {_id: item._id, name: item.name, email: item.email, graduation: name, admin: item.admin}))
+                {_id: item._id, name: item.name, email: item.email, graduation: name, professor: item.professor}))
             })
         })
       },
@@ -233,7 +233,7 @@ import AcNavbar from '../AcNavbar'
       save () {
         if (this.editedIndex > -1) {
           const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email, 
-                                    admin: this.editedItem.admin}
+                                    professor: this.editedItem.professor}
           AdminService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
             .then((res) => {
               console.log(res)

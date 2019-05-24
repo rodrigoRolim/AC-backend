@@ -12,14 +12,16 @@ describe('Route: Student', () => {
     ra: 'a12345',
     name: 'name student',
     email: 'name@mail',
-    graduation: 'graduation description',
+    graduation: '5cd60a0312c3e687ea34667f',
+    documents: [],
     password: '12345'
   }
   const defaultNewStudent = {
     ra: 'a12346',
     name: 'name student again',
     email: 'nameagain@mail',
-    graduation: 'graduation description again',
+    graduation: '5ce881f3ad1b69460281a633',
+    documents: [],
     password: '12345'
   }
   const expectedSaveStudent = {
@@ -27,7 +29,8 @@ describe('Route: Student', () => {
     ra: 'a12346',
     name: 'name student again',
     email: 'nameagain@mail',
-    graduation: 'graduation description again',
+    documents: [],
+    graduation: '5ce881f3ad1b69460281a633',
   }
  
   before(() => {
@@ -75,7 +78,7 @@ describe('Route: Student', () => {
         .post('/student/login')
         .send(requestStudent)
         .end((err, res) => {
-          expect(res.body.access.auth).to.true
+          expect(res.body.auth).to.true
           done(err)
         })
       })
