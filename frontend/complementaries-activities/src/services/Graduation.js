@@ -1,21 +1,21 @@
 import { http } from './config'
 
 export default {
-  addDegree: ({ name }) => {
+  save: ({ name }) => {
     let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
     return http.post('/degrees/admin', { name })
   },
-  readAllDegrees: () => {
+  readAll: () => {
     return http.get('/degrees/admin')
   },
-  deleteDegree: (degree) => {
+  delete: (degree) => {
     const id = degree._id
     let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
     return http.delete(`/degrees/admin/${id}`)
   },
-  updatingDegree: (id, degree) => {
+  update: (id, degree) => {
     let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
     return http.put(`/degrees/admin/${id}`, degree)
