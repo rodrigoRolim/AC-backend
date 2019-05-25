@@ -3,12 +3,6 @@ import Graduation from '../../../src/models/graduation'
 import GraduationController from '../../../src/controllers/graduation'
 
 describe('Controller: graduation', () => {
-  const graduation = {
-    body: {
-      name: 'engenharia de software',
-      professor: '56cb91bdc3464f14678934ca'
-    }
-  }
   const listGraduation = [
     {
       name: 'engenharia de software',
@@ -27,13 +21,15 @@ describe('Controller: graduation', () => {
         send: sinon.spy(),
         status: sinon.stub()
       }
+      class fakeGraduation {
+        save () {}
+      }
+      sinon.stub(fakeGraduation.prototype, 'save').withArgs().resolves()
       response.status.withArgs(201).returns(response)
-      Graduation.create = sinon.stub()
-      Graduation.create.withArgs(graduation.body).resolves('success')
-
-      const graduationController = new GraduationController(Graduation)
+      
+      const graduationController = new GraduationController(fakeGraduation)
       return graduationController.create(request, response).then(() => {
-        sinon.assert.calledWith(response.send, 'success')
+        sinon.assert.calledWith(response.send)
       })
     })
   })
