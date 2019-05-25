@@ -16,7 +16,8 @@ describe('Controllers: Users', () => {
   describe('post() users', () => {
     it('should call send with a token for admin user', () => {
       const expectedResponse = {
-        access: { token: 'hash', auth: true, tag: 0 },
+        token: 'hash',
+        auth: true,
         user: userResolves
       }
       const request = {
