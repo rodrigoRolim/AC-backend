@@ -13,7 +13,6 @@ describe('Router: document', () => {
     path: '/path/to/document',
     evaluation: 'none',
     sent: false,
-    course_name: 'graduation name',
     group: 'name group',
     item: 'name item',
     student: '5ce30224b1bcd6cda1addc58'
@@ -33,7 +32,7 @@ describe('Router: document', () => {
 
   afterEach(() => Document.deleteMany({}))
 
-  describe('POST /student/document/add', () => {
+  describe('POST /document/add', () => {
     it('should return new saved document', done => {
       const newDocument = Object.assign({}, {_id: defaultId}, defaultDocument)
       const expectedSaveDocument = {
@@ -44,14 +43,13 @@ describe('Router: document', () => {
         path: '/path/to/document',
         evaluation: 'none',
         sent: false,
-        course_name: 'graduation name',
         group: 'name group',
         item: 'name item',
         student: '5ce30224b1bcd6cda1addc58'
       }
   
       request
-        .post('/student/document/add')
+        .post('/document/add')
         .set('authorization', token)
         .send(newDocument)
         .end((err, res) => {

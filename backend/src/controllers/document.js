@@ -6,7 +6,7 @@ class DocumentController {
     const document = new this.Document(req.body)
 
     return document.save()
-      .then(() => res.status(201).send('salvo com sucesso.'))
+      .then(() => res.status(201).send(document))
       .catch((err) => res.status(422).send(err.message))
   }
 }
