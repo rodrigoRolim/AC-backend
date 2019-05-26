@@ -124,7 +124,8 @@
 
 
 <script>
-import AdminService from '@/services/Admin.js'
+import GraduationService from '@/services/Graduation.js'
+import ProfessorService from '@/services/Professor.js'
 import AcNavbar from '../AcNavbar'
   export default {
     components: { AcNavbar },
@@ -187,7 +188,7 @@ import AcNavbar from '../AcNavbar'
         this.$router.replace('/professor')
       },
       getGraduations () {
-        AdminService.readAllDegrees()
+        GraduationService.readAll()
           .then(graduations => {
             this.graduations = graduations.data
           })
@@ -196,7 +197,7 @@ import AcNavbar from '../AcNavbar'
           })
       },
       initialize () {
-        AdminService.readAllProfessors()
+        ProfessorService.readAll()
           .then(professors => {
             console.log(professors)
             professors.data.map((item) => {
@@ -234,7 +235,7 @@ import AcNavbar from '../AcNavbar'
         if (this.editedIndex > -1) {
           const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email, 
                                     professor: this.editedItem.professor}
-          AdminService.updatingProfessorResponsible(this.editedItem._id, professorUpdate)
+          ProfessorService.updateResponsible(this.editedItem._id, professorUpdate)
             .then((res) => {
               console.log(res)
               if (res.data == 'OK') {
@@ -244,7 +245,7 @@ import AcNavbar from '../AcNavbar'
           Object.assign(this.professors[this.editedIndex], this.editedItem)
         } else {
           console.log(this.editedItem)
-           AdminService.addProfessor(this.editedItem).
+           ProfessorService.save(this.editedItem).
             then((res) => {
               alert('cadastrado com sucesso')
               this.professors.push(res.data)

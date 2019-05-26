@@ -5,6 +5,7 @@ import database from './config/database'
 import dotenv from 'dotenv-safe'
 import cors from 'cors'
 
+
 const configureExpress = () => {
   dotenv.load()
   const app = express()

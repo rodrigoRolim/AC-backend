@@ -8,7 +8,7 @@
         </v-btn>
         <v-btn color="error"  @click="">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
-      </ac-navbar>
+    </ac-navbar>
   </v-app>
 </template>
 
