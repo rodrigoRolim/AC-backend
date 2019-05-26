@@ -10,6 +10,7 @@ import Home from '@/components/Home'
 import StudentLogin from '@/components/student/StudentLogin'
 import AddStudent from '@/components/student/AddStudent'
 import StudentHome from '@/components/student/StudentHome'
+import AddDocument from '@/components/student/AddDocument'
 import Denied from '@/components/Denied'
 import AddFirstProfessor from '../../only-development/AddFirstProfessor'
 
@@ -87,6 +88,14 @@ let router = new Router({
     {
       path: '/aluno/home',
       component: StudentHome,
+      meta: {
+        requiresAuth: true,
+        is_student: true
+      }
+    },
+    {
+      path: '/aluno/documento/add',
+      component: AddDocument,
       meta: {
         requiresAuth: true,
         is_student: true
