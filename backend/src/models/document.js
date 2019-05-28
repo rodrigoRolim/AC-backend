@@ -33,6 +33,7 @@ const schema = new mongoose.Schema({
   },
   student: {
     type: mongoose.Schema.Types.ObjectId, ref: 'Student',
+    required: true
   }
 })
 

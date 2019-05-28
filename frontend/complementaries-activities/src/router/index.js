@@ -21,15 +21,16 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      component: Home
+      component: Home,
+      name: 'Home'
     },
     {
-      path: '/professor/home',
+      path: '/professor/home', // mudar para professor/curso
       name: 'AdminHome',
       component: AdminGraduation,
       meta: {
         requiresAuth: true,
-        is_admin: true
+        is_professor: true
       }
     },
     {
@@ -37,7 +38,7 @@ let router = new Router({
       component: AdminProfessor,
       meta: {
         requiresAuth: true,
-        is_admin: true
+        is_professor: true
       }
     },
     {
@@ -45,7 +46,7 @@ let router = new Router({
       component: AdminProfessor,
       meta: {
         requiresAuth: true,
-        is_admin: true
+        is_professor: true
       }
     },
     {
@@ -53,22 +54,14 @@ let router = new Router({
       component: AdminGroup,
       meta: {
         requiresAuth: true,
-        is_admin: true
+        is_professor: true
       }
     },
     {
-      path: '/admin',
+      path: '/professor',
       component: ProfessorLogin,
       meta: {
         quest: true
-      }
-    },
-    {
-      path: '/admin/home',
-      component: ProfessorHome,
-      meta: {
-        requiresAuth: true,
-        is_professor: true,
       }
     },
     {
@@ -88,6 +81,7 @@ let router = new Router({
     {
       path: '/aluno/home',
       component: StudentHome,
+      name: 'StudentHome',
       meta: {
         requiresAuth: true,
         is_student: true
@@ -103,7 +97,8 @@ let router = new Router({
     },
     {
       path: '/admin/departamentos',
-      component: AdminDepartment
+      component: AdminDepartment,
+      is_professor: true
     },
     {
       path: '/denied-access',
@@ -118,40 +113,41 @@ let router = new Router({
   ]
 })
 
-/* router.beforeEach((to, from, next) => {
-  let access = JSON.parse(localStorage.getItem('token'))
-  console.log(access) 
+router.beforeEach((to, from, next) => {
+  
+  let token = 'undefined'
+  let user = 'undefined'
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (access == null || access.token == null) {
+    if (typeof localStorage.getItem('token') != "undefined" 
+       && typeof localStorage.getItem('user') != 'undefined') {
+      token = JSON.parse(localStorage.getItem('token'))
+      user = JSON.parse(localStorage.getItem('user'))
+    }
+    if (typeof token == "undefined" || typeof user == 'undefined') {
       next({
         path: '/',
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (to.matched.some(record => record.meta.is_admin)) {
-        console.log(access.admin)
-        if (access.tag == 0) {
-          next()
-        } else {
-          next({ name: 'DeniedAccess' })
-        }
-      } else {
-        next()
-      }
       if (to.matched.some(record => record.meta.is_professor)) {
-        if (access.tag == 1) {
+        console.log(user.user_type)
+        if (user.type_user == 'professor') {
           next()
         } else {
-          next({ name: 'DeniedAccess' })
+          next({ name: 'Home' })
         }
       } else {
         next()
       }
       if (to.matched.some(record => record.meta.is_student)) {
-        if (access.tag == 2) {
+
+        if (user.user_type == 'aluno') {
+          console.log('aqui')
           next()
         } else {
-          next({ name: 'DeniedAccess' })
+          console.log('nao')
+          next({ name: 'Home' })
         }
       }
     }
@@ -164,5 +160,5 @@ let router = new Router({
   } else {
     next()
   }
-}) */
+})
 export default router

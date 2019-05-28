@@ -18,7 +18,7 @@ const fileFilter = (req, file, cb) => {
   }
   cb(null, true)
 }
-const MAX_SIZE = 200000
+const MAX_SIZE = 20000000
 const upload = multer({
   dest: './uploads/',
   fileFilter,
@@ -31,13 +31,14 @@ const router = express.Router()
 const documentController = new DocumentController(Document, open)
 
 router.post('/add', upload.single('file'), (req, res) => documentController.create(req, res))
+router.get('/test', (req, res) => documentController.getDocument(req, res))
 router.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_TYPES") {
-    res.status(422).json({ error: "Only pdf are allowed" })
+    res.status(422).json({ error: "Somente pdfs são pertmitidos" })
     return
   }
   if (err.code === "LIMIT_FILE_SIZE") {
-    res.status(422).json({ error: `Too large. Max size is${MAX_SIZE}` })
+    res.status(422).json({ error: `Muito largo. Tamanho máximo: ${MAX_SIZE/1000}Kb` })
     return
   }
 })

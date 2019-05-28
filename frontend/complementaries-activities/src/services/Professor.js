@@ -4,20 +4,20 @@ export default {
   login: (professor) => {
     return http.post('/professor/login', professor)
   },
-  save: ({ admin, name, email, password }) => {
+  save: (professor) => {
     let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.post('/professor/admin', { name, email, password, admin })
+    return http.post('/professor/add', professor)
   },
   readAll: () => {
     let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.get('/professor/admin')
+    return http.get('/professor/all')
   },
-  updateResponsible: (id, professor) => {
+  update: (id, professor) => {
     let user = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${user.token}`
-    return http.put(`/professor/admin/${id}`, professor)
+    return http.put(`/professor/update/${id}`, professor)
   },
   unsetGraduationOfProfessor: (idGraduation) => {
     return http.put(`/professor/admin/unset/graduation/${idGraduation}`)

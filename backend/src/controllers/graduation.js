@@ -12,7 +12,20 @@ class CourseController {
       })
   }
   readAll (req, res) {
-    return this.Graduation.find({})
+    return this.Graduation.aggregate([
+      { 
+        "$lookup": {
+        "localField": "department",
+        "from": "departments", 
+        "foreignField": "_id",
+        "as": "deps"
+      }
+    },
+      {
+        "$project":
+        {"department": 0}
+      }
+    ])
       .then((graduations) => res.send(graduations))
       .catch(err => res.send(err.message))
   }

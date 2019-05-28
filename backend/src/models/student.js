@@ -41,6 +41,7 @@ schema.set('toJSON', {
     name: ret.name,
     email: ret.email,
     graduation: ret.graduation,
+    user_type: ret.user_type,
     documents: ret.documents
   })
 })

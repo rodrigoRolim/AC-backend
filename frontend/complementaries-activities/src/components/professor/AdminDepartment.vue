@@ -12,107 +12,107 @@
       </ac-navbar>
       <v-layout class="table">
         <v-toolbar flat color="white">
-      <v-toolbar-title>Lista de departamentos</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="500px">
-        <template v-slot:activator="{ on }">
-          <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo departmento</v-btn>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">novo departamento</span>
-          </v-card-title>
-
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm12 md12>
-                  <v-text-field
-                  v-model="editedItem.name"
-                  :rules="nameRules"
-                  label="nome do departamento"
-                  required
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="error" @click="close">Cancel</v-btn>
-            <v-btn color="primary"
-            :disabled="!valid"
-            @click="save">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-toolbar>
-
-      <v-card>
-        <v-card-title >
-          Departamentos
+          <v-toolbar-title>Lista de departamentos</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-card-title>
-        <v-data-table
-        :headers="headers"
-        :items="departments"
-        :search="search"
-        hide-actions
-        :pagination.sync="pagination"
-        
-      >
-        <template v-slot:items="props" >
-          <td class="name-item">{{ props.item.name }}</td>
-          <td class="justify-end layout px-6">
-          <v-icon
-            small
-            color="success"
-            class="mr-3 tam"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            color="error"
-            class="mr-3 tam"
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
-        </td>
-        </template>
-        <template v-slot:no-results  >
+          <v-dialog v-model="dialog" max-width="500px">
+            <template v-slot:activator="{ on }">
+              <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo departmento</v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">novo departamento</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-text-field
+                      v-model="editedItem.name"
+                      :rules="nameRules"
+                      label="nome do departamento"
+                      required
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="error" @click="close">Cancel</v-btn>
+                <v-btn color="primary"
+                :disabled="!valid"
+                @click="save">Save</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+
+        <v-card>
+          <v-card-title >
+            Departamentos
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="search"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="departments"
+            :search="search"
+            hide-actions
+            :pagination.sync="pagination"
+          
+        >
+          <template v-slot:items="props" >
+            <td class="name-item">{{ props.item.name }}</td>
+            <td class="justify-end layout px-6">
+            <v-icon
+              small
+              color="success"
+              class="mr-3 tam"
+              @click="editItem(props.item)"
+            >
+              edit
+            </v-icon>
+            <v-icon
+              small
+              color="error"
+              class="mr-3 tam"
+              @click="deleteItem(props.item)"
+            >
+              delete
+            </v-icon>
+          </td>
+          </template>
+          <template v-slot:no-results  >
+            <v-alert :value="true" color="error" icon="warning">
+              Sua pesquisa para "{{ search }}" não obteve resultados.
+            </v-alert>
+          </template>
+          <template v-slot:no-data>
           <v-alert :value="true" color="error" icon="warning">
-            Sua pesquisa para "{{ search }}" não obteve resultados.
+            nenhum departamento cadastrado
           </v-alert>
-        </template>
-        <template v-slot:no-data>
-        <v-alert :value="true" color="error" icon="warning">
-          nenhum departamento cadastrado
-        </v-alert>
-        </template>
-      </v-data-table>
-      <div class="text-xs-center pt-0">
-        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-     </div>
-    </v-card>
-  </v-layout>
+          </template>
+        </v-data-table>
+        <div class="text-xs-center pt-0">
+          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+      </div>
+      </v-card>
+    </v-layout>
 
   </v-app>
 </template>
 
 <script>
 import AcNavbar from '../AcNavbar.vue'
-import Degree from '@/services/Admin.js'
+import DepartmentService from '@/services/Department.js'
 export default {
   components: { AcNavbar },
   data () {
@@ -171,10 +171,13 @@ export default {
   },
   methods: {
     initialize () {
-      Degree.readAllDegrees()
+      DepartmentService.readAll()
         .then((departments) => {
           this.departments = departments.data
           console.log(this.departments)
+        })
+        .catch((err) => {
+
         })
     },
     editItem (item) {
@@ -186,14 +189,14 @@ export default {
       const index = this.departments.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
-        Degree.deleteDegree(item).then((res) => {
+        GraduationService.deletedepartment(item).then((res) => {
         alert(res.data.message)
         })
         .then(() => {
           console.log('e aqui')
           console.log(item)
           if (typeof item.professor !== 'undefined') {
-            Degree.unsetGraduationOfProfessor(item._id)
+            GraduationService.unsetGraduationOfProfessor(item._id)
               .then((res) => {
                 console.log('entrou aqui')
                 console.log(res)
@@ -217,16 +220,16 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
-        Degree.updatingDegree(this.editedItem._id, this.editedItem)
+       /*  GraduationService.updatingdepartment(this.editedItem._id, this.editedItem)
           .then((res) => {
             if (res.data.ok == 1) {
               alert('atualizado com sucesso')
             }
-          })
+          }) */
         Object.assign(this.departments[this.editedIndex], this.editedItem)
       } else {
-        Degree.addDegree(this.editedItem).then((degree) => {
-          this.departments.push(degree.data)
+        DepartmentService.save(this.editedItem).then((department) => {
+          this.departments.push(department.data)
         })
       }
       this.close()

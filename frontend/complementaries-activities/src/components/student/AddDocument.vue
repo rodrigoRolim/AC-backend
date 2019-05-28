@@ -6,18 +6,20 @@
         <v-btn flat color="blue-grey" to="/aluno/documento/add">
         documento <v-icon right dark>cloud_upload</v-icon>
         </v-btn>
-        <v-btn color="error"  @click="">sair<i class="material-icons">exit_to_app</i></v-btn>
+        <v-btn color="error" @click="">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
     <v-layout justify-center class="container">
     
       <v-flex xs12 sm10 md9 lg9>
-        <v-alert
+        <transition>
+          <v-alert
           :value="successUpload"
-          type="success"
-        >
-          This is a success alert.
-        </v-alert>
+          :type="alert"
+          >
+            {{ messageAlert }}
+         </v-alert>
+        </transition>
         <v-form 
           enctype="multipart/form-data"
           @submit.prevent="save"
@@ -74,7 +76,6 @@
               type="file"
               style="display: none"
               ref="doc"
-              accept="application/pdf"
               @change="onFilePicked"
             >        
           </v-card-text>
@@ -102,13 +103,15 @@ export default {
   data () {
     return {
       successUpload: false,
+      messageAlert: '',
+      alert: 'success',
       document: {
         name: null,
         score: null,
         path: null,
         group: null,
         item: null,
-        student: null
+        student: JSON.parse(localStorage.getItem('user'))._id
       },
       rules: {
         required: value => !!value || 'Required'
@@ -129,8 +132,9 @@ export default {
 
       DocumentService.save(formData)
         .then((res) => {
-          console.log(res)
           this.reset()
+          this.alert = 'success'
+          this.messageAlert = 'carregado com sucesso!'
           this.successUpload = true
           setTimeout(() => {
             this.successUpload = false
@@ -138,21 +142,29 @@ export default {
 
         })
         .catch((err) => {
-          console.log(err.code)
+          this.alert = 'error'
+          this.messageAlert = err.response.data.error
+          this.successUpload = true
+            setTimeout(() => {
+            this.successUpload = false
+          }, 5000)
         })
     },
     reset () {
       this.$refs.form.reset()
     },
     pickFile () {
+     
+      this.successUpload = false
       this.$refs.doc.click()
+      
     },
     onFilePicked (e) {
       const files = e.target.files
       if (typeof files[0] !== undefined) {
         
         this.docName = files[0].name
-        
+
         if (this.docName.lastIndexOf('.') <= 0) {
           return 
         }
@@ -175,5 +187,7 @@ export default {
 </script>
 
 <style scoped>
-
+.container {
+  margin-top: 30px;
+}
 </style>

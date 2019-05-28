@@ -10,18 +10,18 @@
       </v-toolbar-items>
        
       </ac-navbar>
-      <v-layout class="table">
-        <v-toolbar flat color="white">
-      <v-toolbar-title>Lista de cursos</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="500px">
-        <template v-slot:activator="{ on }">
-          <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
-          </v-card-title>
+     <v-layout class="table">
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Lista de cursos</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on }">
+            <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
 
           <v-card-text>
             <v-container grid-list-md>
@@ -34,9 +34,9 @@
                     required
                   ></v-text-field>
                   <v-select
-                    :items="departaments"
+                    :items="departmentNames"
                     label="departamento responsável*"
-                    v-model="selectedName"
+                    v-model="editedItem.department"
                     required
                   ></v-select>
                 </v-flex>
@@ -69,14 +69,14 @@
         </v-card-title>
         <v-data-table
         :headers="headers"
-        :items="degrees"
+        :items="graduations"
         :search="search"
         hide-actions
         :pagination.sync="pagination"
         >
         <template v-slot:items="props" >
           <td class="name-item">{{ props.item.name }}</td>
-          <td class="name-item">{{ props.item.name }}</td>
+          <td class="name-item">{{ props.item.department }}</td>
           <td class="justify-end layout px-6">
           <v-icon
             small
@@ -118,12 +118,15 @@
 
 <script>
 import AcNavbar from '../AcNavbar.vue'
-import Degree from '@/services/Admin.js'
+import GraduationService from '@/services/Graduation.js'
+import DepartmentService from '@/services/Department.js'
 import BtnSetProfessor from '../SetProfessor'
 export default {
   components: { BtnSetProfessor, AcNavbar },
   data () {
     return {
+      departmentNames: [],
+      selectedName: '',
       dialog: false,
       editedIndex: -1,
       valid: true,
@@ -132,7 +135,8 @@ export default {
         v => !!v || 'Name is required'
       ],
       editedItem: {
-        name: ''
+        name: '',
+        department: ''
       },
       defaultItem: {
         name: ''
@@ -150,15 +154,15 @@ export default {
           sortable: false,
           value: 'name'
         },
-         { text: 'Departamento', value: 'name', sortable: false, align: 'left' },
+         { text: 'Departamento', value: 'department', sortable: false, align: 'left' },
         { text: 'Actions', value: 'name', sortable: false, align: 'center' }
       ],
-      degrees: []
+      graduations: []
     }
   },
   computed: {
     pages () {
-      this.pagination.totalItems = this.degrees.length
+      this.pagination.totalItems = this.graduations.length
       if (this.pagination.rowsPerPage == null ||
         this.pagination.totalItems == null
       ) {
@@ -176,39 +180,51 @@ export default {
     }
   },
   mounted () {
-    this.initialize()
+    this.initializeGraduations()
   },
   methods: {
-    initialize () {
-      Degree.readAllDegrees()
-        .then((degrees) => {
-          this.degrees = degrees.data
-          console.log(this.degrees)
+    initializeGraduations () {
+      GraduationService.readAll()
+        .then((graduations) => {
+
+          graduations.data.map(grad => {
+            const newGraduation = Object.assign({}, 
+                { _id: grad._id, name: grad.name, department: grad.deps[0].name })
+            this.graduations.push(newGraduation)
+          })
+          this.initializeDepartments()
+        })
+    },
+    initializeDepartments () {
+      DepartmentService.readAll()
+        .then((departments) => {
+          this.departments = departments.data
+          departments.data.map(dep => {
+            this.departmentNames.push(dep.name)
+          })
         })
     },
     editItem (item) {
-      this.editedIndex = this.degrees.indexOf(item)
+      this.editedIndex = this.graduations.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
     deleteItem (item) {
-      const index = this.degrees.indexOf(item)
+      const index = this.graduations.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
-        Degree.deleteDegree(item).then((res) => {
+        GraduationService.deleteDegree(item).then((res) => {
         alert(res.data.message)
         })
         .then(() => {
-          console.log('e aqui')
-          console.log(item)
+     
           if (typeof item.professor !== 'undefined') {
-            Degree.unsetGraduationOfProfessor(item._id)
+            GraduationService.unsetGraduationOfProfessor(item._id)
               .then((res) => {
-                console.log('entrou aqui')
-                console.log(res)
+              
               })
           }
-          this.degrees.splice(index, 1)
+          this.graduations.splice(index, 1)
         })
       }
     },
@@ -226,16 +242,18 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
-        Degree.updatingDegree(this.editedItem._id, this.editedItem)
+        GraduationService.updatingDegree(this.editedItem._id, this.editedItem)
           .then((res) => {
             if (res.data.ok == 1) {
               alert('atualizado com sucesso')
             }
           })
-        Object.assign(this.degrees[this.editedIndex], this.editedItem)
+        Object.assign(this.graduations[this.editedIndex], this.editedItem)
       } else {
-        Degree.addDegree(this.editedItem).then((degree) => {
-          this.degrees.push(degree.data)
+        const department = this.departments.filter((dep) => dep.name === this.editedItem.department)
+        this.editedItem.department = department[0]._id
+        GraduationService.save(this.editedItem).then((graduation) => {
+          console.log(graduation)
         })
       }
       this.close()

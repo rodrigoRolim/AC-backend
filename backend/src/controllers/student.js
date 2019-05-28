@@ -25,7 +25,7 @@ class StudentController {
 
               const _id = student._id
               const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
-   
+              console.log(student)
               res.status(201).send({ token: token, auth: resp, user: student })
             } else {
               res.status(404).send('No authorization')

@@ -21,11 +21,6 @@ const schema = new mongoose.Schema({
     enum: ['professor'],
     required: true,
     default: 'professor'
-  },
-  admin: {
-    type: Boolean,
-    required: false,
-    default: false
   }
 })
 schema.set('toJSON', {

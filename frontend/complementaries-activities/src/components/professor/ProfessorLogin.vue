@@ -2,7 +2,6 @@
   <v-app>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/admin">admin</v-btn>
         <v-btn flat to="/professor">professor</v-btn>
         <v-btn flat to="/aluno">aluno</v-btn>
       </v-toolbar-items>
@@ -85,16 +84,23 @@ export default {
     login () {
       ProfessorService.login(this.professor).then(response => {
         this.removeSession()
-        this.setUser(response.data.user)
-        this.setToken(response.data.access)
-        router.replace('/professor/home')
+        if (response.status == 201) {
+          this.createSession(response.data)
+          this.$router.replace('/professor/home')
+        }
       })
       .catch((err) => {
+        console.log(err.message)
         this.validatedUser = true
         setTimeout(() => {
           this.validatedUser = false
         }, 10000)
       })
+    },
+    createSession (response) {
+      console.log(response.data)
+      this.setUser(response.user)
+      this.setToken(response.token)
     },
     removeSession () {
       localStorage.removeItem('user')

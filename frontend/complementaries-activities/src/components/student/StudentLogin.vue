@@ -2,7 +2,6 @@
   <v-app>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/admin">admin</v-btn>
         <v-btn flat to="/professor">professor</v-btn>
         <v-btn flat to="/aluno">aluno</v-btn>
       </v-toolbar-items>
@@ -98,9 +97,9 @@ export default {
      
       Student.login(this.student).then(response => {
         this.removeSession()
-        this.setUser(response.data.user)
-        this.setToken(response.data.access)
         if (response.status == 201) {
+          console.log(response.data.user.user_type)
+          this.createSession(response.data)
           this.$router.replace('/aluno/home')
         }
       })
@@ -110,6 +109,10 @@ export default {
           this.validatedUser = false
         }, 10000)
       })
+    },
+    createSession (response) {
+      this.setUser(response.user)
+      this.setToken(response.token)
     },
     removeSession () {
       localStorage.removeItem('user')
