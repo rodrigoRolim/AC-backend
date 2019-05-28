@@ -17,13 +17,16 @@ class DocumentController {
     console.log(req)
     return this.Document.remove({ _id: req.params.id })
       .then(() => res.sendStatus(204))
+      .catch((err) => res.status(400).send(err.message)) // implementar o deleta documento na pasta upload
+  }
+  // implementar readAll
+  readAll (req, res) {
+    // const fileLocation = path.join(__dirname, '..', '..', "uploads/5d84f64f162636bd7ad51112c6c9a059")
+    // console.log(fileLocation)
+    return this.Document.find({})
+      .then((documents) => res.send(documents)) ///res.sendFile(fileLocation)
       .catch((err) => res.status(400).send(err.message))
   }
-  /* getDocument (req, res) {
-    const fileLocation = path.join(__dirname, '..', '..', "uploads/5d84f64f162636bd7ad51112c6c9a059")
-    console.log(fileLocation)
-    return res.sendFile(fileLocation)
-  } */
 }
 
 export default DocumentController

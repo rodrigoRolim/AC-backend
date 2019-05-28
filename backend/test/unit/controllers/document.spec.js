@@ -1,5 +1,6 @@
 import sinon from 'sinon'
 import DocumentController from '../../../src/controllers/document'
+import Document from '../../../src/models/document'
 
 describe('Controller: Document', () => {
   const defaultDocument = {
@@ -121,6 +122,22 @@ describe('Controller: Document', () => {
         .then(() => {
           sinon.assert.calledWith(response.send, [defaultDocument])
         })
+    })
+    context('when an error occurs', () => {
+      it('should return code 400', () => {
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        response.status.withArgs(400).returns(response)
+        Document.find = sinon.stub()
+        Document.find.withArgs({}).rejects({ message: 'Error' })
+        const documentController = new DocumentController(Document)
+        return documentController.readAll(defaultRequest, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
     })
   })
 })
