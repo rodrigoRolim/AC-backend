@@ -109,4 +109,18 @@ describe('Controller: Document', () => {
       })
     })
   })
+  describe('when getting all documents', () => {
+    it('should return all documents', () => {
+      const response = {
+        send: sinon.spy()
+      }
+      Document.find = sinon.stub()
+      Document.find.withArgs({}).resolves([defaultDocument])
+      const documentController = new DocumentController(Document)
+      return documentController.readAll(defaultRequest, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultDocument])
+        })
+    })
+  })
 })
