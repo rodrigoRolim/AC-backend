@@ -67,4 +67,25 @@ describe('Controller: Document', () => {
       })
     })
   })
+  describe('when deleting document', () => {
+    it('should return status code 201', () => {
+      const fakeId = 'id-fake'
+      const request = {params: fakeId}
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      }
+      response.status.withArgs(204).returns(response)
+      class fakeDocument {
+        static remove () {}
+      }
+      const removeStub = sinon.stub(fakeDocument, 'remove')
+      removeStub.withArgs({ _id: fakeId }).resolves([1])
+      const documentController = new DocumentController(fakeDocument)
+      return documentController.delete(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 204)
+        })
+    })
+  })
 })
