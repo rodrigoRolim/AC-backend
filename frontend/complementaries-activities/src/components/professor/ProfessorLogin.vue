@@ -90,7 +90,6 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err.message)
         this.validatedUser = true
         setTimeout(() => {
           this.validatedUser = false

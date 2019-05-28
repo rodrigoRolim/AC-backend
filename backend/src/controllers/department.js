@@ -19,8 +19,12 @@ class DepartmentController {
   }
   delete (req, res) {
     const { params: { id }} = req
+    console.log(id)
     return this.Department.deleteOne({ _id: id})
-      .then(() => res.send({ message:'removed with success' }))
+      .then(() => {
+
+        res.send({ message:'removed with success' })
+      })
       .catch((err) => res.send(err.message))
   }
   update (req, res) {

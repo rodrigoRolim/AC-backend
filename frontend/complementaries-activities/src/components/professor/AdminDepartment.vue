@@ -5,7 +5,7 @@
         <v-btn flat to="/professor/home">cursos</v-btn>
         <v-btn flat to="/admin/departamentos">departamentos</v-btn>
         <v-btn flat to="/admin/professores">professores</v-btn>
-        <v-btn flat to="/admin/grupo">grupos</v-btn>
+        <v-btn flat to="/admin/grupos">grupos</v-btn>
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
        
@@ -189,20 +189,13 @@ export default {
       const index = this.departments.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
-        GraduationService.deletedepartment(item).then((res) => {
-        alert(res.data.message)
-        })
-        .then(() => {
-          console.log('e aqui')
-          console.log(item)
-          if (typeof item.professor !== 'undefined') {
-            GraduationService.unsetGraduationOfProfessor(item._id)
-              .then((res) => {
-                console.log('entrou aqui')
-                console.log(res)
-              })
-          }
+        DepartmentService.delete(item._id).then((res) => {
+          alert(res.data.message)
           this.departments.splice(index, 1)
+        })
+        .catch((err) => {
+          console.log(err)
+          alert('O departamento provavelmente esta sendo usado em algum curso, não pode excluí-lo')
         })
       }
     },

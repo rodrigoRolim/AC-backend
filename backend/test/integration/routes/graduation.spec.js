@@ -16,8 +16,9 @@ describe('Routes: Graduation', () => {
   const listGraduations = {
     _id: '56cb91bdc3464f14678934ca',
     __v: 0,
+    deps: [],
     name: 'engenharia da computação',
-    department: '5cd5b4d3939ac63f4957dce7'
+    //department: '5cd5b4d3939ac63f4957dce7'
   }
   before(() => {
     return setupApp()
@@ -36,7 +37,7 @@ describe('Routes: Graduation', () => {
   describe('POST /admin/home', () => {
     it('should return added last graduation', done => {
       request
-      .post('/graduation/admin')
+      .post('/graduation/add')
       .set('authorization', token)
       .send(defaultGraduation)
       .end((err, res) => {
@@ -45,10 +46,10 @@ describe('Routes: Graduation', () => {
       })
     })
   })
-  describe('GET /admin/home', () => {
+  describe('GET /graduation/all', () => {
     it('should return list of graduations', done => {
       request
-      .get('/graduation/admin')
+      .get('/graduation/all')
       .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql([listGraduations])
@@ -56,10 +57,10 @@ describe('Routes: Graduation', () => {
       })
     })
   })
-  describe('DELETE /admin/home', () => {
+  describe('DELETE /graduation/delete/:id', () => {
     it('should return message of removed with success', done => {
       request
-      .del(`/graduation/admin/${listGraduations._id}`)
+      .del(`/graduation/delete/${listGraduations._id}`)
       .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql({ message: 'removed with success' })
@@ -67,10 +68,10 @@ describe('Routes: Graduation', () => {
       })
     })
   })
-  describe('PUT /admin/home', () => {
+  describe('PUT /graduation/update/:id', () => {
     it('should return graduation updated recently', done => {
       request
-      .put(`/graduation/admin/${listGraduations._id}`)
+      .put(`/graduation/update/${listGraduations._id}`)
       .set('authorization', token)
       .end((err, res) => {
         expect(res.status).to.be.eql(201)

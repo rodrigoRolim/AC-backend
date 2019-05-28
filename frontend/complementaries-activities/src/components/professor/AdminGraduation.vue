@@ -213,7 +213,7 @@ export default {
       const index = this.graduations.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
-        GraduationService.deleteDegree(item).then((res) => {
+        GraduationService.delete(item).then((res) => {
         alert(res.data.message)
         })
         .then(() => {
@@ -253,7 +253,8 @@ export default {
         const department = this.departments.filter((dep) => dep.name === this.editedItem.department)
         this.editedItem.department = department[0]._id
         GraduationService.save(this.editedItem).then((graduation) => {
-          console.log(graduation)
+          this.graduations = []
+          this.initializeGraduations()
         })
       }
       this.close()

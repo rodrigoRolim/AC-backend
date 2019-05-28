@@ -13,6 +13,7 @@ describe('Route: Student', () => {
     name: 'name student',
     email: 'name@mail',
     graduation: '5cd60a0312c3e687ea34667f',
+    user_type: 'aluno',
     documents: [],
     password: '12345'
   }
@@ -21,6 +22,7 @@ describe('Route: Student', () => {
     name: 'name student again',
     email: 'nameagain@mail',
     graduation: '5ce881f3ad1b69460281a633',
+    user_type: 'aluno',
     documents: [],
     password: '12345'
   }
@@ -30,6 +32,7 @@ describe('Route: Student', () => {
     name: 'name student again',
     email: 'nameagain@mail',
     documents: [],
+    user_type: 'aluno',
     graduation: '5ce881f3ad1b69460281a633',
   }
  

@@ -17,7 +17,11 @@ describe('Controller: Document', () => {
   }
   describe('posting document from student', () => {
     it('should posting a document and return code 201', () => {
-      const request = Object.assign({}, { body: defaultDocument }, defaultRequest)
+      const file = {
+        path: 'path/to',
+      }
+      const request = Object.assign({}, 
+        { body: { document: JSON.stringify(defaultDocument)}, file: file }, defaultRequest)
       const response = {
         send: sinon.spy(),
         status: sinon.stub()
@@ -33,12 +37,16 @@ describe('Controller: Document', () => {
 
       return documentController.create(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, 'salvo com sucesso.')
+          sinon.assert.calledWith(response.send)
         })
     })
     context('when an error occurs', () => {
       it('should return code 422', () => {
-        const request = Object.assign({}, { body: defaultDocument }, defaultRequest)
+        const file = {
+          path: 'path/to',
+        }
+        const request = Object.assign({}, 
+          { body: { document: JSON.stringify(defaultDocument)}, file: file }, defaultRequest)
         const response = {
           send: sinon.spy(),
           status: sinon.stub()

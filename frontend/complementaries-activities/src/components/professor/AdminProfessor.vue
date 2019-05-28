@@ -52,11 +52,6 @@
                    <v-flex md12 sm12>
                     <v-text-field type="password" v-model="editedItem.password" label="Senha"></v-text-field>
                   </v-flex>
-                  <v-checkbox
-                  md12
-                  v-model="editedItem.professor"
-                  label="Admin"
-                  ></v-checkbox>
                 </v-layout>
               </v-container>
             </v-card-text>
@@ -124,12 +119,13 @@
 
 
 <script>
-import GraduationService from '@/services/Graduation.js'
+import DepartmentService from '@/services/Department.js'
 import ProfessorService from '@/services/Professor.js'
 import AcNavbar from '../AcNavbar'
   export default {
     components: { AcNavbar },
     data: () => ({
+      selectedName: '',
       dialog: false,
       search: '',
       headers: [
@@ -146,29 +142,26 @@ import AcNavbar from '../AcNavbar'
       ],
       departaments: [],
       professors: [],
-      graduations: [],
       editedIndex: -1,
       editedItem: {
         name: '',
         email: '',
         graduation: '',
         _id: '',
-        password: '',
-        professor: false
+        password: ''
       },
       defaultItem: {
         name: '',
         email: '',
         graduation: '',
         _id: '',
-        password: '',
-        professor: false
+        password: ''
       }
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'Novo professor' : 'Editar professor'
       }
     },
 
@@ -193,7 +186,16 @@ import AcNavbar from '../AcNavbar'
             this.graduations = graduations.data
           })
           .then(() => {
-            this.initialize()
+            this. initializeDepartments()
+          })
+      },
+      initializeDepartments () {
+        DepartmentService.readAll()
+          .then((departments) => {
+            this.departments = departments.data
+            departments.data.map(dep => {
+              this.departmentNames.push(dep.name)
+            })
           })
       },
       initialize () {

@@ -40,11 +40,11 @@ describe('Management groups', () => {
   })
 
   afterEach(() => Group.deleteMany({}))
-  describe('POST /group/admin', () => {
+  describe('POST /group/add', () => {
     context('when add a new group', () => {
       it('should added new item and return 201 and new group', done => {
         request
-        .post('/group/admin')
+        .post('/group/add')
         .set('authorization', token)
         .send(defaultGroupWithItem)
         .end((err, res) => {
@@ -54,11 +54,11 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('PUT /group/admin/:id', () => {
+  describe('PUT /group/update/:id', () => {
     context('when updating a group', () => {
       it('should return 200 when the group has been update', done => {
         request
-          .put(`/group/admin/${defaultId}`)
+          .put(`/group/update/${defaultId}`)
           .set('authorization', token)
           .send(defaultGroupWithItem)
           .end((err, res) => {
@@ -68,11 +68,11 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('PUT  group/admin/add/item/:id', () => {
+  describe('PUT  group/add/item/:id', () => {
     context('when add a item in group', () => {
       it('should added new item in group and return 201', done => {
         request
-        .put(`/group/admin/add/item/${defaultId}`)
+        .put(`/group/add/item/${defaultId}`)
         .set('authorization', token)
         .send(defaultItem)
         .end((err, res) => {
@@ -82,11 +82,11 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('GET /group/admin', () => {
+  describe('GET /group/all', () => {
     context('when get all groups', () => {
       it('should return all groups', done => {
         request
-        .get('/group/admin')
+        .get('/group/all')
         .set(`authorization`, token)
         .end((err, res) => {
           expect(res.body).to.eql([defaultGroupWithItemCreate])
@@ -95,12 +95,12 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('DELETE /group/admin/:id', () => {
+  describe('DELETE /group/delete/:id', () => {
     context('when deleting a group', () => {
       it('should delete a group and return 204 as status code', done => {
 
         request
-          .delete(`/group/admin/${defaultId}`)
+          .delete(`/group/delete/${defaultId}`)
           .set('authorization', token)
           .end((err, res) => {
             expect(res.status).to.eql(204)
@@ -109,11 +109,11 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('PUT  group/admin/update/item/:id', () => {
+  describe('PUT  group/update/item/:id', () => {
     context('when uptade a item from a group', () => {
       it('should upadating item in group and return 200', done => {
         request
-        .put(`/group/admin/update/item/${defaultId}`)
+        .put(`/group/update/item/${defaultId}`)
         .set('authorization', token)
         .send(defaultItem)
         .end((err, res) => {
@@ -123,11 +123,11 @@ describe('Management groups', () => {
       })
     })
   })
-  describe('PUT grou/admin/remove/item/:id', () => {
+  describe('PUT grou/delete/item/:id', () => {
     context('when remove a item from a group', () => {
       it('should removing a item in group and return 204', done => {
         request
-          .put(`/group/admin/remove/item/${defaultId}`)
+          .put(`/group/delete/item/${defaultId}`)
           .set('authorization', token)
           .send(defaultItem)
           .end((err, res) => {

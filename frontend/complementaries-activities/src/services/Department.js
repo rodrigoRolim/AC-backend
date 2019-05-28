@@ -6,5 +6,8 @@ export default {
   },
   save: (department) => {
     return http.post('/department/add', department)
-  }
+  },
+  delete: (id) => {
+    return http.delete(`department/delete/${id}`)
+  } 
 }

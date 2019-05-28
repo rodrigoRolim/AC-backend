@@ -39,7 +39,7 @@ describe('Routes: Department', () => {
         name: 'DAEL',
       }
       request
-      .post('/department/admin')
+      .post('/department/add')
       .set('authorization', token)
       .send(newDepartment)
       .end((err, res) => {
@@ -52,7 +52,7 @@ describe('Routes: Department', () => {
   describe('GET /admin/department', () => {
     it('should return list of department', done => {
       request
-      .get('/department/admin')
+      .get('/department/all')
       .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql([listDepartment])
@@ -63,7 +63,7 @@ describe('Routes: Department', () => {
   describe('DELETE /admin/department', () => {
     it('should return message of removed with success', done => {
       request
-      .del(`/department/admin/${listDepartment._id}`)
+      .del(`/department/delete/${listDepartment._id}`)
       .set('authorization', token)
       .end((err, res) => {
         expect(res.body).to.be.eql({ message: 'removed with success' })
@@ -74,7 +74,7 @@ describe('Routes: Department', () => {
   describe('PUT /admin/department', () => {
     it('should return department updated recently', done => {
       request
-      .put(`/department/admin/${listDepartment._id}`)
+      .put(`/department/update/${listDepartment._id}`)
       .set('authorization', token)
       .end((err, res) => {
         expect(res.status).to.be.eql(201)

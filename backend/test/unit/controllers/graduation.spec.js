@@ -9,6 +9,20 @@ describe('Controller: graduation', () => {
       professor: '56cb91bdc3464f14678934ca'
     }
   ]
+  const aggregateParams = [
+    { 
+      "$lookup": {
+      "localField": "department",
+      "from": "departments", 
+      "foreignField": "_id",
+      "as": "deps"
+    }
+  },
+    {
+      "$project":
+      {"department": 0}
+    }
+  ]
   describe('when adding graduation', () => {
     it('should save a graduation into the database', () => {
       const request = {
@@ -39,8 +53,8 @@ describe('Controller: graduation', () => {
       const response = {
         send: sinon.spy()
       }
-      Graduation.find = sinon.stub()
-      Graduation.find.withArgs({}).resolves(listGraduation)
+      Graduation.aggregate = sinon.stub()
+      Graduation.aggregate.withArgs(aggregateParams).resolves(listGraduation)
 
       const graduationController = new GraduationController(Graduation)
       return graduationController.readAll(request, response)

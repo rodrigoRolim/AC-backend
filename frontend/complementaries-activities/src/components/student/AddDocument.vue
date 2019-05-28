@@ -174,6 +174,7 @@ export default {
           
           this.docUrl = fr.result
           this.docFile = files[0] //that can be sent to server
+          console.log(this.docFile)
 
         })
       } else {

@@ -19,8 +19,7 @@ describe('Routes: professor', () => {
     email: 'roger@email.com',
     password: '12345',
     department: '5ce368dd06edcb3fabd6cea3',
-    type_user: 'professor',
-    admin: false
+    type_user: 'professor'
   }
   const newDefaultProfessor = {
     name: 'roger jhonn',
@@ -28,8 +27,7 @@ describe('Routes: professor', () => {
     email: 'roger@email.com',
     password: '12345',
     type_user: 'professor',
-    department: '5cd87c81f9aedcbd1bb3a57d',
-    admin: false
+    department: '5cd87c81f9aedcbd1bb3a57d'
   } 
   const expectedProfessorUser = {
     _id: defaultId,
@@ -37,8 +35,7 @@ describe('Routes: professor', () => {
     siape: 'a12345',
     email: 'roger@email.com',
     type_user: 'professor',
-    department: '5ce368dd06edcb3fabd6cea3',
-    admin: false
+    department: '5ce368dd06edcb3fabd6cea3'
   }
   const loginProfessor = {
     name: 'roger jhon',
@@ -53,7 +50,7 @@ describe('Routes: professor', () => {
 
   afterEach(() => Professor.deleteMany({}))
 
-  describe('POST /professor/admin', () => {
+  describe('POST /professor/add', () => {
     
     context('when posting an professor', () => {
       it('should return a new professor with status code 201', done => {
@@ -66,12 +63,11 @@ describe('Routes: professor', () => {
           siape: 'a123458',
           email: 'roger@email.com',
           type_user: 'professor',
-          department: '5cd87c81f9aedcbd1bb3a57d',
-          admin: false
+          department: '5cd87c81f9aedcbd1bb3a57d'
         }
 
         request
-          .post('/professor/admin')
+          .post('/professor/add')
           .set('authorization', token)
           .send(newProfessor)
           .end((err, res) => {
@@ -84,7 +80,7 @@ describe('Routes: professor', () => {
     context('when reading all professors', () => {
       it('should return an list of professors with', done => {
         request
-        .get('/professor/admin')
+        .get('/professor/all')
         .set('authorization', token)
         .end((err, res) => {
           expect(res.body).to.eql([expectedProfessorUser]);
@@ -106,7 +102,7 @@ describe('Routes: professor', () => {
       })
     })
   })
-  describe('PUT /professor/admin/:id', () => {
+  describe('PUT /professor/update/:id', () => {
     context('when editing a professor', () => {
       it('should update the professor and return 200 as status code', done => {
         const customProfessor = {
@@ -115,7 +111,7 @@ describe('Routes: professor', () => {
         const updatedProfessor = Object.assign({}, customProfessor, defaultProfessor)
 
         request
-          .put(`/professor/admin/${defaultId}`)
+          .put(`/professor/update/${defaultId}`)
           .set('authorization', token)
           .send(updatedProfessor)
           .end((err, res) => {

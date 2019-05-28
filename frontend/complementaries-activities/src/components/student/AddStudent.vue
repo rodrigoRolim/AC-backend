@@ -125,8 +125,7 @@ export default {
   },
   methods: {
     createStudent () {
-      const idGraduation = this.graduations.filter(grad => grad.name == this.student.graduation)._id
-      this.student.graduation = idGraduation
+      this.catchIdGraduation()
       Student.create(this.student).then(response => {
         if (response.status == 201) {
           alert("cadastrado com sucesso")
@@ -137,9 +136,14 @@ export default {
         alert(`Error: ${err.message}`)
       })
     },
+    catchIdGraduation () {
+      const idGraduation = this.graduations.filter(grad => 
+            grad.name == this.student.graduation)._id
+      this.student.graduation = idGraduation
+    },
     reset () {
      this.$refs.form.reset()
-     this.student.password = ''
+     
     }
   }
 }
