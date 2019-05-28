@@ -70,12 +70,10 @@ describe('Controller: Document', () => {
   describe('when deleting document', () => {
     it('should return status code 201', () => {
       const fakeId = 'id-fake'
-      const request = {params: fakeId}
+      const request = { params: { id: fakeId } }
       const response = {
-        send: sinon.spy(),
-        status: sinon.stub()
+        sendStatus: sinon.spy(),
       }
-      response.status.withArgs(204).returns(response)
       class fakeDocument {
         static remove () {}
       }
@@ -86,6 +84,29 @@ describe('Controller: Document', () => {
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 204)
         })
+    })
+    context('when an error occurs', () => {
+      it('should return status code 400', () => {
+        const fakeId = 'id-fake'
+        const request = { params: { id: fakeId } }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeDocument {
+          static remove () {}
+        }
+
+        const removeStub = sinon.stub(fakeDocument, 'remove')
+        removeStub.withArgs({ _id: fakeId }).rejects({ message: 'Error' })
+        response.status.withArgs(400).returns(response)
+
+        const documentController = new DocumentController(fakeDocument)
+        return documentController.delete(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
     })
   })
 })

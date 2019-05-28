@@ -17,6 +17,7 @@ class DocumentController {
     console.log(req)
     return this.Document.remove({ _id: req.params.id })
       .then(() => res.sendStatus(204))
+      .catch((err) => res.status(400).send(err.message))
   }
   /* getDocument (req, res) {
     const fileLocation = path.join(__dirname, '..', '..', "uploads/5d84f64f162636bd7ad51112c6c9a059")
