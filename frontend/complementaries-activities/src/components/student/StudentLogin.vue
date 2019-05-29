@@ -98,7 +98,6 @@ export default {
       Student.login(this.student).then(response => {
         this.removeSession()
         if (response.status == 201) {
-          console.log(response.data.user.user_type)
           this.createSession(response.data)
           this.$router.replace('/aluno/home')
         }
