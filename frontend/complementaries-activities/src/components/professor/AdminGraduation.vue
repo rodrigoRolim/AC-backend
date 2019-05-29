@@ -10,13 +10,23 @@
       </v-toolbar-items>
        
       </ac-navbar>
+        <v-alert :value="departments.length === 0" type="info">
+          Não há departamentos cadastrados, 
+          você precisa primeiro cadastrar um departamento para cadastrar um curso
+        </v-alert>
+        <v-alert :value="success" type="success">
+          curso cadastrado com sucesso!
+        </v-alert>
+        <v-alert :value="denied" type="warning">
+          já existe um curso com esse nome!
+        </v-alert>
      <v-layout class="table">
       <v-toolbar flat color="white">
         <v-toolbar-title>Lista de cursos</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
+            <v-btn :disabled="departments.length === 0" color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -120,17 +130,18 @@
 import AcNavbar from '../AcNavbar.vue'
 import GraduationService from '@/services/Graduation.js'
 import DepartmentService from '@/services/Department.js'
-import BtnSetProfessor from '../SetProfessor'
 export default {
-  components: { BtnSetProfessor, AcNavbar },
+  components: { AcNavbar },
   data () {
     return {
+      success: false,
+      denied: false,
       departmentNames: [],
       selectedName: '',
       dialog: false,
       editedIndex: -1,
       valid: true,
-      departaments: [],
+      departments: [],
       nameRules: [
         v => !!v || 'Name is required'
       ],
@@ -171,7 +182,7 @@ export default {
       return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
     },
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'Novo curso' : 'Editar Curso'
     }
   },
   watch: {
@@ -199,6 +210,7 @@ export default {
       DepartmentService.readAll()
         .then((departments) => {
           this.departments = departments.data
+          console.log(this.departments)
           departments.data.map(dep => {
             this.departmentNames.push(dep.name)
           })
@@ -214,17 +226,11 @@ export default {
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
         GraduationService.delete(item).then((res) => {
-        alert(res.data.message)
-        })
-        .then(() => {
-     
-          if (typeof item.professor !== 'undefined') {
-            GraduationService.unsetGraduationOfProfessor(item._id)
-              .then((res) => {
-              
-              })
-          }
+          alert(res.data.message)
           this.graduations.splice(index, 1)
+        })
+        .catch((err) => {
+          // implemente uma mensagem de erro ao usuário
         })
       }
     },
@@ -250,15 +256,36 @@ export default {
           })
         Object.assign(this.graduations[this.editedIndex], this.editedItem)
       } else {
-        const department = this.departments.filter((dep) => dep.name === this.editedItem.department)
-        this.editedItem.department = department[0]._id
+        this.replaceNameToId()
         GraduationService.save(this.editedItem).then((graduation) => {
+          this.alertSuccess()
           this.graduations = []
           this.initializeGraduations()
         })
+        .catch((err) => {
+          this.alertDenied()
+
+        })
       }
       this.close()
-    }
+    },
+    replaceNameToId () {
+      const department = this.departments.filter((dep) => 
+          dep.name === this.editedItem.department)
+      this.editedItem.department = department[0]._id
+    },
+    alertSuccess () {
+      this.success = true;
+      setTimeout(() => {
+        this.success = !this.success
+      }, 4000)
+    },
+    alertDenied () {
+      this.denied = true;
+      setTimeout(() => {
+        this.denied = !this.denied
+      }, 4000)
+    },
   }
 }
 </script>
