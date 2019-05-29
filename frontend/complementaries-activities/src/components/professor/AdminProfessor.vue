@@ -36,14 +36,14 @@
                     <v-text-field v-model="editedItem.name" label="Nome do professor"></v-text-field>
                   </v-flex>
                   <v-flex md12 sm12>
-                    <v-text-field v-model="editedItem.name" label="Siape"></v-text-field>
+                    <v-text-field v-model="editedItem.siape" label="Siape"></v-text-field>
                   </v-flex>
                   <v-flex md12 sm12>
                     <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
                   </v-flex>
                    <v-flex md12 sm12>
                      <v-select
-                      :items="departaments"
+                      :items="departmentNames"
                       label="departamento responsável*"
                       v-model="selectedName"
                       required
@@ -84,10 +84,7 @@
         <template v-slot:items="props">
           <td class="name">{{ props.item.name }}</td>
           <td class="text-md-left">{{ props.item.email }}</td>
-          <td class="text-md-left">{{ props.item.graduation }}</td>
-          <td class="text-md-left">
-            <v-icon color="success" small class="mr-2">{{ props.item.professor ? 'lens': ''}}</v-icon>
-          </td>
+          <td class="text-md-left">{{ props.item.department }}</td>
           <td class="justify-center layout px-0">
             <v-icon
               small
@@ -137,24 +134,24 @@ import AcNavbar from '../AcNavbar'
         },
         { text: 'email', value: 'email', sortable: false, align: 'left' },
         { text: 'departamento (responsável)', value: 'curso', sortable: false, align: 'left' },
-        { text: 'professor', value: 'professor', sortable: false, align: 'left'},
         { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
       departaments: [],
+      departmentNames: [],
       professors: [],
       editedIndex: -1,
       editedItem: {
         name: '',
         email: '',
-        graduation: '',
-        _id: '',
+        siape: '',
+        department: '',
         password: ''
       },
       defaultItem: {
         name: '',
         email: '',
-        graduation: '',
-        _id: '',
+        siape: '',
+        department: '',
         password: ''
       }
     }),
@@ -172,22 +169,14 @@ import AcNavbar from '../AcNavbar'
     },
 
     created () {
-      this.getGraduations()
+      this.initializeDepartments()
     },
 
     methods: {
       logout () {
+        localStorage.removeItem('token')
         localStorage.removeItem('user')
         this.$router.replace('/professor')
-      },
-      getGraduations () {
-        GraduationService.readAll()
-          .then(graduations => {
-            this.graduations = graduations.data
-          })
-          .then(() => {
-            this. initializeDepartments()
-          })
       },
       initializeDepartments () {
         DepartmentService.readAll()
@@ -197,21 +186,20 @@ import AcNavbar from '../AcNavbar'
               this.departmentNames.push(dep.name)
             })
           })
+          .then(() => {
+            this.initializeProfessors()
+          })
       },
-      initialize () {
+      initializeProfessors () {
         ProfessorService.readAll()
-          .then(professors => {
+          .then((professors) => {
             console.log(professors)
-            professors.data.map((item) => {
-              console.log(item)
-              let graduationName = this.graduations
-                .filter(graduation => graduation.professor === item._id)
-              let name = (typeof graduationName[0] === 'undefined') ? '':  graduationName[0].name
-              console.log(item.professor)
-              this.professors.push(Object.assign({}, 
-                {_id: item._id, name: item.name, email: item.email, graduation: name, professor: item.professor}))
-            })
-        })
+            this.professors = this.replaceIdToName(professors.data)
+          })
+          .catch((err) => {
+            console.log('errroooouu')
+            // implementar mesagem de erro, sem graça
+          })
       },
 
       editItem (item) {
@@ -234,6 +222,7 @@ import AcNavbar from '../AcNavbar'
       },
 
       save () {
+        this.editedItem.department = this.selectedName
         if (this.editedIndex > -1) {
           const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email, 
                                     professor: this.editedItem.professor}
@@ -246,17 +235,38 @@ import AcNavbar from '../AcNavbar'
             })
           Object.assign(this.professors[this.editedIndex], this.editedItem)
         } else {
+          this.replaceNameToId()
           console.log(this.editedItem)
            ProfessorService.save(this.editedItem).
             then((res) => {
               alert('cadastrado com sucesso')
-              this.professors.push(res.data)
+              this.professors.push(this.replaceIdToName([res.data])[0])
             })
             .catch((err) => {
-              alert('nomes duplicados')
+              console.log(err)
+              // implementar messagem de erro
             })
         }
         this.close()
+      },
+      replaceNameToId () {
+        const department = this.departments.filter((dep) => 
+            dep.name === this.editedItem.department)
+        this.editedItem.department = department[0]._id
+      },
+      replaceIdToName (professors) {
+        let newProfessors = []
+        professors.map((professor) => {
+          
+          const department = this.departments.filter((dep) => 
+            dep._id === professor.department)
+          professor.department = department[0].name
+
+          newProfessors.push(professor)
+
+        })
+        
+        return newProfessors
       }
     }
   }
