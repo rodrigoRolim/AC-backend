@@ -117,6 +117,9 @@ export default {
           this.graduationsNames.push(graduation.name)
         })
       })
+      .catch((err) => {
+        // implemente mensagens de erro para o usuário com o vuetify
+      })
   },
   computed: {
     form () {
@@ -128,11 +131,13 @@ export default {
       this.catchIdGraduation()
       Student.create(this.student).then(response => {
         if (response.status == 201) {
+          // implemente usando os alert do vuetify
           alert("cadastrado com sucesso")
           this.reset()
         }
       })
       .catch((err) => {
+        // implemente usando os alert do vuetify
         alert(`Error: ${err.message}`)
       })
     },
