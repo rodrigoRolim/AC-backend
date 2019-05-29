@@ -149,13 +149,12 @@ describe('Controller: Document', () => {
         status: sinon.stub()
       }
       response.status.withArgs(201).returns(response)
-      Document.find = sinon.stub()
-      Document.find.withArgs({path: fileLocation }).resolves(fileLocation)
+  /*     Document.find = sinon.stub()
+      Document.find.withArgs({path: fileLocation }).resolves(fileLocation) */
       const documentController = new DocumentController(Document)
-      return documentController.getFile(request, response)
-        .then(() => {
-          sinon.assert.calledWith(response.send, fileLocation)
-        })
+      const respFile = documentController.getFile(request, response)
+      expect(respFile).to.eql(fileLocation)
+      
     })
   })
 })
