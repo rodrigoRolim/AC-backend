@@ -31,7 +31,8 @@ const router = express.Router()
 const documentController = new DocumentController(Document, open)
 
 router.post('/add', upload.single('file'), (req, res) => documentController.create(req, res))
-router.get('/test', (req, res) => documentController.getDocument(req, res))
+router.get('/all', (req, res) => documentController.readAll(req, res))
+
 router.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_TYPES") {
     res.status(422).json({ error: "Somente pdfs são pertmitidos" })

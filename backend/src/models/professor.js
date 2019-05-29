@@ -15,7 +15,9 @@ const schema = new mongoose.Schema({
   },
   email: String,
   password: String,
-  department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
+  department: { 
+    type: mongoose.Schema.Types.ObjectId, ref: 'Department'
+  },
   type_user: {
     type: String,
     enum: ['professor'],
