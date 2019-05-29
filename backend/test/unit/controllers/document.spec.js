@@ -163,22 +163,26 @@ describe('Controller: Document', () => {
        
     })
     context('when an error occurs', () => {
-      const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
-      const request = { params: { file: fileLocation  } }
-      const fileLocationResult = path.join(__dirname, '..','..', '..', request.params.file)
-
-      const response = {
-        sendFile: sinon.stub()
-      }
-
-      fs.access = sinon.stub()
-      fs.access.withArgs(fileLocationResult, fs.F_OK).rejects({ message: 'Error' })
-    
-      const documentController = new DocumentController(Document, path, fs)
-      return documentController.getFile(request, response)
-        .then(() => {
-          sinon.assert.calledWith(response.sendFile, 'Error')
-        })
+      it('should return status code 400', () => {
+        const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
+        const request = { params: { file: fileLocation  } }
+        const fileLocationResult = path.join(__dirname, '..','..', '..', request.params.file)
+  
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+  
+        response.status.withArgs(400).returns(response)
+        fs.access = sinon.stub()
+        fs.access.withArgs(fileLocationResult, fs.F_OK).rejects({ message: 'Error' })
+      
+        const documentController = new DocumentController(Document, path, fs)
+        return documentController.getFile(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
     })
   })
 })
