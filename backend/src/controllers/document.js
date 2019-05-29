@@ -1,8 +1,8 @@
-// import path from 'path'
 class DocumentController {
-  constructor (Document, open) {
+  constructor (Document, path, fs) {
     this.Document = Document
-    this.open = open
+    this.path = path
+    this.fs = fs
   }
   create (req, res) {
 
@@ -13,6 +13,7 @@ class DocumentController {
       .then(() => res.status(201).send(document))
       .catch((err) => res.status(422).send(err.message)) 
   }
+  // lembre-se: vc ainda não fez a rotar de deletar documento e vc tem que excluir o pdf também
   delete (req, res) {
     console.log(req)
     return this.Document.remove({ _id: req.params.id })
@@ -27,6 +28,15 @@ class DocumentController {
       .then((documents) => res.send(documents)) ///res.sendFile(fileLocation)
       .catch((err) => res.status(400).send(err.message))
   }
+  getFile (req, res) {
+
+    const fileLocation = this.path.join(__dirname, '..', '..', req.params.file)
+    return this.fs.access(fileLocation, this.fs.F_OK)
+      .then(() => res.sendFile(fileLocation))
+      
+      
+  } 
+  
 }
 
 export default DocumentController
