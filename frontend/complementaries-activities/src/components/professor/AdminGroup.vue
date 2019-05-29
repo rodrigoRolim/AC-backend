@@ -184,8 +184,8 @@ import GroupService from '@/services/Group.js'
             this.groups = res.data
           })
       },
-
       logout () {
+        localStorage.removeItem('token')
         localStorage.removeItem('user')
         this.$router.replace('/professor')
       },
