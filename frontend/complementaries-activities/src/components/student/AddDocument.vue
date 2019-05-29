@@ -6,7 +6,7 @@
         <v-btn flat color="blue-grey" to="/aluno/documento/add">
         documento <v-icon right dark>cloud_upload</v-icon>
         </v-btn>
-        <v-btn color="error" @click="">sair<i class="material-icons">exit_to_app</i></v-btn>
+        <v-btn color="error" @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
     <v-layout justify-center class="container">
@@ -174,7 +174,6 @@ export default {
           
           this.docUrl = fr.result
           this.docFile = files[0] //that can be sent to server
-          console.log(this.docFile)
 
         })
       } else {
@@ -182,7 +181,12 @@ export default {
         this.docUrl = ''
         this.docFile = ''
       }
-    }
+    },
+    logout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.replace('/aluno')
+    },
   }
 }
 </script>

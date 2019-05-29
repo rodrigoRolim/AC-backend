@@ -6,11 +6,11 @@
         <v-btn flat color="blue-grey" to="/aluno/documento/add">
         documento <v-icon right dark>cloud_upload</v-icon>
         </v-btn>
-        <v-btn color="error"  @click="">sair<i class="material-icons">exit_to_app</i></v-btn>
+        <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
     <student-progress></student-progress>
-    <student-documents></student-documents>
+    <student-documents :documents="documentsResponse"></student-documents>
     <!--<v-btn @click="soVem">vem nimin</v-btn>
     <div>
     <canvas id="my_canvas"></canvas></div>-->
@@ -29,16 +29,23 @@ export default {
   components: { AcNavbar, StudentDocuments, StudentProgress },
   data () {
     return {
-      pdf: null
+      pdf: null,
+      documentsResponse: []
     }
   },
+  created () {
+    DocumentService.readAll()
+      .then((documents) => {
+       this.documentsResponse = documents.data
+      })
+  },
   methods: {
-    soVem () {
+    getDocument () {
       DocumentService.get()
         .then((resp) => {
             pdfjs.getDocument(resp.data).then(doc => {
               doc.getPage(1).then(page => {
-                console.log(page)
+ 
                 var viewport = page.getViewport(1.0);
                 
                 var canvas = document.getElementById("my_canvas")
@@ -56,10 +63,16 @@ export default {
                   console.log('page rendered')
                 })
               }, (reason) => {
+                // implemente mensagem de erro
                 console.error(reason)
               })
             })
         })
+    },
+    logout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.replace('/aluno')
     },
   }
 }
