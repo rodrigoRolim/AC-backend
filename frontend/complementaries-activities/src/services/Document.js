@@ -7,5 +7,8 @@ export default {
   },
   get: () => {
     return http.get('/document/test', { responseType: 'arraybuffer'})
+  },
+  readAll: () => {
+    return http.get('/document/all')
   }
 }
