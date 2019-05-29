@@ -20,13 +20,13 @@ class DocumentController {
       .then(() => res.sendStatus(204))
       .catch((err) => res.status(400).send(err.message)) // implementar o deleta documento na pasta upload
   }
-  // implementar readAll
   readAll (req, res) {
 
     return this.Document.find({})
-      .then((documents) => res.send(documents)) ///res.sendFile(fileLocation)
+      .then((documents) => res.send(documents))
       .catch((err) => res.status(400).send(err.message))
   }
+  // implementar a rota dessa função
   getFile (req, res) {
 
     const fileLocation = this.path.join(__dirname, '..', '..', req.params.file)
