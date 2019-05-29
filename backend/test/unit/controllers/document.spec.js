@@ -1,6 +1,8 @@
 import sinon from 'sinon'
 import DocumentController from '../../../src/controllers/document'
 import Document from '../../../src/models/document'
+import path from 'path'
+import fs from 'mz/fs'
 
 describe('Controller: Document', () => {
   const defaultDocument = {
@@ -143,18 +145,40 @@ describe('Controller: Document', () => {
   describe('getting document by file path', () => {
     it('should return file with status code 201', () => {
       const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
-      const request = { params: { id:{ fileLocation } } }
+      const request = { params: { file: fileLocation  } }
+      const fileLocationResult = path.join(__dirname, '..','..', '..', request.params.file)
+
       const response = {
-        sendFile: sinon.spy(),
-        status: sinon.stub()
+        sendFile: sinon.stub()
       }
-      response.status.withArgs(201).returns(response)
-  /*     Document.find = sinon.stub()
-      Document.find.withArgs({path: fileLocation }).resolves(fileLocation) */
-      const documentController = new DocumentController(Document)
-      const respFile = documentController.getFile(request, response)
-      expect(respFile).to.eql(fileLocation)
-      
+
+      fs.access = sinon.stub()
+      fs.access.withArgs(fileLocationResult, fs.F_OK).resolves()
+    
+      const documentController = new DocumentController(Document, path, fs)
+      return documentController.getFile(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendFile)
+        })
+       
+    })
+    context('when an error occurs', () => {
+      const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
+      const request = { params: { file: fileLocation  } }
+      const fileLocationResult = path.join(__dirname, '..','..', '..', request.params.file)
+
+      const response = {
+        sendFile: sinon.stub()
+      }
+
+      fs.access = sinon.stub()
+      fs.access.withArgs(fileLocationResult, fs.F_OK).rejects({ message: 'Error' })
+    
+      const documentController = new DocumentController(Document, path, fs)
+      return documentController.getFile(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendFile, 'Error')
+        })
     })
   })
 })
