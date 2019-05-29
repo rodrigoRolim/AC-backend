@@ -19,7 +19,7 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="desserts"
+        :items="documents"
         :search="search"
       >
       <template v-slot:items="props">
@@ -82,6 +82,7 @@
 import Comments from './Comments'
 export default {
   name: 'StudentProgess',
+  props: ['documents'],
   components: { Comments },
   data () {
     return {
@@ -99,87 +100,6 @@ export default {
         { text: 'Avaliação', value: 'evaluation', align: 'left' },
         { text: 'Feedback', value: 'feedback', align: 'left' },
         { text: 'ações', value: 'actions', align: 'left' }
-      ],
-      desserts: [
-        {
-          name: 'Atividades comunitárias',
-          group: 1,
-          item: 'IV',
-          score: 14,
-          evaluation: 4.0,
-        },
-        {
-          name: 'Ice cream sandwich',
-          group: 237,
-          item: 9.0,
-          score: 37,
-          evaluation: 4.3,
-
-        },
-        {
-          name: 'Eclair',
-          group: 262,
-          item: 16.0,
-          score: 23,
-          evaluation: 6.0,
-          iron: '7%'
-        },
-        {
-          name: 'Cupcake',
-          group: 305,
-          item: 3.7,
-          score: 67,
-          evaluation: 4.3,
-          iron: '8%'
-        },
-        {
-          name: 'Gingerbread',
-          group: 356,
-          item: 16.0,
-          score: 49,
-          evaluation: 3.9,
-          iron: '16%'
-        },
-        {
-          name: 'Jelly bean',
-          group: 375,
-          item: 0.0,
-          score: 94,
-          evaluation: 0.0,
-          iron: '0%'
-        },
-        {
-          name: 'Lollipop',
-          group: 392,
-          item: 0.2,
-          score: 98,
-          evaluation: 0,
-          iron: '2%'
-        },
-        {
-          name: 'Honeycomb',
-          group: 408,
-          item: 3.2,
-          score: 87,
-          evaluation: 6.5,
-          iron: '45%'
-        },
-        {
-          name: 'Donut',
-          group: 452,
-          item: 25.0,
-          score: 51,
-          evaluation: 4.9,
-          iron: '22%'
-        },
-        {
-          name: 'KitKat',
-          group: 518,
-          item: 26.0,
-          score: 65,
-          evaluation: 7,
-          iron: '6%'
-        }
       ]
     }
   }
