@@ -56,7 +56,6 @@ describe('Router: document', () => {
         .get('/document/all')
         .set('authorization', token)
         .end((err, res) => {
-          console.log(res.body)
           expect(res.body).to.eql([defaultDocumentResponse])
           done(err)
         })
