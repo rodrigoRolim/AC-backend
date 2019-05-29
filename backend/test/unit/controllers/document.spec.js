@@ -140,4 +140,22 @@ describe('Controller: Document', () => {
       })
     })
   })
+  describe('getting document by file path', () => {
+    it('should return file with status code 201', () => {
+      const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
+      const request = { params: { id:{ fileLocation } } }
+      const response = {
+        sendFile: sinon.spy(),
+        status: sinon.stub()
+      }
+      response.status.withArgs(201).returns(response)
+      Document.find = sinon.stub()
+      Document.find.withArgs({path: fileLocation }).resolves(fileLocation)
+      const documentController = new DocumentController(Document)
+      return documentController.getFile(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, fileLocation)
+        })
+    })
+  })
 })
