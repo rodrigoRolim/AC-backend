@@ -33,8 +33,7 @@ class DocumentController {
     const fileLocation = this.path.join(__dirname, '..', '..', req.params.file)
     return this.fs.access(fileLocation, this.fs.F_OK)
       .then(() => res.sendFile(fileLocation))
-      
-      
+      .catch((err) => res.status(400).send(err.message))
   } 
   
 }
