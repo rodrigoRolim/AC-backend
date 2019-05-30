@@ -2,7 +2,7 @@ import express from 'express'
 import DepartmentController from '../controllers/department'
 import Department from '../models/department'
 import verify from '../auth'
-import deleteDepartment from  '../auth/deleteDepartment'
+import verifyRelathionship from  '../middleware/verifyRelathionships'
 
 const router = express.Router()
 const departmentController = new DepartmentController(Department)
@@ -10,6 +10,7 @@ const departmentController = new DepartmentController(Department)
 router.post('/add', (req, res) => departmentController.create(req, res))
 router.get('/all', (req, res) => departmentController.readAll(req, res))
 router.put('/update/:id', (req, res) => departmentController.update(req, res))
-router.delete('/delete/:id', deleteDepartment.isExistRelations, (req, res) => departmentController.delete(req, res))
+router.delete('/delete/:id', verifyRelathionship.isExistRelations, 
+  (req, res) => departmentController.delete(req, res))
 
 export default router

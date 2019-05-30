@@ -20,6 +20,7 @@ const schema = new mongoose.Schema({
   },
   graduation: {
     type: mongoose.Schema.Types.ObjectId, ref: 'Graduation',
+    required: true
   },
   password: {
     type: String,

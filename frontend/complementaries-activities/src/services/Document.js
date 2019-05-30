@@ -5,8 +5,9 @@ export default {
     console.log(formData)
     return http.post('/document/add', formData)
   },
-  get: () => {
-    return http.get('/document/test', { responseType: 'arraybuffer'})
+  getFile: (path) => {
+    console.log(path)
+    return http.get(`/document/${path}`, { responseType: 'arraybuffer'})
   },
   readAll: () => {
     return http.get('/document/all')

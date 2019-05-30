@@ -113,14 +113,17 @@ let router = new Router({
   ]
 })
 
-/* router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
   
   let token = 'undefined'
   let user = 'undefined'
 
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (typeof localStorage.getItem('token') != "undefined" 
-       && typeof localStorage.getItem('user') != 'undefined') {
+    if (typeof localStorage.getItem('token') != "undefined" &&
+        localStorage.getItem('token') !== null && 
+        typeof localStorage.getItem('user') != 'undefined' &&
+        localStorage.getItem('user') !== null) {
+
       token = JSON.parse(localStorage.getItem('token'))
       user = JSON.parse(localStorage.getItem('user'))
     }
@@ -131,8 +134,7 @@ let router = new Router({
       })
     } else {
       if (to.matched.some(record => record.meta.is_professor)) {
-        console.log(user.user_type)
-        if (user.type_user == 'professor') {
+        if (typeof user !== null || user.type_user == 'professor') {
           next()
         } else {
           next({ name: 'Home' })
@@ -141,18 +143,16 @@ let router = new Router({
         next()
       }
       if (to.matched.some(record => record.meta.is_student)) {
-
-        if (user.user_type == 'aluno') {
-          console.log('aqui')
+        
+        if (typeof user !== null && user.user_type == 'aluno') {
           next()
         } else {
-          console.log('nao')
           next({ name: 'Home' })
         }
       }
     }
   } else if (to.matched.some(record => record.meta.guest)) {
-    if(access.token == null){
+    if(token == null){
       next()
     } else{
       next({ name: 'DeniedAccess' })
@@ -160,5 +160,5 @@ let router = new Router({
   } else {
     next()
   }
-}) */
+}) 
 export default router

@@ -13,7 +13,7 @@ describe('Router: document', () => {
   const defaultDocument = {
     name: 'document name',
     score: 10,
-    path: '/path/to/document',
+    path: 'test.pdf',
     evaluation: 'none',
     sent: false,
     group: 'name group',
@@ -65,7 +65,7 @@ describe('Router: document', () => {
     })
   })
   describe('DELETE /document/:file', () => {
-    it('should return all documents object', done => {
+    it('should return delete document', done => {
       const defaultDocumentResponse = Object.assign({}, 
         {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
       const pathFile = 'uploads/test.pdf'
@@ -80,9 +80,9 @@ describe('Router: document', () => {
   })
   describe('GET /document/:file', () => {
     it('should return pdf file', done => {
-      const pathFile = path.join(__dirname, '..', '..', 'unit/uploads/test.pdf')
+      const pathFile = 'uploads/test.pdf'
       request
-        .get(`/document/${path}`)
+        .get(`/document/${pathFile}`)
         .set('authorization', token)
         .end((err, res) => {
           expect(res.body).to.eql()

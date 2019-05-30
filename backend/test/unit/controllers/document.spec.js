@@ -72,7 +72,9 @@ describe('Controller: Document', () => {
   })
   describe('when deleting document', () => {
     it('should return status code 201', () => {
+      const pathname =  path.join(__dirname, '..', '..', '..', 'uploads', 'fake-path')
       const fakePath = 'fake-path'
+      console.log(fakePath)
       const request = { params: { file: fakePath } }
       const response = {
         sendStatus: sinon.spy(),
@@ -81,7 +83,7 @@ describe('Controller: Document', () => {
         static remove () {}
       }
       fs.unlink = sinon.stub()
-      fs.unlink.withArgs(fakePath).resolves([1])
+      fs.unlink.withArgs(pathname).resolves()
       const removeStub = sinon.stub(fakeDocument, 'remove')
       removeStub.withArgs({ path: fakePath }).resolves([1])
       const documentController = new DocumentController(fakeDocument, path, fs)
@@ -101,11 +103,11 @@ describe('Controller: Document', () => {
         class fakeDocument {
           static remove () {}
         }
-        fs.unlink = sinon.stub()
-        fs.unlink.withArgs(fakePath).rejects()
+        response.status.withArgs(400).returns(response)
+       /*  fs.unlink = sinon.stub()
+        fs.unlink.withArgs(fakePath).rejects() */
         const removeStub = sinon.stub(fakeDocument, 'remove')
         removeStub.withArgs({ path: fakePath }).rejects({ message: 'Error' })
-        response.status.withArgs(400).returns(response)
 
         const documentController = new DocumentController(fakeDocument, path, fs)
         return documentController.delete(request, response)
@@ -116,6 +118,7 @@ describe('Controller: Document', () => {
     })
     context('when not found file', () => {
       it('should return status code 404', () => {
+        const pathname =  path.join(__dirname, '..', '..', '..', 'uploads', 'fake-path')
         const fakePath = 'fake-path'
         const request = { params: { file: fakePath } }
         const response = {
@@ -126,7 +129,7 @@ describe('Controller: Document', () => {
           static remove () {}
         }
         fs.unlink = sinon.stub()
-        fs.unlink.withArgs(fakePath).rejects({ message: 'Error' })
+        fs.unlink.withArgs(pathname).rejects({ message: 'Error' })
         const removeStub = sinon.stub(fakeDocument, 'remove')
         removeStub.withArgs({ path: fakePath }).resolves([1])
         response.status.withArgs(404).returns(response)

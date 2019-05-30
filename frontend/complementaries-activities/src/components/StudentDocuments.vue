@@ -36,14 +36,14 @@
               
               color="#42A5F5"
               class="mr-3"
-              @click="editItem(props.item)"
+              @click="send(props.item)"
             >
               send
             </v-icon>
             <v-icon
               color="#546E7A"
               class="mr-3"
-              @click="editItem(props.item)"
+              @click="openDocument(props.item)"
             >
               open_in_browser
             </v-icon>
@@ -80,6 +80,7 @@
 
 <script>
 import Comments from './Comments'
+import DocumentService from '@/services/Document'
 export default {
   name: 'StudentProgess',
   props: ['documents'],
@@ -101,6 +102,14 @@ export default {
         { text: 'Feedback', value: 'feedback', align: 'left' },
         { text: 'ações', value: 'actions', align: 'left' }
       ]
+    }
+  },
+  methods: {
+    openDocument (document) {
+      DocumentService.getFile(document.path)
+        .then((res) => {
+          console.log(res)
+        })
     }
   }
 }

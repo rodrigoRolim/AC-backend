@@ -15,16 +15,14 @@ class DocumentController {
       .catch((err) => res.status(422).send(err.message)) 
   }
   delete (req, res) {
-    console.log(req)
+    console.log(res)
     return this.Document.remove({ path: req.params.file })
       .then(() => {
-        this.fs.unlink(req.params.file)
+        const pathname = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)
+        console.log(pathname)
+        this.fs.unlink(pathname)
           .then(() => res.sendStatus(204))
-          .catch((err) => {
-            console.log(err.message)
-            res.status(404).send(err.message)
-          })
-          console.log('aqui')
+          .catch((err) => res.status(404).send(err.message))
       })
       .catch((err) => res.status(400).send(err.message))
   }
