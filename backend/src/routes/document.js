@@ -3,10 +3,8 @@ import DocumentController from '../../src/controllers/document'
 import Document from '../../src/models/document'
 import verify from '../auth'
 import multer from 'multer'
-import fs from 'fs'
-import Util from 'util'
-
-const open = Util.promisify(fs.open)
+import fs from 'mz/fs'
+import path from 'path'
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ["application/pdf"]
@@ -28,10 +26,11 @@ const upload = multer({
 })
 
 const router = express.Router()
-const documentController = new DocumentController(Document, open)
+const documentController = new DocumentController(Document, path,fs)
 
 router.post('/add', upload.single('file'), (req, res) => documentController.create(req, res))
 router.get('/all', (req, res) => documentController.readAll(req, res))
+router.get('/uploads/:file', (req, res) => documentController.getFile(req, res))
 
 router.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_TYPES") {
