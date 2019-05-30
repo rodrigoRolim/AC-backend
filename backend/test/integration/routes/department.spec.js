@@ -8,12 +8,12 @@ describe('Routes: Department', () => {
   })
   const defaultId = '5cd60a0312c3e687ea34667f'
   const defaultDepartment = {
-    name: 'DACOMP',
+    name: 'department name',
   }
   const listDepartment = {
     _id: '56cb91bdc3464f14678934ca',
     __v: 0,
-    name: 'DACOMP',
+    name: 'department name',
   }
   before(() => {
     return setupApp()
