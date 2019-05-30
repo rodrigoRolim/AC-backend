@@ -1,8 +1,10 @@
 import Document from '../../../src/models/document'
 import jwt from 'jsonwebtoken'
 import path from 'path'
+import fs from 'mz/fs'
 
 describe('Router: document', () => {
+  const newPathfile = path.join(__dirname, '..', '..', '..', 'uploads/test.pdf')
   let request
   const defaultId = '5cd60a0312c3e687ea34667f'
   let token = jwt.sign({ defaultId }, 'mysecret', {
@@ -25,12 +27,13 @@ describe('Router: document', () => {
       })
   })
   beforeEach(() => {
+    fs.closeSync(fs.openSync(newPathfile, 'w'))
     let document = new Document(defaultDocument)
     document._id = "5ce98fb42552b2f933f5e47a"
     Document.deleteMany({})
     return document.save()
   })
-
+  // /home/rodrigo/projects/atividades complementares/backend/uploads
   afterEach(() => Document.deleteMany({}))
 
   describe('POST /document/add', () => {
@@ -40,7 +43,7 @@ describe('Router: document', () => {
         .post('/document/add')
         .set('authorization', token)
         .set('Accept', 'application/pdf')
-        .attach('file', path.join(__dirname, '..', '..', 'unit/uploads/Projeto de AG.pdf'))
+        .attach('file', newPathfile)
         .field('document', JSON.stringify(newDocument))
         .end((err, res) => {
           expect(res.status).to.eql(201)
@@ -58,6 +61,31 @@ describe('Router: document', () => {
         .end((err, res) => {
           expect(res.body).to.eql([defaultDocumentResponse])
           done(err)
+        })
+    })
+  })
+  describe('DELETE /document/:file', () => {
+    it('should return all documents object', done => {
+      const defaultDocumentResponse = Object.assign({}, 
+        {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
+      const pathFile = 'uploads/test.pdf'
+      request
+        .del(`/document/${pathFile}`)
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(res.status).to.eql(204)
+          done(err)
+        })
+    })
+  })
+  describe('GET /document/:file', () => {
+    it('should return pdf file', done => {
+      const pathFile = path.join(__dirname, '..', '..', 'unit/uploads/test.pdf')
+      request
+        .get(`/document/${path}`)
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(res.body).to.eql()
         })
     })
   })
