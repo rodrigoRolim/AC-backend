@@ -72,17 +72,19 @@ describe('Controller: Document', () => {
   })
   describe('when deleting document', () => {
     it('should return status code 201', () => {
-      const fakeId = 'id-fake'
-      const request = { params: { id: fakeId } }
+      const fakePath = 'fake-path'
+      const request = { params: { file: fakePath } }
       const response = {
         sendStatus: sinon.spy(),
       }
       class fakeDocument {
         static remove () {}
       }
+      fs.unlink = sinon.stub()
+      fs.unlink.withArgs(fakePath).resolves([1])
       const removeStub = sinon.stub(fakeDocument, 'remove')
-      removeStub.withArgs({ _id: fakeId }).resolves([1])
-      const documentController = new DocumentController(fakeDocument)
+      removeStub.withArgs({ path: fakePath }).resolves([1])
+      const documentController = new DocumentController(fakeDocument, path, fs)
       return documentController.delete(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 204)
@@ -90,8 +92,8 @@ describe('Controller: Document', () => {
     })
     context('when an error occurs', () => {
       it('should return status code 400', () => {
-        const fakeId = 'id-fake'
-        const request = { params: { id: fakeId } }
+        const fakePath = 'fake-path'
+        const request = { params: { file: fakePath } }
         const response = {
           send: sinon.spy(),
           status: sinon.stub()
@@ -99,12 +101,37 @@ describe('Controller: Document', () => {
         class fakeDocument {
           static remove () {}
         }
-
+        fs.unlink = sinon.stub()
+        fs.unlink.withArgs(fakePath).rejects()
         const removeStub = sinon.stub(fakeDocument, 'remove')
-        removeStub.withArgs({ _id: fakeId }).rejects({ message: 'Error' })
+        removeStub.withArgs({ path: fakePath }).rejects({ message: 'Error' })
         response.status.withArgs(400).returns(response)
 
-        const documentController = new DocumentController(fakeDocument)
+        const documentController = new DocumentController(fakeDocument, path, fs)
+        return documentController.delete(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+    context('when not found file', () => {
+      it('should return status code 404', () => {
+        const fakePath = 'fake-path'
+        const request = { params: { file: fakePath } }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeDocument {
+          static remove () {}
+        }
+        fs.unlink = sinon.stub()
+        fs.unlink.withArgs(fakePath).rejects({ message: 'Error' })
+        const removeStub = sinon.stub(fakeDocument, 'remove')
+        removeStub.withArgs({ path: fakePath }).resolves([1])
+        response.status.withArgs(404).returns(response)
+
+        const documentController = new DocumentController(fakeDocument, path, fs)
         return documentController.delete(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
