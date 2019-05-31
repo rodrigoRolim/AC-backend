@@ -1,56 +1,60 @@
 <template>
-  <v-card class="text-xs-center progress">
+  <v-card class="text-xs-center progress" v-if="groups">
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
+      v-for="(group, index) in groups"
+      v-bind:key="group._id"
       :rotate="360"
       :size="120"
       :width="15"
-      :value="value"
-      color="teal"
+      :value="score = getValue(group)"
+      :color="getColor(index)"
     >
-      {{ value }}% <strong>Grupo 1</strong>
+      {{ score*group.scoreMin/100 }} <small>pontos</small> <strong>{{group.name}}</strong>
     </v-progress-circular>
    
-    <v-progress-circular
-      :rotate="-90"
-      :size="120"
-      :width="15"
-      :value="value"
-      color="primary"
-    >
-      {{ value }}% <strong>Grupo 2</strong>
-    </v-progress-circular>
-
-    <v-progress-circular
-      :rotate="90"
-      :size="120"
-      :width="15"
-      :value="value"
-      color="red"
-    >
-      {{ value }}% <strong>Grupo 3</strong>
-    </v-progress-circular>
   </v-card>
 </template>
 
 <script>
+import GroupService from '@/services/Group'
 export default {
+  name: 'StudentProgress',
+  props: ['documents'],
   data () {
     return {
       interval: {},
-      value: 0
+      value: 0,
+      groups: null,
+      pointed_color: 0,
+      colors: ['teal', 'primary', 'red']
     }
   },
-  beforeDestroy () {
-    clearInterval(this.interval)
-  },
-  mounted () {
-    this.interval = setInterval(() => {
-      if (this.value === 100) {
-        return (this.value = 0)
+  created () {
+    GroupService.readAll()
+      .then((groups) => {
+        this.groups = groups.data
+      })
+   /*  this.documents.map((document) => {
+      switch(document.group) {
+        case 'grupo 1':
+          this.group_1 += document.score
       }
-      this.value += 10
-    }, 1000)
+    }) */
+  },
+  methods: {
+    getValue (group) {
+      let score = 0
+      for (let i = 0; i < this.documents.length; i++) {
+        if (group.name == this.documents[i].group) {
+          score += this.documents[i].score
+        }
+      }
+      return score*100/group.scoreMin
+    },
+    getColor (count) {
+      return this.colors[count%3]
+    }
   }
 }
 </script>

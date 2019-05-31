@@ -15,11 +15,11 @@ class DocumentController {
       .catch((err) => res.status(422).send(err.message)) 
   }
   delete (req, res) {
-    console.log(res)
+    console.log(req.params.file)
     return this.Document.remove({ path: req.params.file })
       .then(() => {
         const pathname = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)
-        console.log(pathname)
+
         this.fs.unlink(pathname)
           .then(() => res.sendStatus(204))
           .catch((err) => res.status(404).send(err.message))
@@ -36,9 +36,13 @@ class DocumentController {
   getFile (req, res) {
     console.log(req.params.file)
 
-    const fileLocation = this.path.join(__dirname, '..', '..', req.params.file)
+    const fileLocation = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)
+    console.log(fileLocation)
     return this.fs.access(fileLocation, this.fs.F_OK)
-      .then(() => res.sendFile(fileLocation))
+      .then(() => {
+        console.log('asedr')
+        res.sendFile(fileLocation)
+      })
       .catch((err) => res.status(400).send(err.message))
   }
  

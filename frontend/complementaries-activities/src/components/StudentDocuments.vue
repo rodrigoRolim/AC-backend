@@ -32,36 +32,22 @@
           <comments></comments>
         </td>
         <td class="justify-center layout px-0">
-            <v-icon
-              
-              color="#42A5F5"
-              class="mr-3"
-              @click="send(props.item)"
-            >
-              send
-            </v-icon>
-            <v-icon
-              color="#546E7A"
-              class="mr-3"
-              @click="openDocument(props.item)"
-            >
-              open_in_browser
-            </v-icon>
-            <v-icon
-              color="#43A047"
-              class="mr-3"
-              @click="editItem(props.item)"
-            >
-              edit
-            </v-icon>
-            <v-icon
-              color="#FF1744"
-              class="mr-3"
-              @click="editItem(props.item)"
-            >
-              delete
-            </v-icon>
-          </td> 
+          <show-document :document="props.item"></show-document>
+          <v-icon
+            color="#43A047"
+            class="mr-3"
+            @click="editItem(props.item)"
+          >
+            edit
+          </v-icon>
+          <v-icon
+            color="#FF1744"
+            class="mr-3"
+            @click="editItem(props.item)"
+          >
+            delete
+          </v-icon>
+        </td> 
       </template>
       <template v-slot:no-results>
         <v-alert :value="true" color="error" icon="warning">
@@ -81,10 +67,12 @@
 <script>
 import Comments from './Comments'
 import DocumentService from '@/services/Document'
+import ShowDocument from  './ShowDocument'
 export default {
   name: 'StudentProgess',
+  components: { },
   props: ['documents'],
-  components: { Comments },
+  components: { Comments, ShowDocument },
   data () {
     return {
       search: '',
@@ -95,12 +83,12 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { text: 'Grupo', value: 'group', align: 'left' },
-        { text: 'Item', value: 'item', align: 'left' },
-        { text: 'Pontos', value: 'score', align: 'left' },
-        { text: 'Avaliação', value: 'evaluation', align: 'left' },
-        { text: 'Feedback', value: 'feedback', align: 'left' },
-        { text: 'ações', value: 'actions', align: 'left' }
+        { text: 'Grupo', value: 'group', sortable: false, align: 'left' },
+        { text: 'Item', value: 'item', sortable: false, align: 'left' },
+        { text: 'Pontos', value: 'score', sortable: false, align: 'left' },
+        { text: 'Avaliação', value: 'evaluation', sortable: false, align: 'left' },
+        { text: 'Feedback', value: 'feedback', sortable: false, align: 'left' },
+        { text: 'ações', value: 'actions', sortable: false, align: 'left' }
       ]
     }
   },

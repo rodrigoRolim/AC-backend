@@ -9,12 +9,12 @@
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <student-progress></student-progress>
-    <student-documents :documents="documentsResponse"></student-documents>
-    <!--<v-btn @click="soVem">vem nimin</v-btn>
-    <div>
-    <canvas id="my_canvas"></canvas></div>-->
-    
+    <student-progress v-if="documentsResponse.length != 0" 
+    :documents="documentsResponse" >
+    </student-progress>
+    <student-documents v-if="documentsResponse.length != 0" 
+    :documents="documentsResponse" >
+    </student-documents>
   </v-app>
 </template>
 
@@ -23,51 +23,48 @@ import AcNavbar from '../AcNavbar'
 import StudentDocuments from '../StudentDocuments'
 import StudentProgress from '../StudentProgress'
 import DocumentService from '@/services/Document'
+import GroupService from '@/services/Group'
 import pdfjs from 'pdfjs-dist'
+
 export default {
   name: 'StudentHome',
   components: { AcNavbar, StudentDocuments, StudentProgress },
   data () {
     return {
       pdf: null,
-      documentsResponse: []
+      documentsResponse: [],
+      progress_group_1: 0,
+      progress_group_2: 0,
+      progress_group_3: 0,
+      progress: []
     }
   },
   created () {
     DocumentService.readAll()
       .then((documents) => {
        this.documentsResponse = documents.data
+       console.log(this.documentsResponse)
       })
+
   },
   methods: {
-    getDocument () {
-      DocumentService.get()
+    /* initiliazeGroups () {
+      GroupService.readAll()
         .then((resp) => {
-            pdfjs.getDocument(resp.data).then(doc => {
-              doc.getPage(1).then(page => {
- 
-                var viewport = page.getViewport(1.0);
-                
-                var canvas = document.getElementById("my_canvas")
-                var context = canvas.getContext("2d")
-                canvas.height = viewport.height
-                canvas.width = viewport.width
-
-                var renderContext = {
-                  canvasContext: context,
-                  viewport: viewport
-                }
-                var renderTask = page.render(renderContext)
-                
-                renderTask.promise.then(() => {
-                  console.log('page rendered')
-                })
-              }, (reason) => {
-                // implemente mensagem de erro
-                console.error(reason)
-              })
-            })
+          console.log(resp.data)
         })
+    }, */
+    async calculateProgress () {
+      await this.documentResponse.map(document => {
+        switch(document.group) {
+          case 'grupo 1':
+            this.progress_group_1 += document.score
+          case 'grupo 2':
+            this.progress_group_2 += document.score
+          case 'grupo 3':
+            this.progress_group_3 += document.score
+        }
+      })
     },
     logout () {
       localStorage.removeItem('token')

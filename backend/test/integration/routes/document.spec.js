@@ -29,11 +29,11 @@ describe('Router: document', () => {
   beforeEach(() => {
     fs.closeSync(fs.openSync(newPathfile, 'w'))
     let document = new Document(defaultDocument)
+    console.log(document)
     document._id = "5ce98fb42552b2f933f5e47a"
     Document.deleteMany({})
     return document.save()
   })
-  // /home/rodrigo/projects/atividades complementares/backend/uploads
   afterEach(() => Document.deleteMany({}))
 
   describe('POST /document/add', () => {
@@ -68,9 +68,9 @@ describe('Router: document', () => {
     it('should return delete document', done => {
       const defaultDocumentResponse = Object.assign({}, 
         {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
-      const pathFile = 'uploads/test.pdf'
+      const pathFile = 'test.pdf'
       request
-        .del(`/document/${pathFile}`)
+        .del(`/document/uploads/${pathFile}`)
         .set('authorization', token)
         .end((err, res) => {
           expect(res.status).to.eql(204)
@@ -80,12 +80,13 @@ describe('Router: document', () => {
   })
   describe('GET /document/:file', () => {
     it('should return pdf file', done => {
-      const pathFile = 'uploads/test.pdf'
+      const pathFile = 'test.pdf'
       request
-        .get(`/document/${pathFile}`)
+        .get(`/document/uploads/${pathFile}`)
         .set('authorization', token)
         .end((err, res) => {
-          expect(res.body).to.eql()
+          expect(res.status).to.eql(204)
+          done(err)
         })
     })
   })

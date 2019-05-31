@@ -7,8 +7,15 @@
         <v-btn flat to="/aluno">aluno</v-btn>
       </v-toolbar-items>
     </ac-navbar>
+   
     <v-layout justify-center class="container">
       <v-flex xs12 sm10 md8 lg6>
+       <v-alert
+        :value="showAlert"
+        :type="alert"
+        >
+        {{ messageAlert }}
+       </v-alert>
         <v-form ref="form">
           <v-card >
           
@@ -90,6 +97,9 @@ export default {
     return {
       show: false,
       errorMessages: '',
+      alert: null,
+      showAlert: false,
+      messageAlert: '',
       student: {
         ra: null,
         name: null,
@@ -128,23 +138,38 @@ export default {
   },
   methods: {
     createStudent () {
-      this.catchIdGraduation()
+      this.student.graduation = this.catchIdGraduation()
+      console.log(this.student.graduation)
       Student.create(this.student).then(response => {
         if (response.status == 201) {
-          // implemente usando os alert do vuetify
-          alert("cadastrado com sucesso")
+          this.messageAlert = 'cadastrados com sucesso!'
+          this.alert = 'success'
+          this.showAlert = true
+          setTimeout(() => {
+            this.showAlert = false
+            this.alert = null
+          }, 3000)
           this.reset()
         }
       })
       .catch((err) => {
-        // implemente usando os alert do vuetify
-        alert(`Error: ${err.message}`)
+         this.messageAlert = 'Não foi possível efetuar o cadastro'
+         this.alert = 'error'
+         this.showAlert = true
+          setTimeout(() => {
+            this.messageAlert = 'Não foi possível efetuar o cadastro'
+            this.showAlert = false
+            this.alert = null
+          }, 3000)
+          this.reset()
       })
     },
     catchIdGraduation () {
-      const idGraduation = this.graduations.filter(grad => 
-            grad.name == this.student.graduation)._id
-      this.student.graduation = idGraduation
+      console.log(this.graduations)
+      const graduation = this.graduations.filter(grad => 
+            grad.name == this.student.graduation)
+      const id = graduation[0].deps[0]._id
+      return id
     },
     reset () {
      this.$refs.form.reset()

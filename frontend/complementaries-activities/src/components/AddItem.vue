@@ -1,5 +1,4 @@
 <template>
-
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">

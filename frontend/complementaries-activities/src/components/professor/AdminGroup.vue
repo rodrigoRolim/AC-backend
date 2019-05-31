@@ -95,9 +95,9 @@
       </template>
       <template v-slot:expand="props">
         <v-card flat v-for="item in props.item.items" :key="item._id">
-          <v-card-text class="item">{{item.description}}
-            <edit-item  :item="item" :idGroup="props.item._id" class="edit" small></edit-item>
-            <v-icon small dark color="secondary" @click="removeItem(props.item, item)">delete</v-icon>
+          <v-card-text class="item"><span class="format-text">{{item.description}}</span>
+            <edit-item  :item="item" :idGroup="props.item._id" class="edit mr-2" small></edit-item>
+            <v-icon class="mr-2" small dark color="secondary" @click="removeItem(props.item, item)">delete</v-icon>
           </v-card-text>
         </v-card>
       </template>
@@ -269,5 +269,10 @@ import GroupService from '@/services/Group.js'
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  word-break: break-all;  
+}
+.format-text {
+
+  width: 50%;
 }
 </style>

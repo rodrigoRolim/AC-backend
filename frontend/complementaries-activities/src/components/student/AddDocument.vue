@@ -38,8 +38,9 @@
             <v-autocomplete
               ref="group"
               v-model="document.group"
+              @change="changeItem"
               :rules="[() => !!document.group || 'This field is required']"
-              :items="groups"
+              :items="groupsNames"
               label="Grupo"
               placeholder="Select..."
               required
@@ -97,6 +98,7 @@
 import AcNavbar from '../AcNavbar'
 import pdf from 'pdfvuer'
 import DocumentService from '@/services/Document.js'
+import GroupService from '@/services/Group'
 export default {
   name: 'AddDocument',
   components: { AcNavbar, pdf },
@@ -116,16 +118,42 @@ export default {
       rules: {
         required: value => !!value || 'Required'
       },
-      items: ['item 1'],
-      groups: ['grupo 1'],
+      items: [],
+      groups: [],
+      groupsNames: [],
       docName: '',
       docUrl: '',
       docFile: ''
     }
   },
+  created () {
+    GroupService.readAll()
+      .then((groups) => {
+        this.groups = groups.data
+        this.namesGroups(groups.data)
+      })
+  },
   methods: {
-    save () {
+    namesGroups (groups) {
+      groups.map((group) => {
+        console.log(group)
+        this.groupsNames.push(group.name)
+      })
+    },
+    changeItem () {
+      this.items = []
+      const groups = this.groups.filter((group) => this.document.group == group.name) // group.seq
+      groups[0].items.map((item) => {
+        console.log(item)
+        this.items.push(item.description)
+      })
       
+    },
+    save () {
+      // const group = this.groups.filter(group => this.document.group == group.name)
+          // this.document.group = group[0].seq
+        //}
+      //})
       const formData = new FormData()
       formData.append('document', JSON.stringify(this.document))
       formData.append('file', this.docFile)

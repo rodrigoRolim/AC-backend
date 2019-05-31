@@ -8,6 +8,7 @@ const schemaItem = new mongoose.Schema({
 
 const schemaGroup = new mongoose.Schema({
   name: String,
+  seq: Number,
   scoreMin: Number,
   scoreMax: Number,
   description: String,
