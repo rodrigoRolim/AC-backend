@@ -237,5 +237,29 @@ describe('Controller: Document', () => {
         })
 
     })
+    context('when an error occurs', () => {
+      it('should return status code 400', () => {
+        const fakeid = 'fake-id'
+        const request = {
+          params: {
+            id: fakeid
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        
+        response.status.withArgs(400).returns(response)
+        Document.find = sinon.stub()
+        Document.find.withArgs({ _id: fakeid }).rejects({ message: 'Error' })
+  
+        const documentController = new DocumentController(Document)
+        return documentController.getById(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
   })
 })

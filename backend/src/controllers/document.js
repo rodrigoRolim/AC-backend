@@ -47,6 +47,7 @@ class DocumentController {
 
     return this.Document.find({ _id: id })
       .then((document) => res.send(document))
+      .catch((err) => res.status(400).send(err.message))
   }
 }
 
