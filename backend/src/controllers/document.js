@@ -42,19 +42,10 @@ class DocumentController {
       .catch((err) => res.status(400).send(err.message))
   }
   getById (req, res) {
-    const document = [
-      {
-        name: 'document name',
-      score: 10,
-      path: '/path/to/document',
-      evaluation: 'none',
-      sent: false,
-      group: 'name group',
-      item: 'name item',
-      student: '5ce30224b1bcd6cda1addc58'
-      }
-    ]
-    return document
+    const { params : { id }} = req
+
+    return this.Document.find({ _id: id })
+      .then((document) => res.send(document))
   }
 }
 
