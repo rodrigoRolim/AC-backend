@@ -34,7 +34,6 @@ class DocumentController {
       .then((documents) => res.send(documents))
       .catch((err) => res.status(400).send(err.message))
   }
-  // implementar a rota dessa função
   getFile (req, res) {
 
     const fileLocation = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)
@@ -42,7 +41,21 @@ class DocumentController {
       .then(() => res.sendFile(fileLocation))
       .catch((err) => res.status(400).send(err.message))
   }
- 
+  getById (req, res) {
+    const document = [
+      {
+        name: 'document name',
+      score: 10,
+      path: '/path/to/document',
+      evaluation: 'none',
+      sent: false,
+      group: 'name group',
+      item: 'name item',
+      student: '5ce30224b1bcd6cda1addc58'
+      }
+    ]
+    return document
+  }
 }
 
 export default DocumentController
