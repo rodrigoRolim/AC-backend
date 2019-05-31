@@ -78,7 +78,7 @@ describe('Router: document', () => {
         })
     })
   })
-  describe('GET /document/:file', () => {
+  describe('GET /document/uploads/:file', () => {
     it('should return pdf file', done => {
       const pathFile = 'test.pdf'
       request
@@ -89,5 +89,18 @@ describe('Router: document', () => {
           done(err)
         })
     })
+  })
+  describe('GET /document/:id', () => {
+    it('should return document', done => {
+      const customId = "5ce98fb42552b2f933f5e47a"
+      request
+        .set('authorization', token)
+        .get(`/document/${customId}`)
+        .end((err, res) => {
+          expect(res.body).to.eql([defaultDocument])
+          done(err)
+        })
+    })
+   
   })
 })
