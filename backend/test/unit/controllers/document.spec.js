@@ -215,4 +215,21 @@ describe('Controller: Document', () => {
       })
     })
   })
+  describe('get document by id', () => {
+    it('should return document', () => {
+      const fakeid = 'fake-id'
+      const request = {
+        params: {
+          id: fakeid
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+
+      const documentController = new DocumentController()
+      expect(documentController.getById()).to.eql([defaultDocument])
+
+    })
+  })
 })
