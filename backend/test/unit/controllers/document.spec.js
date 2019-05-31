@@ -227,8 +227,14 @@ describe('Controller: Document', () => {
         send: sinon.spy()
       }
 
-      const documentController = new DocumentController()
-      expect(documentController.getById()).to.eql([defaultDocument])
+      Document.find = sinon.stub()
+      Document.find.withArgs({ _id: fakeid }).resolves([defaultDocument])
+
+      const documentController = new DocumentController(Document)
+      return documentController.getById(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultDocument])
+        })
 
     })
   })
