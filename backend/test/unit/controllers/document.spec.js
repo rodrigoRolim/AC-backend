@@ -74,18 +74,20 @@ describe('Controller: Document', () => {
     it('should return status code 201', () => {
       const pathname =  path.join(__dirname, '..', '..', '..', 'uploads', 'fake-path')
       const fakePath = 'fake-path'
-      console.log(fakePath)
+
       const request = { params: { file: fakePath } }
       const response = {
         sendStatus: sinon.spy(),
       }
+
       class fakeDocument {
         static remove () {}
       }
+
       fs.unlink = sinon.stub()
       fs.unlink.withArgs(pathname).resolves()
       const removeStub = sinon.stub(fakeDocument, 'remove')
-      removeStub.withArgs({ path: fakePath }).resolves([1])
+      removeStub.withArgs({ path: path.join('uploads', fakePath) }).resolves([1])
       const documentController = new DocumentController(fakeDocument, path, fs)
       return documentController.delete(request, response)
         .then(() => {
@@ -104,10 +106,8 @@ describe('Controller: Document', () => {
           static remove () {}
         }
         response.status.withArgs(400).returns(response)
-       /*  fs.unlink = sinon.stub()
-        fs.unlink.withArgs(fakePath).rejects() */
         const removeStub = sinon.stub(fakeDocument, 'remove')
-        removeStub.withArgs({ path: fakePath }).rejects({ message: 'Error' })
+        removeStub.withArgs({ path: path.join('uploads', fakePath) }).rejects({ message: 'Error' })
 
         const documentController = new DocumentController(fakeDocument, path, fs)
         return documentController.delete(request, response)
@@ -131,7 +131,7 @@ describe('Controller: Document', () => {
         fs.unlink = sinon.stub()
         fs.unlink.withArgs(pathname).rejects({ message: 'Error' })
         const removeStub = sinon.stub(fakeDocument, 'remove')
-        removeStub.withArgs({ path: fakePath }).resolves([1])
+        removeStub.withArgs({ path: path.join('uploads', fakePath) }).resolves([1])
         response.status.withArgs(404).returns(response)
 
         const documentController = new DocumentController(fakeDocument, path, fs)
@@ -174,10 +174,10 @@ describe('Controller: Document', () => {
   })
   describe('getting document by file path', () => {
     it('should return file with status code 201', () => {
-      const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
+      const fileLocation = '5d84f64f162636bd7ad51112c6c9a059'
       const request = { params: { file: fileLocation  } }
-      const fileLocationResult = path.join(__dirname, '..','..', '..', request.params.file)
-
+      const fileLocationResult = path.join(__dirname, '..','..', '..', 'uploads', request.params.file)
+      console.log(fileLocationResult)
       const response = {
         sendFile: sinon.stub()
       }
@@ -194,9 +194,9 @@ describe('Controller: Document', () => {
     })
     context('when an error occurs', () => {
       it('should return status code 400', () => {
-        const fileLocation = 'uploads/5d84f64f162636bd7ad51112c6c9a059'
+        const fileLocation = '5d84f64f162636bd7ad51112c6c9a059'
         const request = { params: { file: fileLocation  } }
-        const fileLocationResult = path.join(__dirname, '..','..', '..', request.params.file)
+        const fileLocationResult = path.join(__dirname, '..','..', '..', 'uploads', request.params.file)
   
         const response = {
           send: sinon.spy(),

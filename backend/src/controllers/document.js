@@ -37,6 +37,7 @@ class DocumentController {
   getFile (req, res) {
 
     const fileLocation = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)
+    console.log(fileLocation)
     return this.fs.access(fileLocation, this.fs.F_OK)
       .then(() => res.sendFile(fileLocation))
       .catch((err) => res.status(400).send(err.message))
