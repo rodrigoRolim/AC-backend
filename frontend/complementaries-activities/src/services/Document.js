@@ -1,9 +1,9 @@
 import { http } from './config'
 
 export default {
-  save: (formData) => {
+  save: (document) => {
  
-    return http.post('/document/add', formData)
+    return http.post('/document/add', document)
   },
   getFile: (path) => {
 
@@ -20,5 +20,9 @@ export default {
   getById: (id) => {
     
     return http.get(`/document/${id}`)
+  },
+  update: (id, document) => {
+    console.log(document)
+    return http.put(`/document/update/${id}`, document)
   }
 }
