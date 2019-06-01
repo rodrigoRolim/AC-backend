@@ -22,7 +22,11 @@ export default {
     return http.get(`/document/${id}`)
   },
   update: (id, document) => {
-    console.log(document)
+
     return http.put(`/document/update/${id}`, document)
+  },
+  send: (studentId) => {
+    
+    return http.put(`/document/sent/${studentId}`)
   }
 }

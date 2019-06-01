@@ -9,7 +9,11 @@
    <v-toolbar flat color="white">
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn color="secondary" depressed dark class="mb-1">enviar documentos</v-btn>
+    <v-btn color="secondary" 
+    @click="sentDocuments" depressed 
+    :disabled="loadBtn || isAllSent"
+    :loading="loadBtn"
+    class="mb-1">enviar documentos</v-btn>
    </v-toolbar>
     <v-card>
       <v-card-title>
@@ -46,6 +50,7 @@
           <v-btn
             color="#00796B"
             class="mr-2"
+            :disabled="props.item.sent"
             small
             :to="`/aluno/documento/add/${props.item._id}`"
           >
@@ -54,6 +59,7 @@
           <v-btn
             color="#FF1744"
             class="mr-2"
+            :disabled="props.item.sent"
             small
             @click="deleteDocument(props.item)"
           >
@@ -87,6 +93,8 @@ export default {
   components: { Comments, ShowDocument },
   data () {
     return {
+      loadBtn: false,
+      isAllSent: false,
       successUpload: false,
       messageAlert: '',
       alert: 'success',
@@ -112,8 +120,24 @@ export default {
   },
   created () {
     console.log(this.documents)
+    this.verifyAllSent()
   },
   methods: {
+    verifyAllSent () {
+      if (this.documents.length !== 0) {
+        console.log(this.documents.filter((doc) => doc.sent).length)
+        this.isAllSent = this.documents.filter((doc) => doc.sent).length === this.documents.length
+      } else {
+        this.isAllSent = false
+      }
+    }/* ,
+    isAllHaveMinScore () {
+      if (this.documents.length !== 0) {
+        
+      } else {
+        return false
+      }
+    } */, 
     getIcon (evaluation) {
       switch (evaluation) {
         case 'none':
@@ -121,34 +145,48 @@ export default {
         case 'aproved':
           return 'check_circle'
       }
-      
+    },
+    getAlert (type, message) {
+      this.alert = type
+      this.messageAlert = message
+      this.successUpload = true
+      setTimeout(() => {
+        this.loadBtn = false
+        this.successUpload = false
+      }, 5000)
     },
     deleteDocument (doc) {
+      // verificar se o sent é falso no lado do servidor: middleware
        const userResponse = confirm('tem certeza que deseja excluir este item?')
       if (userResponse) {
          DocumentService.delete(doc.path)
-        .then((res) => {
-          this.popDocument(doc)
-          this.alert = 'success'
-          this.messageAlert = 'excluído com sucesso!'
-          this.successUpload = true
-          setTimeout(() => {
-            this.successUpload = false
-          }, 5000)
-        })
-        .catch((err) => {
-          this.alert = 'error'
-          this.messageAlert = 'houve um problema na hora de excluir'
-          this.successUpload = true
-            setTimeout(() => {
-            this.successUpload = false
-          }, 5000)
-        })
+          .then((res) => {
+            this.popDocument(doc)
+            this.getAlert('success', 'Excluído com sucesso!')
+          })
+          .catch((err) => {
+            this.getAlert('error', 'houve um problema na hora de excluir')
+          })
       }
+    },
+    sentDocuments () {
+      this.loadBtn = true
+      const studentid = JSON.parse(localStorage.getItem('user'))._id
+
+      DocumentService.send(studentid)
+        .then((res) => {
+          this.getAlert('success', 'Enviados com sucesso!')
+          this.documents.map((doc) => {
+            doc.sent = true
+          })
+          return
+        })
+        .then(() => {
+          this.verifyAllSent()
+        })
     },
     popDocument (doc) {
       const index = this.documents.indexOf(doc)
-      console.log(index)
       this.documents.splice(index, 1)
     }
   }

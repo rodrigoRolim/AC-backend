@@ -31,7 +31,7 @@ export default {
     return {
       showMask: false,
       pdf: null,
-      documentsResponse: [],
+      documentsResponse: null,
       progress_group_1: 0,
       progress_group_2: 0,
       progress_group_3: 0,

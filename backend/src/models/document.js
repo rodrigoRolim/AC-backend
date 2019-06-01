@@ -24,6 +24,7 @@ const schema = new mongoose.Schema({
   },
   sent: { 
     type: Boolean,
+    required: true,
     default: false
   },
   group: { 
