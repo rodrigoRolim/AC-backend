@@ -7,10 +7,10 @@
       :rotate="360"
       :size="120"
       :width="15"
-      :value="score = getValue(group)"
+      :value="getValue(group)[0]"
       :color="getColor(index)"
     >
-      {{ score*group.scoreMin/100 }} <small>pontos</small> <strong>{{group.name}}</strong>
+      {{ getValue(group)[1] }} <small>pontos</small> <strong>{{group.name}}</strong>
     </v-progress-circular>
    
   </v-card>
@@ -31,26 +31,23 @@ export default {
     }
   },
   created () {
+  
     GroupService.readAll()
       .then((groups) => {
         this.groups = groups.data
       })
-   /*  this.documents.map((document) => {
-      switch(document.group) {
-        case 'grupo 1':
-          this.group_1 += document.score
-      }
-    }) */
   },
   methods: {
     getValue (group) {
       let score = 0
-      for (let i = 0; i < this.documents.length; i++) {
-        if (group.name == this.documents[i].group) {
-          score += this.documents[i].score
+      if (this.documents.length > 0) {
+        for (let i = 0; i < this.documents.length; i++) {
+          if (group.name == this.documents[i].group) {
+            score += this.documents[i].score
+          }
         }
       }
-      return score*100/group.scoreMin
+      return [score*100/group.scoreMax, score]
     },
     getColor (count) {
       return this.colors[count%3]
