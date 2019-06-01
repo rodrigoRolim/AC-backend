@@ -19,6 +19,9 @@ const schema = new mongoose.Schema({
     enum: ['aproved', 'reproved', 'none'],
     default: 'none'
   },
+  feedback: {
+    type: String 
+  },
   sent: { 
     type: Boolean,
     default: false
