@@ -20,6 +20,7 @@
             {{ messageAlert }}
          </v-alert>
         </transition>
+       <!--<v-progress-linear v-if="load" :indeterminate="load"></v-progress-linear>-->
         <v-form 
           enctype="multipart/form-data"
           @submit.prevent="save"
@@ -84,10 +85,10 @@
           </v-card-text>
           <v-divider class="mt-5"></v-divider>
           <v-card-actions class="justify-end">
-            <v-btn color="success" dark depressed to="/aluno/home">voltar</v-btn>
+            <v-btn color="success" :disabled="load" :loading="load" depressed to="/aluno/home">voltar</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="secondary" dark depressed @click="reset">Resetar</v-btn>
-            <v-btn color="primary" dark depressed type="submit">Submit</v-btn>
+            <v-btn color="secondary" :disabled="load" :loading="load" depressed @click="reset">Resetar</v-btn>
+            <v-btn color="primary" depressed :disabled="load" :loading="load" type="submit">Submit</v-btn>
           </v-card-actions>
         </v-card>
         </v-form>
@@ -106,6 +107,7 @@ export default {
   components: { AcNavbar, pdf },
   data () {
     return {
+      load: false,
       successUpload: false,
       messageAlert: '',
       alert: 'success',
@@ -135,7 +137,6 @@ export default {
         this.groups = groups.data
         this.namesGroups(groups.data)
       })
-
       if (this.$route.params.id) {
         this.getDocument(this.$route.params.id)
       }
@@ -146,9 +147,7 @@ export default {
         .then((document) => {
           this.document = document.data[0]
           this.getItemsWhenUpdate(document.data[0])
-          return document
         })
-        .then(() =>  this.document = document.data[0])
         .catch((err) => {
 
         })
@@ -173,35 +172,37 @@ export default {
       
     },
     save () {
+
       const formData = new FormData()
       formData.append('document', JSON.stringify(this.document))
-
-      if (typeof this.$router.params == 'undefined') {
-
+      //this.load = true
+      if (typeof this.$route.params.id == 'undefined') {
+        
         formData.append('file', this.docFile)
         DocumentService.save(formData)
           .then((res) => {
-            this.reset()
-            this.alert = 'success'
-            this.messageAlert = 'carregado com sucesso!'
-            this.successUpload = true
-            setTimeout(() => {
-              this.successUpload = false
-            }, 5000)
-
+            //this.load = false
+            this.getAlert('success', 'carregado com sucesso!')
           })
           .catch((err) => {
-            this.alert = 'error'
-            this.messageAlert = err.response.data.error
-            this.successUpload = true
-              setTimeout(() => {
-              this.successUpload = false
-            }, 5000)
+            this.getAlert('error', err.response.data.error)
           })
       } else {
-        // DocumentService. implementar o update de documento
+        const idDoc = this.$route.params.id
+        DocumentService.update(idDoc, JSON.parse(formData.get('document')))
+          .then((res) => {
+            this.getAlert('success', 'atualizado com sucesso!')
+          })
       }
-     
+    },
+    getAlert (type, message) {
+      this.reset()
+      this.alert = type
+      this.messageAlert = message
+      this.successUpload = true
+      setTimeout(() => {
+        this.successUpload = false
+      }, 5000)
     },
     reset () {
       this.$refs.form.reset()
