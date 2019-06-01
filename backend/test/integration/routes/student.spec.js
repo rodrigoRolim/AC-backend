@@ -21,9 +21,9 @@ describe('Route: Student', () => {
     ra: 'a12346',
     name: 'name student again',
     email: 'nameagain@mail',
-    graduation: '5ce881f3ad1b69460281a633',
+    graduation: 'engenharia de software',
     user_type: 'aluno',
-    documents: [],
+    department: '5cf01570ec365a1bcccc7b58',
     password: '12345'
   }
   const expectedSaveStudent = {
@@ -31,9 +31,9 @@ describe('Route: Student', () => {
     ra: 'a12346',
     name: 'name student again',
     email: 'nameagain@mail',
-    documents: [],
+    department: '5cf01570ec365a1bcccc7b58',
     user_type: 'aluno',
-    graduation: '5ce881f3ad1b69460281a633',
+    graduation: 'engenharia de software',
   }
  
   before(() => {

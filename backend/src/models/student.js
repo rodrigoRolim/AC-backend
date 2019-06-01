@@ -18,8 +18,12 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  department: {
+    type: mongoose.Schema.Types.ObjectId, ref: 'Department',
+    required: true
+  },
   graduation: {
-    type: mongoose.Schema.Types.ObjectId, ref: 'Graduation',
+    type: String,
     required: true
   },
   password: {
@@ -30,10 +34,7 @@ const schema = new mongoose.Schema({
     type: String,
     enum: ['aluno'], 
     default: 'aluno'
-  },
-  documents:[{
-    type: mongoose.Schema.Types.ObjectId, ref: 'Document'
-  }]
+  }
 })
 schema.set('toJSON', {
   transform: (doc, ret, options) => ({

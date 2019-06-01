@@ -12,8 +12,8 @@ describe('Management student', () => {
     email: 'student@mail',
     password: '12345',
     graduation: 'engenharia',
-    user_type: 'aluno',
-    documents: []
+    department: 'id-department',
+    user_type: 'aluno'
   }
   const defaultRequest = {
     params: {}
