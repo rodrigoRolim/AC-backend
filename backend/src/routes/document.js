@@ -34,6 +34,7 @@ router.get('/uploads/:file', (req, res) => documentController.getFile(req, res))
 router.get('/:id', (req, res) => documentController.getById(req, res))
 router.delete('/uploads/:file', (req, res) => documentController.delete(req, res))
 router.put('/update/:id', (req, res) => documentController.update(req, res))
+router.put('/sent/:id', (req, res) => documentController.sent(req, res))
 
 router.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_TYPES") {

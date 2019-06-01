@@ -128,4 +128,18 @@ describe('Router: document', () => {
       })
     })
   })
+  describe('PUT /document/sent/:id', () => {
+    context('when updating sent attribute of document', () => {
+      it('should update sent of document and return 200 as status code', done => {
+        const studentId = '5ce30224b1bcd6cda1addc58'
+        request
+          .set('authorization', token)
+          .put(`/document/sent/${studentId}`)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
 })
