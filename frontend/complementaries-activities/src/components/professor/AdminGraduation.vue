@@ -26,7 +26,8 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn :disabled="departments.length === 0" color="secondary" depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
+            <v-btn :disabled="departments.length === 0" color="secondary" 
+            depressed dark class="mb-1" v-on="on">Novo curso</v-btn>
           </template>
           <v-card>
             <v-card-title>

@@ -217,7 +217,7 @@ import GroupService from '@/services/Group.js'
         }, 300)
       },
       removeItem (group, item) {
-        const userResponse = confirm('Are you sure you want to delete this item?')
+        const userResponse = confirm('tem certeza que você deseja excluir este item?')
         if (userResponse) {
            GroupService.removeItem(group._id, item)
             .then((res) => {

@@ -65,6 +65,7 @@
             ></v-text-field>
            
             <v-text-field
+              v-if="!this.$route.params.id"
               ref="score"
               v-model="docName"
               :rules="[() => !!docName || 'This field is required']"
@@ -74,6 +75,7 @@
               required
             ></v-text-field>
             <input
+              v-if="!this.$route.params.id"
               type="file"
               style="display: none"
               ref="doc"
@@ -129,54 +131,77 @@ export default {
   created () {
     GroupService.readAll()
       .then((groups) => {
+
         this.groups = groups.data
         this.namesGroups(groups.data)
       })
+
+      if (this.$route.params.id) {
+        this.getDocument(this.$route.params.id)
+      }
   },
   methods: {
+    getDocument (id) {
+      DocumentService.getById(id)
+        .then((document) => {
+          this.document = document.data[0]
+          this.getItemsWhenUpdate(document.data[0])
+          return document
+        })
+        .then(() =>  this.document = document.data[0])
+        .catch((err) => {
+
+        })
+    },
+    getItemsWhenUpdate (document) {
+      const group = this.groups.filter((group) => group.name == document.group)
+      group[0].items.map((item) => {
+        this.items.push(item.description)
+      })
+    },
     namesGroups (groups) {
       groups.map((group) => {
-        console.log(group)
         this.groupsNames.push(group.name)
       })
     },
     changeItem () {
       this.items = []
-      const groups = this.groups.filter((group) => this.document.group == group.name) // group.seq
+      const groups = this.groups.filter((group) => this.document.group == group.name)
       groups[0].items.map((item) => {
-        console.log(item)
         this.items.push(item.description)
       })
       
     },
     save () {
-      // const group = this.groups.filter(group => this.document.group == group.name)
-          // this.document.group = group[0].seq
-        //}
-      //})
       const formData = new FormData()
       formData.append('document', JSON.stringify(this.document))
-      formData.append('file', this.docFile)
 
-      DocumentService.save(formData)
-        .then((res) => {
-          this.reset()
-          this.alert = 'success'
-          this.messageAlert = 'carregado com sucesso!'
-          this.successUpload = true
-          setTimeout(() => {
-            this.successUpload = false
-          }, 5000)
+      if (typeof this.$router.params == 'undefined') {
 
-        })
-        .catch((err) => {
-          this.alert = 'error'
-          this.messageAlert = err.response.data.error
-          this.successUpload = true
+        formData.append('file', this.docFile)
+        DocumentService.save(formData)
+          .then((res) => {
+            this.reset()
+            this.alert = 'success'
+            this.messageAlert = 'carregado com sucesso!'
+            this.successUpload = true
             setTimeout(() => {
-            this.successUpload = false
-          }, 5000)
-        })
+              this.successUpload = false
+            }, 5000)
+
+          })
+          .catch((err) => {
+            this.alert = 'error'
+            this.messageAlert = err.response.data.error
+            this.successUpload = true
+              setTimeout(() => {
+              this.successUpload = false
+            }, 5000)
+          })
+      } else {
+        // DocumentService. implementar o update de documento
+      }
+     
     },
     reset () {
       this.$refs.form.reset()
