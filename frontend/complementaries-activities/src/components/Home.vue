@@ -19,7 +19,22 @@
 <script>
 import AcNavbar from './AcNavbar'
 export default {
-  components: { AcNavbar }
+  name: 'Home',
+  components: { AcNavbar },
+  data () {
+    return {
+      user: JSON.parse(localStorage.getItem('user'))
+    }
+  },
+  created () {
+    console.log(this.user)
+    switch(this.user.user_type) {
+      case 'aluno':
+        this.$router.replace('/aluno/home')
+      case 'professor':
+        this.$router.replace('/professor/home')
+    }
+  }
 }
 </script>
 
