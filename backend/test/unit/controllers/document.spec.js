@@ -341,4 +341,29 @@ describe('Controller: Document', () => {
       })
     })
   })
+  describe('updateSent () update the sent of many documents', () => {
+    it('should return 200 as status code', () => {
+      const fakestudentid = 'fake-student-id'
+      const request = {
+        params: {
+          id: fakestudentid 
+        }
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+      class fakeDocument {
+        static updateMany () {}
+      }
+      
+      const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
+      updateManyStub.withArgs({ student: fakestudentid }, { sent: true }).resolves()
+
+      const documentController = new DocumentController(fakeDocument)
+      return documentController.sent(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200)
+        })
+    })
+  })
 })
