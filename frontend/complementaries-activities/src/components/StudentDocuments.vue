@@ -1,5 +1,11 @@
 <template>
   <v-layout class="table">
+  <v-alert
+    :value="successUpload"
+    :type="alert"
+    >
+      {{ messageAlert }}
+  </v-alert>
    <v-toolbar flat color="white">
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
@@ -27,26 +33,32 @@
         <td class="text-md-left">{{ props.item.group }}</td>
         <td class="text-md-left">{{ props.item.item }}</td>
         <td class="text-md-left">{{ props.item.score }}</td>
-        <td class="text-md-left">{{ props.item.evaluation }}</td>
+        <td class="text-md-left">
+        <v-icon v-bind:class="getIcon(props.item.evaluation)">
+          {{ getIcon(props.item.evaluation)  }}
+        </v-icon>
+        </td>
         <td class="text-md-left">
           <comments></comments>
         </td>
         <td class="justify-center layout px-0">
           <show-document :document="props.item"></show-document>
-          <v-icon
-            color="#43A047"
-            class="mr-3"
-            @click="editItem(props.item)"
+          <v-btn
+            color="#00796B"
+            class="mr-2"
+            small
+            :to="`/aluno/documento/add/${props.item._id}`"
           >
-            edit
-          </v-icon>
-          <v-icon
+            <v-icon color="white">edit</v-icon>
+          </v-btn>
+          <v-btn
             color="#FF1744"
-            class="mr-3"
-            @click="editItem(props.item)"
+            class="mr-2"
+            small
+            @click="deleteDocument(props.item)"
           >
-            delete
-          </v-icon>
+            <v-icon color="white">delete</v-icon>
+          </v-btn>
         </td> 
       </template>
       <template v-slot:no-results>
@@ -75,6 +87,12 @@ export default {
   components: { Comments, ShowDocument },
   data () {
     return {
+      successUpload: false,
+      messageAlert: '',
+      alert: 'success',
+      search: '',
+      dialog: false,
+      editedIndex: -1,
       search: '',
       headers: [
         {
@@ -92,12 +110,46 @@ export default {
       ]
     }
   },
+  created () {
+    console.log(this.documents)
+  },
   methods: {
-    openDocument (document) {
-      DocumentService.getFile(document.path)
+    getIcon (evaluation) {
+      switch (evaluation) {
+        case 'none':
+          return 'fiber_manual_record'
+        case 'aproved':
+          return 'check_circle'
+      }
+      
+    },
+    deleteDocument (doc) {
+       const userResponse = confirm('tem certeza que deseja excluir este item?')
+      if (userResponse) {
+         DocumentService.delete(doc.path)
         .then((res) => {
-          console.log(res)
+          this.popDocument(doc)
+          this.alert = 'success'
+          this.messageAlert = 'excluído com sucesso!'
+          this.successUpload = true
+          setTimeout(() => {
+            this.successUpload = false
+          }, 5000)
         })
+        .catch((err) => {
+          this.alert = 'error'
+          this.messageAlert = 'houve um problema na hora de excluir'
+          this.successUpload = true
+            setTimeout(() => {
+            this.successUpload = false
+          }, 5000)
+        })
+      }
+    },
+    popDocument (doc) {
+      const index = this.documents.indexOf(doc)
+      console.log(index)
+      this.documents.splice(index, 1)
     }
   }
 }
@@ -112,5 +164,14 @@ export default {
   width: 90%;
   margin: 0px auto;
   margin-bottom: 20px;
+}
+.v-btn {
+  min-width: 15%
+}
+.v-alert {
+  width: 100%;
+}
+.check_circle {
+  color: green
 }
 </style>
