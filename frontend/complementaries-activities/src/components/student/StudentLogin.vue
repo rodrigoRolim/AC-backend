@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
         <v-btn flat to="/professor">professor</v-btn>
@@ -64,14 +65,16 @@
 
 <script>
 import AcNavbar from '../AcNavbar'
+import MaskLoad from '../MaskLoad'
 import router from '@/router/index'
 import Student from '@/services/Student.js'
 
 export default {
   name: 'StudentLogin',
-  components: { AcNavbar },
+  components: { AcNavbar, MaskLoad },
   data () {
     return {
+      showMask: false,
       show: false,
       validatedUser: false,
       errorMessages: '',
@@ -94,12 +97,15 @@ export default {
   },
   methods: {
     loginStudent () {
-     
+      this.showMask = true
       Student.login(this.student).then(response => {
         this.removeSession()
         if (response.status == 201) {
           this.createSession(response.data)
-          this.$router.replace('/aluno/home')
+          setTimeout(() => {
+            this.showMask = false
+            this.$router.replace('/aluno/home')
+            }, 2000)
         }
       })
       .catch((err) => {

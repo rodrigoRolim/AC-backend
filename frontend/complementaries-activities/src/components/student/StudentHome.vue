@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
         <v-btn flat to="/aluno/home">Home</v-btn>
@@ -9,17 +10,14 @@
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <student-progress v-if="documentsResponse.length != 0" 
-    :documents="documentsResponse" >
-    </student-progress>
-    <student-documents v-if="documentsResponse.length != 0" 
-    :documents="documentsResponse" >
-    </student-documents>
+    <student-progress v-if="documentsResponse" :documents="documentsResponse"></student-progress>
+    <student-documents v-if="documentsResponse" :documents="documentsResponse"></student-documents>
   </v-app>
 </template>
 
 <script>
 import AcNavbar from '../AcNavbar'
+import MaskLoad from '../MaskLoad'
 import StudentDocuments from '../StudentDocuments'
 import StudentProgress from '../StudentProgress'
 import DocumentService from '@/services/Document'
@@ -28,9 +26,10 @@ import pdfjs from 'pdfjs-dist'
 
 export default {
   name: 'StudentHome',
-  components: { AcNavbar, StudentDocuments, StudentProgress },
+  components: { AcNavbar, MaskLoad, StudentDocuments, StudentProgress },
   data () {
     return {
+      showMask: false,
       pdf: null,
       documentsResponse: [],
       progress_group_1: 0,
@@ -40,10 +39,14 @@ export default {
     }
   },
   created () {
+    this.showMask = true
     DocumentService.readAll()
       .then((documents) => {
-       this.documentsResponse = documents.data
-       console.log(this.documentsResponse)
+        setTimeout(() => {
+          this.showMask = false 
+          this.documentsResponse = documents.data
+        }, 2000)
+        
       })
 
   },
