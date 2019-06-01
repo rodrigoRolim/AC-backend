@@ -262,4 +262,83 @@ describe('Controller: Document', () => {
       })
     })
   })
+  describe('update() updating document', () => {
+    it('should respond with status code 200 when the document has been updated', () => {
+      const fakeid = 'fake-id'
+      const updatedDocument = {
+        _id: fakeid,
+        name: 'document name updated',
+        score: 10,
+        path: '/path/to/document/updated',
+        evaluation: 'none',
+        sent: false,
+        group: 'name group updated',
+        item: 'name item updated',
+        student: '5ce30224b1bcd6cda1addc58'
+      }
+      const request = {
+        params: {
+          id: fakeid
+        },
+        body: updatedDocument
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+
+      class fakeDocument {
+        static findOneAndUpdate () {}
+      }
+
+      const findOneAndUpdateStub = sinon.stub(fakeDocument, 'findOneAndUpdate')
+      findOneAndUpdateStub.withArgs({ _id: fakeid }, updatedDocument).resolves(updatedDocument)
+
+      const documentController = new DocumentController(fakeDocument)
+
+      return documentController.update(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200)
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return 422', () => {
+        const fakeid = 'fake-id'
+        const updatedDocument = {
+          _id: fakeid,
+          name: 'document name updated',
+          score: 10,
+          path: '/path/to/document/updated',
+          evaluation: 'none',
+          sent: false,
+          group: 'name group updated',
+          item: 'name item updated',
+          student: '5ce30224b1bcd6cda1addc58'
+        }
+        const request = {
+          params: {
+            id: fakeid
+          },
+          body: updatedDocument
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+  
+        class fakeDocument {
+          static findOneAndUpdate () {}
+        }
+  
+        const findOneAndUpdate = sinon.stub(fakeDocument, 'findOneAndUpdate')
+        findOneAndUpdate.withArgs({ _id: fakeid }).rejects({ message: 'Error' })
+        response.status.withArgs(422).returns(response)
+
+        const documentController = new DocumentController(fakeDocument)
+        return documentController.update(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })

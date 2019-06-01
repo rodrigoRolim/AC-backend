@@ -44,11 +44,19 @@ class DocumentController {
   }
   getById (req, res) {
 
-    const { params : { id }} = req
+    const { params : { id } } = req
 
     return this.Document.find({ _id: id })
       .then((document) => res.send(document))
       .catch((err) => res.status(400).send(err.message))
+  }
+  update (req, res) {
+    
+    const { params: { id } } = req
+    const { body } = req
+    return this.Document.findOneAndUpdate({ _id: id }, body)
+      .then((doc) => res.sendStatus(200))
+      .catch((err) => res.status(422).send(err.message))
   }
 }
 
