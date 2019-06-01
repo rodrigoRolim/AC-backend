@@ -113,7 +113,6 @@
         </template>
     </v-data-table>
     </v-card>
-
     </v-layout>
   </v-app>
 </template>
