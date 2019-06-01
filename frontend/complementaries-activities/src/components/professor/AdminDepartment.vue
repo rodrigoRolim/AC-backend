@@ -177,7 +177,7 @@ export default {
           console.log(this.departments)
         })
         .catch((err) => {
-
+          
         })
     },
     editItem (item) {
