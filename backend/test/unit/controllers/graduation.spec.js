@@ -85,7 +85,7 @@ describe('Controller: graduation', () => {
     })
   }),
   describe('when editing a graduation', () => {
-    it('should return updated object', () => {
+    it('should response with 200 when graduation has been updated', () => {
       const request = {
         body: {
           name: 'engenharia da computação'
