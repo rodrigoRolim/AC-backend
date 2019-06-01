@@ -17,7 +17,6 @@ class DocumentController {
   }
   delete (req, res) {
     const file = this.path.join('uploads', req.params.file)
-    console.log(file)
     return this.Document.remove({ path: file })
       .then(() => {
         
@@ -51,10 +50,10 @@ class DocumentController {
       .catch((err) => res.status(400).send(err.message))
   }
   update (req, res) {
-    
+
     const { params: { id } } = req
-    const { body } = req
-    return this.Document.findOneAndUpdate({ _id: id }, body)
+    
+    return this.Document.findOneAndUpdate({ _id: id }, req.body)
       .then((doc) => res.sendStatus(200))
       .catch((err) => res.status(422).send(err.message))
   }
