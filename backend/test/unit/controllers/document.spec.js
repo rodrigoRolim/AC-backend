@@ -365,5 +365,32 @@ describe('Controller: Document', () => {
           sinon.assert.calledWith(response.sendStatus, 200)
         })
     })
+    context('when an error occurs', () => {
+      it('should return 400 as status code', () => {
+        const fakestudentid = 'fake-student-id'
+        const request = {
+          params: {
+            id: fakestudentid 
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeDocument {
+          static updateMany () {}
+        }
+        
+        response.status.withArgs(400).returns(response)
+        const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
+        updateManyStub.withArgs({ student: fakestudentid }, { sent: true }).rejects({ message: 'Error' })
+  
+        const documentController = new DocumentController(fakeDocument)
+        return documentController.sent(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
   })
 })

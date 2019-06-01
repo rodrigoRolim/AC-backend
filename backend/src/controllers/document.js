@@ -52,10 +52,15 @@ class DocumentController {
   update (req, res) {
 
     const { params: { id } } = req
-    
+
     return this.Document.findOneAndUpdate({ _id: id }, req.body)
       .then((doc) => res.sendStatus(200))
       .catch((err) => res.status(422).send(err.message))
+  }
+  sent (req, res) {
+    return this.Document.updateMany({ student: req.params.id }, { sent: true })
+      .then(() => res.sendStatus(200))
+      .catch((err) => res.status(400).send(err.message))
   }
 }
 
