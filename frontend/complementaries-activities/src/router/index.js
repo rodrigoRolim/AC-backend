@@ -96,6 +96,14 @@ let router = new Router({
       }
     },
     {
+      path: '/aluno/documento/add/:id',
+      component: AddDocument,
+      meta: {
+        requiresAuth: true,
+        is_student: true
+      }
+    },
+    {
       path: '/admin/departamentos',
       component: AdminDepartment,
       is_professor: true
