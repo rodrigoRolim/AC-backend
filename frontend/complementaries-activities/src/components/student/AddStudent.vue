@@ -138,7 +138,7 @@ export default {
   },
   methods: {
     createStudent () {
-      this.student.graduation = this.catchIdGraduation()
+      this.student.department = this.catchIdDepartment()
       console.log(this.student.graduation)
       Student.create(this.student).then(response => {
         if (response.status == 201) {
@@ -164,7 +164,7 @@ export default {
           this.reset()
       })
     },
-    catchIdGraduation () {
+    catchIdDepartment () {
       console.log(this.graduations)
       const graduation = this.graduations.filter(grad => 
             grad.name == this.student.graduation)
