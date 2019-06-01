@@ -71,7 +71,7 @@ describe('Routes: Department', () => {
       })
     })
   })
-  describe('PUT /admin/department', () => {
+  describe('PUT /department/update', () => {
     it('should return department updated recently', done => {
       request
       .put(`/department/update/${listDepartment._id}`)

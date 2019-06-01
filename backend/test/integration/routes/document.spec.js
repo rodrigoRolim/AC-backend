@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import path from 'path'
 import fs from 'mz/fs'
 
+// colocar context em todos os testes
+
 describe('Router: document', () => {
   const newPathfile = path.join(__dirname, '..', '..', '..', 'uploads/test.pdf')
   let request
@@ -29,7 +31,6 @@ describe('Router: document', () => {
   beforeEach(() => {
     fs.closeSync(fs.openSync(newPathfile, 'w'))
     let document = new Document(defaultDocument)
-    console.log(document)
     document._id = "5ce98fb42552b2f933f5e47a"
     Document.deleteMany({})
     return document.save()
@@ -52,22 +53,22 @@ describe('Router: document', () => {
     })
   })
   describe('GET /document/all', () => {
-    it('should return all documents object', done => {
-      const defaultDocumentResponse = Object.assign({}, 
-        {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
-      request
-        .get('/document/all')
-        .set('authorization', token)
-        .end((err, res) => {
-          expect(res.body).to.eql([defaultDocumentResponse])
-          done(err)
-        })
+    context('when getting all documents', () => {
+      it('should return all documents object', done => {
+        const defaultDocumentResponse = Object.assign({}, 
+          {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
+        request
+          .get('/document/all')
+          .set('authorization', token)
+          .end((err, res) => {
+            expect(res.body).to.eql([defaultDocumentResponse])
+            done(err)
+          })
+      })
     })
   })
   describe('DELETE /document/:file', () => {
     it('should return delete document', done => {
-      const defaultDocumentResponse = Object.assign({}, 
-        {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
       const pathFile = 'test.pdf'
       request
         .del(`/document/uploads/${pathFile}`)
@@ -101,6 +102,30 @@ describe('Router: document', () => {
           done(err)
         })
     })
-   
+  })
+  describe('PUT /document/update/:id', () => {
+    context('when updating document', () => {
+      it('should update the document and return 200 as status code', done => {
+        const customId = "5ce98fb42552b2f933f5e47a"
+        const updatedDocument = {
+          name: 'document name updated',
+          score: 10,
+          path: 'test.pdf',
+          evaluation: 'none',
+          sent: false,
+          group: 'name group updated',
+          item: 'name item updated',
+          student: '5ce30224b1bcd6cda1addc58'
+        }
+        request
+          .set('authorization', token)
+          .put(`/document/update/${customId}`)
+          .send(updatedDocument)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
   })
 })
