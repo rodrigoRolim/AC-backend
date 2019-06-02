@@ -63,6 +63,7 @@ class StudentController {
           ]
       )
       .then((students) => res.send(students))
+      .catch((err) => res.status(400).send(err.message))
 
   }
   // criar um get all students de determinado departamento, mas somente os que já enviaram seus documentos

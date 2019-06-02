@@ -87,7 +87,7 @@ describe('Controller: Document', () => {
       fs.unlink = sinon.stub()
       fs.unlink.withArgs(pathname).resolves()
       const removeStub = sinon.stub(fakeDocument, 'remove')
-      removeStub.withArgs({ path: path.join('uploads', fakePath) }).resolves([1])
+      removeStub.withArgs({ path: path.join('uploads', fakePath), sent: false }).resolves([1])
       const documentController = new DocumentController(fakeDocument, path, fs)
       return documentController.delete(request, response)
         .then(() => {
@@ -107,7 +107,7 @@ describe('Controller: Document', () => {
         }
         response.status.withArgs(400).returns(response)
         const removeStub = sinon.stub(fakeDocument, 'remove')
-        removeStub.withArgs({ path: path.join('uploads', fakePath) }).rejects({ message: 'Error' })
+        removeStub.withArgs({ path: path.join('uploads', fakePath), sent: false }).rejects({ message: 'Error' })
 
         const documentController = new DocumentController(fakeDocument, path, fs)
         return documentController.delete(request, response)
@@ -131,7 +131,7 @@ describe('Controller: Document', () => {
         fs.unlink = sinon.stub()
         fs.unlink.withArgs(pathname).rejects({ message: 'Error' })
         const removeStub = sinon.stub(fakeDocument, 'remove')
-        removeStub.withArgs({ path: path.join('uploads', fakePath) }).resolves([1])
+        removeStub.withArgs({ path: path.join('uploads', fakePath), sent: false }).resolves([1])
         response.status.withArgs(404).returns(response)
 
         const documentController = new DocumentController(fakeDocument, path, fs)
