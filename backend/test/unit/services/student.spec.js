@@ -34,7 +34,7 @@ describe('StudentService: turnStudentToSender ()', () => {
       }
       
       const studenServiceStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-      studenServiceStub.withArgs({ _id: fakeidstudent }, { returnNewDocument: true }).returns([])
+      studenServiceStub.withArgs({ _id: fakeidstudent }, { already_sent: true }, { returnNewDocument: true }).returns([])
 
       const studentService = new StudentService(fakeStudent)
       expect(studentService.turnSender(request)).to.be.false 

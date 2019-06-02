@@ -1,6 +1,7 @@
 import sinon from 'sinon'
 import DocumentController from '../../../src/controllers/document'
 import Document from '../../../src/models/document'
+import StudentService from '../../../src/services/student'
 import path from 'path'
 import fs from 'mz/fs'
 
@@ -36,7 +37,7 @@ describe('Controller: Document', () => {
       sinon.stub(fakeDocument.prototype, 'save').withArgs().resolves()
       response.status.withArgs(201).returns(response)
 
-      const documentController = new DocumentController(fakeDocument)
+      const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
 
       return documentController.create(request, response)
         .then(() => {
@@ -61,7 +62,7 @@ describe('Controller: Document', () => {
         sinon.stub(fakeDocument.prototype, 'save').withArgs().rejects({ message: 'Error' })
         response.status.withArgs(422).returns(response)
 
-        const documentController = new DocumentController(fakeDocument)
+        const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
 
         return documentController.create(request, response)
           .then(() => {
@@ -88,7 +89,7 @@ describe('Controller: Document', () => {
       fs.unlink.withArgs(pathname).resolves()
       const removeStub = sinon.stub(fakeDocument, 'remove')
       removeStub.withArgs({ path: path.join('uploads', fakePath) }).resolves([1])
-      const documentController = new DocumentController(fakeDocument, path, fs)
+      const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
       return documentController.delete(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 204)
@@ -109,7 +110,7 @@ describe('Controller: Document', () => {
         const removeStub = sinon.stub(fakeDocument, 'remove')
         removeStub.withArgs({ path: path.join('uploads', fakePath) }).rejects({ message: 'Error' })
 
-        const documentController = new DocumentController(fakeDocument, path, fs)
+        const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
         return documentController.delete(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
@@ -134,7 +135,7 @@ describe('Controller: Document', () => {
         removeStub.withArgs({ path: path.join('uploads', fakePath) }).resolves([1])
         response.status.withArgs(404).returns(response)
 
-        const documentController = new DocumentController(fakeDocument, path, fs)
+        const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
         return documentController.delete(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
@@ -149,7 +150,7 @@ describe('Controller: Document', () => {
       }
       Document.find = sinon.stub()
       Document.find.withArgs({}).resolves([defaultDocument])
-      const documentController = new DocumentController(Document)
+      const documentController = new DocumentController(Document, StudentService, path, fs)
       return documentController.readAll(defaultRequest, response)
         .then(() => {
           sinon.assert.calledWith(response.send, [defaultDocument])
@@ -164,7 +165,7 @@ describe('Controller: Document', () => {
         response.status.withArgs(400).returns(response)
         Document.find = sinon.stub()
         Document.find.withArgs({}).rejects({ message: 'Error' })
-        const documentController = new DocumentController(Document)
+        const documentController = new DocumentController(Document, StudentService, path, fs)
         return documentController.readAll(defaultRequest, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
@@ -185,7 +186,7 @@ describe('Controller: Document', () => {
       fs.access = sinon.stub()
       fs.access.withArgs(fileLocationResult, fs.F_OK).resolves()
     
-      const documentController = new DocumentController(Document, path, fs)
+      const documentController = new DocumentController(Document, StudentService, path, fs)
       return documentController.getFile(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendFile)
@@ -207,7 +208,7 @@ describe('Controller: Document', () => {
         fs.access = sinon.stub()
         fs.access.withArgs(fileLocationResult, fs.F_OK).rejects({ message: 'Error' })
       
-        const documentController = new DocumentController(Document, path, fs)
+        const documentController = new DocumentController(Document, StudentService, path, fs)
         return documentController.getFile(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
@@ -230,7 +231,7 @@ describe('Controller: Document', () => {
       Document.find = sinon.stub()
       Document.find.withArgs({ _id: fakeid }).resolves([defaultDocument])
 
-      const documentController = new DocumentController(Document)
+      const documentController = new DocumentController(Document, StudentService, path, fs)
       return documentController.getById(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, [defaultDocument])
@@ -254,7 +255,7 @@ describe('Controller: Document', () => {
         Document.find = sinon.stub()
         Document.find.withArgs({ _id: fakeid }).rejects({ message: 'Error' })
   
-        const documentController = new DocumentController(Document)
+        const documentController = new DocumentController(Document, StudentService, path, fs)
         return documentController.getById(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
@@ -293,7 +294,7 @@ describe('Controller: Document', () => {
       const findOneAndUpdateStub = sinon.stub(fakeDocument, 'findOneAndUpdate')
       findOneAndUpdateStub.withArgs({ _id: fakeid }, updatedDocument).resolves(updatedDocument)
 
-      const documentController = new DocumentController(fakeDocument)
+      const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
 
       return documentController.update(request, response)
         .then(() => {
@@ -333,7 +334,7 @@ describe('Controller: Document', () => {
         findOneAndUpdate.withArgs({ _id: fakeid }).rejects({ message: 'Error' })
         response.status.withArgs(422).returns(response)
 
-        const documentController = new DocumentController(fakeDocument)
+        const documentController = new DocumentController(fakeDocument, StudentService, path, fs)
         return documentController.update(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
@@ -355,11 +356,17 @@ describe('Controller: Document', () => {
       class fakeDocument {
         static updateMany () {}
       }
-      
+      class fakeStudentService {
+        static toSender () {}
+      }
+
       const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
       updateManyStub.withArgs({ student: fakestudentid, sent: false  }, { sent: true }).resolves()
 
-      const documentController = new DocumentController(fakeDocument)
+      const toSentStub = sinon.stub(fakeStudentService, 'toSender')
+      toSentStub.withArgs(request).returns(true)
+
+      const documentController = new DocumentController(fakeDocument, fakeStudentService, path, fs)
       return documentController.sent(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 200)
@@ -380,16 +387,48 @@ describe('Controller: Document', () => {
         class fakeDocument {
           static updateMany () {}
         }
-        
+        class fakeStudentService {
+          static toSender () {}
+        }
         response.status.withArgs(400).returns(response)
         const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
         updateManyStub.withArgs({ student: fakestudentid, sent: false  }, { sent: true }).rejects({ message: 'Error' })
-  
-        const documentController = new DocumentController(fakeDocument)
+        
+        const toSentStub = sinon.stub(fakeStudentService, 'toSender')
+        toSentStub.withArgs(request).returns(true)
+        
+        const documentController = new DocumentController(fakeDocument, fakeStudentService, path, fs)
         return documentController.sent(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
+      })
+    })
+    context('when not found student for update his', () => {
+      it('should return 403 as status code', () => {
+        const fakestudentid = 'fake-student-id'
+        const request = {
+          params: {
+            id: fakestudentid 
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+
+        class fakeStudentService {
+          static toSender () {}
+        }
+        response.status.withArgs(403).returns(response)
+
+        const toSentStub = sinon.stub(fakeStudentService, 'toSender')
+        toSentStub.withArgs(request).returns(false)
+
+        const documentController = new DocumentController(Document, fakeStudentService, path, fs)
+        const resp = documentController.sent(request, response)
+
+        sinon.assert.calledWith(resp.status, 403)          
       })
     })
   })

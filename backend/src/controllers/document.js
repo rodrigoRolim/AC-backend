@@ -1,8 +1,9 @@
 class DocumentController {
 
-  constructor (Document, path, fs) {
+  constructor (Document, StudentService, path, fs) {
 
     this.Document = Document
+    this.StudentService = StudentService
     this.path = path
     this.fs = fs
   }
@@ -58,9 +59,13 @@ class DocumentController {
       .catch((err) => res.status(422).send(err.message))
   }
   sent (req, res) {
-    return this.Document.updateMany({ student: req.params.id, sent: false }, { sent: true })
-      .then(() => res.sendStatus(200))  
-      .catch((err) => res.status(400).send(err.message))
+    if (this.StudentService.toSender(req)) {
+      return this.Document.updateMany({ student: req.params.id, sent: false }, { sent: true })
+        .then(() => res.sendStatus(200))  
+        .catch((err) => res.status(400).send(err.message))
+    } else {
+      return res.status(403)
+    }
   }
 }
 
