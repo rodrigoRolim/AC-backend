@@ -29,7 +29,7 @@ const router = express.Router()
 const documentController = new DocumentController(Document, path,fs)
 
 router.post('/add', upload.single('file'), (req, res) => documentController.create(req, res))
-router.get('/all', (req, res) => documentController.readAll(req, res))
+router.get('/all/:id', (req, res) => documentController.readAll(req, res))
 router.get('/uploads/:file', (req, res) => documentController.getFile(req, res))
 router.get('/:id', (req, res) => documentController.getById(req, res))
 router.delete('/uploads/:file', (req, res) => documentController.delete(req, res))

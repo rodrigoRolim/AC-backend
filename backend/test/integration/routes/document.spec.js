@@ -52,13 +52,14 @@ describe('Router: document', () => {
         })  
     })
   })
-  describe('GET /document/all', () => {
+  describe('GET /document/all/:id', () => {
     context('when getting all documents', () => {
       it('should return all documents object', done => {
+        const customStudentId = '5ce30224b1bcd6cda1addc58'
         const defaultDocumentResponse = Object.assign({}, 
           {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
         request
-          .get('/document/all')
+          .get(`/document/all${customStudentId}`)
           .set('authorization', token)
           .end((err, res) => {
             expect(res.body).to.eql([defaultDocumentResponse])
