@@ -34,6 +34,37 @@ class StudentController {
       })
       .catch((err) => res.status(400).send(err.message))
   }
+  getStudentsOfDepartment (req, res) {
+    return this.Student.aggregate(
+      [
+          {
+              "$match": {
+                  "department": req.params.id
+                  }
+              },
+              { 
+                  "$lookup": {
+                      "localField": '_id', 
+                      "from": 'documents', 
+                      "foreignField": 'student', 
+                      "as": "documents"
+                  }
+              }, 
+              {
+                  "$match": { 
+                      "documents.sent": true 
+                  }
+              }, 
+              {
+                  "$project": {
+                      "documents": 0
+                  }
+              }
+          ]
+      )
+      .then((students) => res.send(students))
+
+  }
   // criar um get all students de determinado departamento, mas somente os que já enviaram seus documentos
   // criar um atualizador do atributo already_student e dispará-lo ao professor pelo pusher: findOneAndUpdate
 }

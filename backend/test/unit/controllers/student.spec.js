@@ -129,4 +129,107 @@ describe('Management student', () => {
       })
     })
   })
+  describe('readAllStudents(): read all students of the specified department', () => {
+    it('should return all student of the speciefied department', () => {
+      const fakeidDepartment = 'fake-id-department'
+      const request = {
+        params: {
+          id: fakeidDepartment
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+      class fakeStudent {
+        static aggregate () {}
+      }
+
+      const fakeStudentAggregateStub = sinon.stub(fakeStudent, 'aggregate')
+      fakeStudentAggregateStub.withArgs([
+        {
+            "$match": {
+                "department": request.params.id
+                }
+            },
+            { 
+                "$lookup": {
+                    "localField": '_id', 
+                    "from": 'documents', 
+                    "foreignField": 'student', 
+                    "as": "documents"
+                }
+            }, 
+            {
+                "$match": { 
+                    "documents.sent": true 
+                }
+            }, 
+            {
+                "$project": {
+                    "documents": 0
+                }
+            }
+        ]).resolves([defaultStudent])
+
+      const studentController = new StudentController(fakeStudent)
+      
+      return studentController.getStudentsOfDepartment(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultStudent])
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return 400 as status code', () => {
+        const fakeidDepartment = 'fake-id-department'
+        const request = {
+          params: {
+            id: fakeidDepartment
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeStudent {
+          static aggregate () {}
+        }
+        
+        response.status.withArgs(400).returns(response)
+
+        const fakeStudentAggregateStub = sinon.stub(fakeStudent, 'aggregate')
+        fakeStudentAggregateStub.withArgs([
+          {
+              "$match": {
+                  "department": request.params.id
+                  }
+              },
+              { 
+                  "$lookup": {
+                      "localField": '_id', 
+                      "from": 'documents', 
+                      "foreignField": 'student', 
+                      "as": "documents"
+                  }
+              }, 
+              {
+                  "$match": { 
+                      "documents.sent": true 
+                  }
+              }, 
+              {
+                  "$project": {
+                      "documents": 0
+                  }
+              }
+          ]).rejects({ message: 'Error' })
+  
+        const studentController = new StudentController(fakeStudent)
+        
+        return studentController.getStudentsOfDepartment(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })
