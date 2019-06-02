@@ -40,6 +40,7 @@ export default {
   methods: {
     getValue (group) {
       let score = 0
+
       if (this.documents.length > 0) {
         for (let i = 0; i < this.documents.length; i++) {
           if (group.name == this.documents[i].group) {

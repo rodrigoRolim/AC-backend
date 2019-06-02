@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <mask-load v-if="showMask"></mask-load>
      <ac-navbar>
       <v-toolbar-items>
         <v-btn flat to="/aluno/home">Home</v-btn>
@@ -99,14 +100,15 @@
 
 <script>
 import AcNavbar from '../AcNavbar'
-import pdf from 'pdfvuer'
+import MaskLoad from '../MaskLoad'
 import DocumentService from '@/services/Document.js'
 import GroupService from '@/services/Group'
 export default {
   name: 'AddDocument',
-  components: { AcNavbar, pdf },
+  components: { AcNavbar, MaskLoad },
   data () {
     return {
+      showMask: false,
       load: false,
       successUpload: false,
       messageAlert: '',
@@ -131,11 +133,14 @@ export default {
     }
   },
   created () {
+    this.showMask = true
     GroupService.readAll()
       .then((groups) => {
-
-        this.groups = groups.data
-        this.namesGroups(groups.data)
+        setTimeout(() => {
+          this.groups = groups.data
+          this.namesGroups(groups.data)
+          this.showMask = false
+        }, 1000)
       })
       if (this.$route.params.id) {
         this.getDocument(this.$route.params.id)

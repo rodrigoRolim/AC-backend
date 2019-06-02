@@ -139,30 +139,24 @@ export default {
   methods: {
     createStudent () {
       this.student.department = this.catchIdDepartment()
-      console.log(this.student.graduation)
       Student.create(this.student).then(response => {
         if (response.status == 201) {
-          this.messageAlert = 'cadastrados com sucesso!'
-          this.alert = 'success'
-          this.showAlert = true
-          setTimeout(() => {
-            this.showAlert = false
-            this.alert = null
-          }, 3000)
-          this.reset()
+          this.getConfirmation('success','cadastrados com sucesso!')
         }
       })
       .catch((err) => {
-         this.messageAlert = 'Não foi possível efetuar o cadastro'
-         this.alert = 'error'
-         this.showAlert = true
-          setTimeout(() => {
-            this.messageAlert = 'Não foi possível efetuar o cadastro'
-            this.showAlert = false
-            this.alert = null
-          }, 3000)
-          this.reset()
+        this.getConfirmation('error', 'Não foi possível efetuar o cadastro')
       })
+    },
+    getConfirmation (type, message) {
+      this.messageAlert = message
+      this.alert = type
+      this.showAlert = true
+      setTimeout(() => {
+        this.showAlert = false
+        this.alert = null
+      }, 3000)
+      this.reset()
     },
     catchIdDepartment () {
       console.log(this.graduations)
@@ -173,7 +167,6 @@ export default {
     },
     reset () {
      this.$refs.form.reset()
-     
     }
   }
 }

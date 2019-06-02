@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialog" scrollable max-width="630px">
+    <v-dialog v-model="dialog" scrollable max-width="800px" >
       <template v-slot:activator="{ on }">
         <v-btn color="secondary" small dark v-on="on" class="mr-1"><v-icon color="white">picture_as_pdf
         </v-icon></v-btn>
@@ -9,7 +9,7 @@
         <v-card-title>
           <span class="headline">{{ document.name }}</span>
         </v-card-title>
-        <v-card-text>
+        <v-card-text class="pdf">
           <canvas :id="document.path"></canvas>
         </v-card-text>
         <v-card-actions>
@@ -96,10 +96,16 @@ export default {
 </script>
 
 <style scoped>
-.v-dialog {
- height: 30vh;
+.v-layout {
+
 }
 .v-btn {
   min-width: 15%;
+}
+.pdf {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
 }
 </style>

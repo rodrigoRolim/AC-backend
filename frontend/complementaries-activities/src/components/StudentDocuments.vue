@@ -120,10 +120,10 @@ export default {
   },
   created () {
     console.log(this.documents)
-    this.verifyAllSent()
+    this.turnAllSent()
   },
   methods: {
-    verifyAllSent () {
+    turnAllSent () {
       if (this.documents.length !== 0) {
         console.log(this.documents.filter((doc) => doc.sent).length)
         this.isAllSent = this.documents.filter((doc) => doc.sent).length === this.documents.length
@@ -150,8 +150,8 @@ export default {
       this.alert = type
       this.messageAlert = message
       this.successUpload = true
+      this.loadBtn = false
       setTimeout(() => {
-        this.loadBtn = false
         this.successUpload = false
       }, 5000)
     },
@@ -162,7 +162,7 @@ export default {
          DocumentService.delete(doc.path)
           .then((res) => {
             this.popDocument(doc)
-            this.getAlert('success', 'Excluído com sucesso!')
+            setTimeout(this.getAlert('success', 'Excluído com sucesso!'), 2000)
           })
           .catch((err) => {
             this.getAlert('error', 'houve um problema na hora de excluir')
@@ -175,14 +175,14 @@ export default {
 
       DocumentService.send(studentid)
         .then((res) => {
-          this.getAlert('success', 'Enviados com sucesso!')
+          setTimeout(this.getAlert('success', 'Enviados com sucesso!'), 2000)
           this.documents.map((doc) => {
             doc.sent = true
           })
           return
         })
         .then(() => {
-          this.verifyAllSent()
+          this.turnAllSent()
         })
     },
     popDocument (doc) {

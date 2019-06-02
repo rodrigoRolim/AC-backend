@@ -34,7 +34,8 @@ const schema = new mongoose.Schema({
     type: String,
     enum: ['aluno'], 
     default: 'aluno'
-  }
+  },
+  // construir testes e função para atualizá-lo no controller findOneAndUpdate(<filter>, <update>, { returnNewDocument: true })
 })
 schema.set('toJSON', {
   transform: (doc, ret, options) => ({
@@ -43,6 +44,7 @@ schema.set('toJSON', {
     name: ret.name,
     email: ret.email,
     graduation: ret.graduation,
+    department: ret.department,
     user_type: ret.user_type,
     documents: ret.documents
   })

@@ -194,7 +194,6 @@ export default {
           this.departments.splice(index, 1)
         })
         .catch((err) => {
-          console.log(err)
           alert('O departamento provavelmente esta sendo usado em algum curso, não pode excluí-lo')
         })
       }
@@ -221,9 +220,10 @@ export default {
           }) */
         Object.assign(this.departments[this.editedIndex], this.editedItem)
       } else {
-        DepartmentService.save(this.editedItem).then((department) => {
-          this.departments.push(department.data)
-        })
+        DepartmentService.save(this.editedItem)
+          .then((department) => {
+            this.departments.push(department.data)
+          })
       }
       this.close()
     }

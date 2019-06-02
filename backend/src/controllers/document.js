@@ -17,7 +17,7 @@ class DocumentController {
   }
   delete (req, res) {
     const file = this.path.join('uploads', req.params.file)
-    return this.Document.remove({ path: file })
+    return this.Document.remove({ path: file, sent: false })
       .then(() => {
         
         const pathname = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)

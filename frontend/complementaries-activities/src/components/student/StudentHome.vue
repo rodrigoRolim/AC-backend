@@ -40,13 +40,13 @@ export default {
   },
   created () {
     this.showMask = true
-    DocumentService.readAll()
+    const idStudent = JSON.parse(localStorage.getItem('user'))._id
+    DocumentService.readAll(idStudent)
       .then((documents) => {
+        this.documentsResponse = documents.data
         setTimeout(() => {
           this.showMask = false 
-          this.documentsResponse = documents.data
-        }, 2000)
-        
+        }, 1000)
       })
 
   },

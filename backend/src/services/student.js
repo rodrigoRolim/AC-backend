@@ -5,7 +5,7 @@ class StudentService {
   }
   turnSender (req) {
     try {
-      const student = this.Student.findOneAndUpdate({ _id: req.params.id }, { returnNewDocument: true })
+      const student = this.Student.findOneAndUpdate({ _id: req.params.id }, { already_sent: true }, { returnNewDocument: true })
       if (student.length > 0) {
         return true
       } else {
