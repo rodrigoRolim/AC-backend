@@ -2,9 +2,9 @@
   <div class="modal-mask">
     <v-progress-circular
       class="modal-container"
-      :size="100"
+      :size="120"
       :width="7"
-      color="purple"
+      color="#37474F"
       indeterminate
     ></v-progress-circular>
   </div>
