@@ -42,6 +42,15 @@ let router = new Router({
       }
     },
     {
+      path: '/professor/alunos',
+      component: ProfessorStudent,
+      name: 'ProfessorStudent',
+      meta: {
+        requiresAuth: true,
+        is_professor: true
+      }
+    },
+    {
       path: '/admin/professores',
       component: AdminProfessor,
       meta: {
