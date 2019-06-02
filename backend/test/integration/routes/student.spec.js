@@ -14,8 +14,9 @@ describe('Route: Student', () => {
     email: 'name@mail',
     graduation: '5cd60a0312c3e687ea34667f',
     user_type: 'aluno',
-    documents: [],
-    password: '12345'
+    department: '5cf01570ec365a1bcccc7b58',
+    password: '12345',
+    already_sent: false
   }
   const defaultNewStudent = {
     ra: 'a12346',
@@ -24,6 +25,7 @@ describe('Route: Student', () => {
     graduation: 'engenharia de software',
     user_type: 'aluno',
     department: '5cf01570ec365a1bcccc7b58',
+    already_sent: false,
     password: '12345'
   }
   const expectedSaveStudent = {
@@ -33,6 +35,7 @@ describe('Route: Student', () => {
     email: 'nameagain@mail',
     department: '5cf01570ec365a1bcccc7b58',
     user_type: 'aluno',
+    already_sent: false,
     graduation: 'engenharia de software',
   }
  
