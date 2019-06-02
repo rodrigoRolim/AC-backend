@@ -357,7 +357,7 @@ describe('Controller: Document', () => {
       }
       
       const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
-      updateManyStub.withArgs({ student: fakestudentid }, { sent: true }).resolves()
+      updateManyStub.withArgs({ student: fakestudentid, sent: false  }, { sent: true }).resolves()
 
       const documentController = new DocumentController(fakeDocument)
       return documentController.sent(request, response)
@@ -383,7 +383,7 @@ describe('Controller: Document', () => {
         
         response.status.withArgs(400).returns(response)
         const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
-        updateManyStub.withArgs({ student: fakestudentid }, { sent: true }).rejects({ message: 'Error' })
+        updateManyStub.withArgs({ student: fakestudentid, sent: false  }, { sent: true }).rejects({ message: 'Error' })
   
         const documentController = new DocumentController(fakeDocument)
         return documentController.sent(request, response)
