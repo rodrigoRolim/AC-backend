@@ -6,5 +6,8 @@ export default {
   },
   login: (userStudent) => {
     return http.post('/student/login', userStudent)
+  },
+  readAll: (idDepartment) => {
+    return http.get(`/student/all/department/${idDepartment}`)
   }
 }
