@@ -26,12 +26,14 @@ export default {
     }
   },
   created () {
-    console.log(this.user)
+    console.log(this.user.user_type)
     switch(this.user.user_type) {
       case 'aluno':
         this.$router.replace('/aluno/home')
+        break;
       case 'professor':
         this.$router.replace('/professor/home')
+        break;
     }
   }
 }
