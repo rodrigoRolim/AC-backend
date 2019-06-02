@@ -2,7 +2,7 @@
   <v-layout row justify-center>
     <v-dialog v-model="dialog" scrollable max-width="630px">
       <template v-slot:activator="{ on }">
-        <v-btn color="secondary" small dark v-on="on"  class="mr-1"><v-icon color="white">picture_as_pdf
+        <v-btn color="secondary" small dark v-on="on" class="mr-1"><v-icon color="white">picture_as_pdf
         </v-icon></v-btn>
       </template>
       <v-card>
@@ -46,6 +46,7 @@ export default {
     }
   },
   created () {
+    console.log(this.document.path)
     this.getDocument(this.document.path)
   },
   methods: {
@@ -82,7 +83,7 @@ export default {
     getDocument (path) {
       DocumentService.getFile(path)
         .then((resp) => {
-          pdfjs.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js'
+         
           pdfjs.getDocument(resp.data).then(doc => {
             this.pdf = doc
             this.numberPages = doc.numPages
