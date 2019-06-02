@@ -6,12 +6,12 @@ export default {
     return http.post('/document/add', document)
   },
   getFile: (path) => {
-
+    
     return http.get(`/document/${path}`, { responseType: 'arraybuffer'})
   },
-  readAll: () => {
+  readAll: (idStudent) => {
 
-    return http.get('/document/all')
+    return http.get(`/document/all/${idStudent}`)
   },
   delete: (path) => {
 
