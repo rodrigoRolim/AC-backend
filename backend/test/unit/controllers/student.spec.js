@@ -13,7 +13,8 @@ describe('Management student', () => {
     password: '12345',
     graduation: 'engenharia',
     department: 'id-department',
-    user_type: 'aluno'
+    user_type: 'aluno',
+    already_sent: false
   }
   const defaultRequest = {
     params: {}
