@@ -1,11 +1,13 @@
 <template>
   <v-app>
+  <mask-load v-if="showMask"></mask-load>
   <ac-navbar>
     <v-toolbar-items>
-      <v-btn flat to="/professor/home">cursos</v-btn>
+      <v-btn flat to="/admin/cursos">cursos</v-btn>
       <v-btn flat to="/admin/departamentos">departamentos</v-btn>
       <v-btn flat to="/admin/professores">professores</v-btn>
       <v-btn flat to="/admin/grupos">grupos</v-btn>
+      <v-btn flat to="/professor/home">alunos</v-btn>
       <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
     </v-toolbar-items>
 
@@ -119,13 +121,15 @@
 
 <script>
 import AcNavbar from '../AcNavbar'
+import MaskLoad from '../MaskLoad'
 import AddItem from '../AddItem'
 import EditItem from '../EditItem'
 import GroupService from '@/services/Group.js'
   export default {
-    components: { AcNavbar, AddItem, EditItem },
+    components: { AcNavbar, MaskLoad, AddItem, EditItem },
     data () {
       return {
+        showMask: false,
         expand: false,
         dialog: false,
         editedIndex: -1,
@@ -160,6 +164,7 @@ import GroupService from '@/services/Group.js'
       }
     },
     created () {
+      this.showMask = true
       this.initializeGroup()
     },
     computed: {
@@ -179,8 +184,14 @@ import GroupService from '@/services/Group.js'
       },
       initializeGroup () {
         GroupService.readAll()
-          .then((res) => {
-            this.groups = res.data
+          .then((res) => res.data)
+          .then((groups) => {
+            this.groups = groups
+          })
+          .then(() => setTimeout(() => { this.showMask = false }, 1000))
+          .catch((err) => {
+            console.log(err)
+            // mensagem de erro
           })
       },
       logout () {

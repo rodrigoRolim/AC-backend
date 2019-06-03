@@ -25,8 +25,8 @@ let router = new Router({
       name: 'Home'
     },
     {
-      path: '/professor/home', // mudar para professor/curso
-      name: 'AdminHome',
+      path: '/admin/cursos', // mudar para professor/curso
+      name: 'ProfessorGraduation',
       component: AdminGraduation,
       meta: {
         requiresAuth: true,
@@ -42,9 +42,9 @@ let router = new Router({
       }
     },
     {
-      path: '/professor/alunos',
-      component: ProfessorStudent,
-      name: 'ProfessorStudent',
+      path: '/professor/home',
+      component: ProfessorHome,
+      name: 'ProfessorHome',
       meta: {
         requiresAuth: true,
         is_professor: true

@@ -23,8 +23,7 @@
           <v-icon class="mr-2" @click="renderPage(document.path, pdfScale+=0.1, pageNum)">zoom_in</v-icon>
           <v-icon @click="renderPage(document.path, pdfScale-=0.1, pageNum)">zoom_out</v-icon>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" dark depressed @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -46,7 +45,6 @@ export default {
     }
   },
   created () {
-    console.log(this.document.path)
     this.getDocument(this.document.path)
   },
   methods: {
@@ -96,9 +94,6 @@ export default {
 </script>
 
 <style scoped>
-.v-layout {
-
-}
 .v-btn {
   min-width: 15%;
 }

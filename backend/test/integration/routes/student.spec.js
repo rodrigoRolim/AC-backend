@@ -15,8 +15,7 @@ describe('Route: Student', () => {
     graduation: '5cd60a0312c3e687ea34667f',
     user_type: 'aluno',
     department: '5cf01570ec365a1bcccc7b58',
-    password: '12345',
-    already_sent: false
+    password: '12345'
   }
   const defaultNewStudent = {
     ra: 'a12346',
@@ -25,7 +24,6 @@ describe('Route: Student', () => {
     graduation: 'engenharia de software',
     user_type: 'aluno',
     department: '5cf01570ec365a1bcccc7b58',
-    already_sent: false,
     password: '12345'
   }
   const expectedSaveStudent = {
@@ -35,10 +33,19 @@ describe('Route: Student', () => {
     email: 'nameagain@mail',
     department: '5cf01570ec365a1bcccc7b58',
     user_type: 'aluno',
-    already_sent: false,
     graduation: 'engenharia de software',
   }
- 
+  // salvá-lo também para o teste dá certo
+  const newDocument = {
+    name: 'document name',
+    score: 10,
+    path: 'test.pdf',
+    evaluation: 'none',
+    sent: true,
+    group: 'name group',
+    item: 'name item',
+    student: defaultId
+  }
   before(() => {
     return setupApp()
       .then(app => {
@@ -87,6 +94,22 @@ describe('Route: Student', () => {
           expect(res.body.auth).to.true
           done(err)
         })
+      })
+    })
+  })
+  describe('GET /student/all/department/:id', () => {
+    context('when reading all students of especified department', () => {
+      it('should return all students from especified department', done => {
+        
+        const idDepartment = '5cf01570ec365a1bcccc7b58'
+
+        resquest
+          .set('authorization', token)
+          .get(`/student/all/department/${idDepartment}`)
+          .end((err, res) => {
+            expect(res.body).to.eql([defaultStudent])
+            done(err)
+          })
       })
     })
   })

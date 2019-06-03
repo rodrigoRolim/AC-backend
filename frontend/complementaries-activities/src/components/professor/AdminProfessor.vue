@@ -1,11 +1,13 @@
 <template>
   <v-app id="ManagerProfessor">
+    <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
     <v-toolbar-items>
-      <v-btn flat to="/professor/home">cursos</v-btn>
+      <v-btn flat to="/admin/cursos">cursos</v-btn>
       <v-btn flat to="/admin/departamentos">departamentos</v-btn>
       <v-btn flat to="/admin/professores">professores</v-btn>
       <v-btn flat to="/admin/grupos">grupos</v-btn>
+      <v-btn flat to="/professor/home">alunos</v-btn>
       <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
     </v-toolbar-items>
       </v-btn>
@@ -105,7 +107,7 @@
         </template>
         <template v-slot:no-data>
           <v-alert :value="true" color="error" icon="warning">
-            nenhum grupo cadastrado
+            nenhum professor cadastrado
           </v-alert>
         </template>
         </v-data-table>
@@ -118,10 +120,12 @@
 <script>
 import DepartmentService from '@/services/Department.js'
 import ProfessorService from '@/services/Professor.js'
+import MaskLoad from '../MaskLoad'
 import AcNavbar from '../AcNavbar'
   export default {
-    components: { AcNavbar },
+    components: { AcNavbar, MaskLoad },
     data: () => ({
+      showMask: false,
       selectedName: '',
       dialog: false,
       search: '',
@@ -136,7 +140,7 @@ import AcNavbar from '../AcNavbar'
         { text: 'departamento (responsável)', value: 'curso', sortable: false, align: 'left' },
         { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
-      departaments: [],
+      departments: [],
       departmentNames: [],
       professors: [],
       editedIndex: -1,
@@ -169,6 +173,7 @@ import AcNavbar from '../AcNavbar'
     },
 
     created () {
+      this.showMask = true
       this.initializeDepartments()
     },
 
@@ -180,28 +185,28 @@ import AcNavbar from '../AcNavbar'
       },
       initializeDepartments () {
         DepartmentService.readAll()
-          .then((departments) => {
-            this.departments = departments.data
-            departments.data.map(dep => {
-              this.departmentNames.push(dep.name)
-            })
-          })
-          .then(() => {
-            this.initializeProfessors()
-          })
+          .then((res) => res.data)
+          .then((departments) => this.setDepartments(departments))
+          .then(() => this.initializeProfessors())
       },
       initializeProfessors () {
         ProfessorService.readAll()
-          .then((professors) => {
-            console.log(professors)
-            this.professors = this.replaceIdToName(professors.data)
-          })
+          .then((professors) => this.replaceIdToName(professors.data))
+          .then((professors) => this.professors = professors)
+          .then(() => setTimeout(() => { this.showMask = false }, 1000))
           .catch((err) => {
-            console.log('errroooouu')
+            this.showMask = false
+            console.log(err)
             // implementar mesagem de erro, sem graça
           })
       },
-
+      
+      setDepartments (departments) {
+        this.departments = departments
+        departments.map(dep => {
+          this.departmentNames.push(dep.name)
+        })
+      },
       editItem (item) {
         this.editedIndex = this.professors.indexOf(item)
         this.editedItem = Object.assign({}, item)
@@ -236,7 +241,6 @@ import AcNavbar from '../AcNavbar'
           Object.assign(this.professors[this.editedIndex], this.editedItem)
         } else {
           this.replaceNameToId()
-          console.log(this.editedItem)
            ProfessorService.save(this.editedItem).
             then((res) => {
               alert('cadastrado com sucesso')
@@ -255,15 +259,14 @@ import AcNavbar from '../AcNavbar'
         this.editedItem.department = department[0]._id
       },
       replaceIdToName (professors) {
+
         let newProfessors = []
         professors.map((professor) => {
-          
-          const department = this.departments.filter((dep) => 
-            dep._id === professor.department)
+   
+          const department = this.departments.filter((dep) => dep._id == professor.department)
           professor.department = department[0].name
 
           newProfessors.push(professor)
-
         })
         
         return newProfessors

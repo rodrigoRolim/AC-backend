@@ -1,8 +1,9 @@
 class StudentController {
-  constructor (Student, jwt, compare) {
+  constructor (Student, jwt, compare, castingId) {
     this.Student = Student
     this.jwt = jwt
     this.compare = compare
+    this.castingId = castingId
   }
   create (req, res) {
     const student = new this.Student(req.body)
@@ -35,11 +36,12 @@ class StudentController {
       .catch((err) => res.status(400).send(err.message))
   }
   getStudentsOfDepartment (req, res) {
+    console.log(req.params.id)
     return this.Student.aggregate(
       [
           {
               "$match": {
-                  "department": req.params.id
+                  "department": this.castingId.ObjectId(req.params.id)
                   }
               },
               { 
@@ -57,7 +59,8 @@ class StudentController {
               }, 
               {
                   "$project": {
-                      "documents": 0
+                      "documents": 0,
+                      "password": 0
                   }
               }
           ]

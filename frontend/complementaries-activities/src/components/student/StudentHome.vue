@@ -31,11 +31,7 @@ export default {
     return {
       showMask: false,
       pdf: null,
-      documentsResponse: null,
-      progress_group_1: 0,
-      progress_group_2: 0,
-      progress_group_3: 0,
-      progress: []
+      documentsResponse: null
     }
   },
   created () {
@@ -51,24 +47,6 @@ export default {
 
   },
   methods: {
-    /* initiliazeGroups () {
-      GroupService.readAll()
-        .then((resp) => {
-          console.log(resp.data)
-        })
-    }, */
-    async calculateProgress () {
-      await this.documentResponse.map(document => {
-        switch(document.group) {
-          case 'grupo 1':
-            this.progress_group_1 += document.score
-          case 'grupo 2':
-            this.progress_group_2 += document.score
-          case 'grupo 3':
-            this.progress_group_3 += document.score
-        }
-      })
-    },
     logout () {
       localStorage.removeItem('token')
       localStorage.removeItem('user')

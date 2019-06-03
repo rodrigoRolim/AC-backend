@@ -1,11 +1,13 @@
 <template>
    <v-app>
+     <mask-load v-if="showMask"></mask-load>
      <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/professor/home">cursos</v-btn>
+        <v-btn flat to="/admin/cursos">cursos</v-btn>
         <v-btn flat to="/admin/departamentos">departamentos</v-btn>
         <v-btn flat to="/admin/professores">professores</v-btn>
         <v-btn flat to="/admin/grupos">grupos</v-btn>
+        <v-btn flat to="/professor/home">alunos</v-btn>
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
        
@@ -113,7 +115,7 @@
           </v-alert>
         </template>
         <template v-slot:no-data>
-        <v-alert :value="true" color="error" icon="warning">
+        <v-alert :value="true" color="#78909C" icon="warning">
           nenhum curso cadastrado
         </v-alert>
         </template>
@@ -129,12 +131,14 @@
 
 <script>
 import AcNavbar from '../AcNavbar.vue'
+import MaskLoad from '../MaskLoad'
 import GraduationService from '@/services/Graduation.js'
 import DepartmentService from '@/services/Department.js'
 export default {
-  components: { AcNavbar },
+  components: { AcNavbar, MaskLoad },
   data () {
     return {
+      showMask: false,
       success: false,
       denied: false,
       departmentNames: [],
@@ -196,25 +200,29 @@ export default {
   },
   methods: {
     initializeGraduations () {
+      this.showMask = true
       GraduationService.readAll()
-        .then((graduations) => {
-
-          graduations.data.map(grad => {
-            const newGraduation = Object.assign({}, 
-                { _id: grad._id, name: grad.name, department: grad.deps[0].name })
-            this.graduations.push(newGraduation)
-          })
-          this.initializeDepartments()
-        })
+        .then((res) => res.data)
+        .then((graduations) => this.setGraduations(graduations))
+        .then(() => this.initializeDepartments())
     },
     initializeDepartments () {
       DepartmentService.readAll()
-        .then((departments) => {
-          this.departments = departments.data
-          console.log(this.departments)
-          departments.data.map(dep => {
-            this.departmentNames.push(dep.name)
-          })
+        .then((res) => res.data)
+        .then((departments) => this.setDepartments(departments))
+        .then(() =>  setTimeout(() => { this.showMask = false }, 1000))
+    },
+    setDepartments (departments) {
+      this.departments = departments
+      departments.map(dep => {
+        this.departmentNames.push(dep.name)
+      })
+    },
+    setGraduations (graduations) {
+      graduations.map(grad => {
+          const newGraduation = Object.assign({}, 
+              { _id: grad._id, name: grad.name, department: grad.deps[0].name })
+          this.graduations.push(newGraduation)
         })
     },
     editItem (item) {

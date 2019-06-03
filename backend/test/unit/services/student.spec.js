@@ -1,4 +1,4 @@
-import StudentService from '../../../src/services/student'
+/* import StudentService from '../../../src/services/student'
 import sinon from 'sinon'
 
 describe('StudentService: turnStudentToSender ()', () => {
@@ -40,4 +40,4 @@ describe('StudentService: turnStudentToSender ()', () => {
       expect(studentService.turnSender(request)).to.be.false 
     })
   })
-})
+}) */

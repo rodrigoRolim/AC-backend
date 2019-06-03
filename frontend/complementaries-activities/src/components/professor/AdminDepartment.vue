@@ -1,11 +1,13 @@
 <template>
    <v-app>
+     <mask-load v-if="showMask"></mask-load>
      <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/professor/home">cursos</v-btn>
+        <v-btn flat to="/admin/cursos">cursos</v-btn>
         <v-btn flat to="/admin/departamentos">departamentos</v-btn>
         <v-btn flat to="/admin/professores">professores</v-btn>
         <v-btn flat to="/admin/grupos">grupos</v-btn>
+        <v-btn flat to="/professor/home">alunos</v-btn>
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
        
@@ -112,11 +114,13 @@
 
 <script>
 import AcNavbar from '../AcNavbar.vue'
+import MaskLoad from '../MaskLoad'
 import DepartmentService from '@/services/Department.js'
 export default {
-  components: { AcNavbar },
+  components: { AcNavbar, MaskLoad },
   data () {
     return {
+      showMask: false,
       dialog: false,
       editedIndex: -1,
       valid: true,
@@ -171,11 +175,13 @@ export default {
   },
   methods: {
     initialize () {
+      this.showMask = true
       DepartmentService.readAll()
+        .then((res) => res.data)
         .then((departments) => {
-          this.departments = departments.data
-          console.log(this.departments)
+          this.departments = departments
         })
+        .then(() => setTimeout(() => { this.showMask = false}, 1000))
         .catch((err) => {
           
         })
