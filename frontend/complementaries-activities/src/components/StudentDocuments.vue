@@ -9,7 +9,9 @@
    <v-toolbar flat color="white">
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn color="secondary" 
+    <v-btn 
+    color="secondary" 
+    v-if="documents.length > 0"
     @click="sentDocuments" depressed 
     :disabled="loadBtn || isAllSent"
     :loading="loadBtn"

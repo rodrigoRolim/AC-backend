@@ -30,7 +30,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  user_type: {
+  type_user: {
     type: String,
     enum: ['aluno'], 
     default: 'aluno'

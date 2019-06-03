@@ -16,7 +16,7 @@
         >
         Usuário inválido.
         </v-alert>
-        <v-card ref="form"> 
+        <v-card> 
           <v-toolbar
             card
             color="#43A047"
@@ -26,32 +26,36 @@
           <v-spacer></v-spacer>
           </v-toolbar>
           <v-spacer></v-spacer>
-          <v-card-text>
-            <v-text-field
-              v-model="professor.name"
-              :rules="[() => !!professor.name || 'This field is required']"
-              label="Nome *"
-              placeholder="john Doe"
-              required
-            ></v-text-field>    
-            <v-text-field
-              :append-icon="show ? 'visibility' : 'visibility_off'"
-              :rules="[rules.required]"
-              :type="show ? 'text' : 'password'"
-              name="input-10-2"
-              label="Senha"
-              hint="deve ter pelo menos 8 caracteres"
-              v-model="professor.password"
-              class="input-group--focused"
-              @click:append="show = !show"
-              required
-            ></v-text-field>
-          </v-card-text>
-          <v-divider class="mt-5"></v-divider>
-          <v-card-actions class="justify-end">
-            <v-btn color="secondary" dark depressed @click="reset">Resetar</v-btn>
-            <v-btn color="primary" depressed @click="login" :disabled="validated">Submit</v-btn>
-          </v-card-actions>
+          <v-form ref="form">
+             <v-card-text>
+              <v-text-field
+                ref="professor.name"
+                v-model="professor.name"
+                :rules="[() => !!professor.name || 'This field is required']"
+                label="Nome *"
+                placeholder="john Doe"
+                required
+              ></v-text-field>    
+              <v-text-field
+                ref="professor.password"
+                :append-icon="show ? 'visibility' : 'visibility_off'"
+                :rules="[rules.required]"
+                :type="show ? 'text' : 'password'"
+                name="input-10-2"
+                label="Senha"
+                hint="deve ter pelo menos 8 caracteres"
+                v-model="professor.password"
+                class="input-group--focused"
+                @click:append="show = !show"
+                required
+              ></v-text-field>
+            </v-card-text>
+            <v-divider class="mt-5"></v-divider>
+            <v-card-actions class="justify-end">
+              <v-btn color="secondary" dark depressed @click="reset">Resetar</v-btn>
+              <v-btn color="primary" depressed @click="login" :disabled="validated">Submit</v-btn>
+            </v-card-actions>
+          </v-form>
       </v-card>
     </v-flex>
   </v-layout>
@@ -72,8 +76,8 @@ export default {
       validatedUser: false,
       errorMessages: '',
       professor: {
-        name: '',
-        password: ''
+        name: null,
+        password: null
       },
       rules: {
         required: value => !!value || 'Required',
@@ -111,8 +115,8 @@ export default {
       localStorage.setItem('token', JSON.stringify(token))
     },
     reset () {
-      this.professor.username = ''
-      this.professor.password = ''
+      this.$refs.form.reset()
+      // this.professor.name = ''
     }
   },
   computed: {
@@ -120,7 +124,7 @@ export default {
       return this.professor
     },
     validated () {
-      return this.professor.username === '' || this.professor.password == ''
+      return this.professor.name == null || this.professor.password == null
     }
   }
 }

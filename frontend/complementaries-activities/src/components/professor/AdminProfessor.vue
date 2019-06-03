@@ -188,6 +188,9 @@ import AcNavbar from '../AcNavbar'
           .then((res) => res.data)
           .then((departments) => this.setDepartments(departments))
           .then(() => this.initializeProfessors())
+          .catch((err) => {
+            console.log(err)
+          })
       },
       initializeProfessors () {
         ProfessorService.readAll()
@@ -229,11 +232,13 @@ import AcNavbar from '../AcNavbar'
       save () {
         this.editedItem.department = this.selectedName
         if (this.editedIndex > -1) {
-          const professorUpdate = { name: this.editedItem.name, email: this.editedItem.email, 
-                                    professor: this.editedItem.professor}
+          const professorUpdate = { 
+            name: this.editedItem.name,
+            email: this.editedItem.email,                        
+            professor: this.editedItem.professor
+          }
           ProfessorService.updateResponsible(this.editedItem._id, professorUpdate)
             .then((res) => {
-              console.log(res)
               if (res.data == 'OK') {
                 alert('atualizado com sucesso')
               }
@@ -262,7 +267,7 @@ import AcNavbar from '../AcNavbar'
 
         let newProfessors = []
         professors.map((professor) => {
-   
+
           const department = this.departments.filter((dep) => dep._id == professor.department)
           professor.department = department[0].name
 

@@ -1,7 +1,8 @@
 class StudentService {
 
-  constructor (Student) {
+  constructor (Student, pusher) {
     this.Student = Student
+    this.pusher = pusher
   }
   turnSender (req) {
     try {
@@ -13,6 +14,18 @@ class StudentService {
       }
     } catch (err) {
       return false
+    }
+  }
+  subscribeStudentToProfessor (req, res) {
+    try {
+      const student = this.Student.find({ _id: req.params.id })
+      if (student.length > 0) {
+        pusher.trigger('my-channel', 'my-event', {
+          "message": "hello world"
+        });
+      }
+    } catch (err) {
+      return res.status(400).send(err.message)
     }
   }
 }

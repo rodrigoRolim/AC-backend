@@ -67,7 +67,7 @@
 import AcNavbar from '../AcNavbar'
 import MaskLoad from '../MaskLoad'
 import StudentService from '@/services/Student'
-
+import Pusher from 'pusher-js'
 export default {
   name: 'ProfessorHome',
   components: { AcNavbar, MaskLoad },
@@ -104,6 +104,20 @@ export default {
       localStorage.removeItem('user')
       this.$router.replace('/professor')
     }
+  },
+  // pusher going to here
+  getNewSenderStudents () {
+    Pusher.logToConsole = true;
+
+    let pusher = new Pusher('9dc5a8662a93a62e45bb', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    let channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
   }
 }
 </script>

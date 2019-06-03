@@ -5,7 +5,19 @@ import verify from '../auth'
 import multer from 'multer'
 import fs from 'mz/fs'
 import path from 'path'
+import Pusher from 'pusher'
 
+var pusher = new Pusher({
+  appId: '795627',
+  key: '9dc5a8662a93a62e45bb',
+  secret: 'a884fc3b107158db9674',
+  cluster: 'us2',
+  encrypted: true
+});
+
+pusher.trigger('my-channel', 'my-event', {
+  "message": "hello world"
+});
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ["application/pdf"]
 
@@ -26,6 +38,7 @@ const upload = multer({
 })
 
 const router = express.Router()
+// passar o pusher no construtor
 const documentController = new DocumentController(Document, path,fs)
 
 router.post('/add', upload.single('file'), (req, res) => documentController.create(req, res))

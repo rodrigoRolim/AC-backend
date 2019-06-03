@@ -98,22 +98,26 @@ export default {
   methods: {
     loginStudent () {
       this.showMask = true
-      Student.login(this.student).then(response => {
-        this.removeSession()
-        if (response.status == 201) {
-          this.createSession(response.data)
+      Student.login(this.student)
+        .then(res => res.data)
+        .then((students) => {
+          this.removeSession()
+          return students
+        })
+        .then((students) => this.createSession(students))
+        .then(() => {
           setTimeout(() => {
-            this.showMask = false
-            this.$router.replace('/aluno/home')
-            }, 2000)
-        }
-      })
-      .catch((err) => {
-        this.validatedUser = true
-        setTimeout(() => {
-          this.validatedUser = false
-        }, 10000)
-      })
+          this.showMask = false
+          this.$router.replace('/aluno/home')
+          }, 2000)
+        })
+        .catch((err) => {
+          this.showMask = false
+          this.validatedUser = true
+          setTimeout(() => {
+            this.validatedUser = false
+          }, 5000)
+        })
     },
     createSession (response) {
       this.setUser(response.user)

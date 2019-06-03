@@ -135,30 +135,34 @@ export default {
   created () {
     this.showMask = true
     GroupService.readAll()
+      .then((res) => res.data)
       .then((groups) => {
-        setTimeout(() => {
-          this.groups = groups.data
-          this.namesGroups(groups.data)
-          this.showMask = false
-        }, 1000)
+        this.groups = groups
+        return groups
       })
-      if (this.$route.params.id) {
-        this.getDocument(this.$route.params.id)
-      }
+      .then((groups) => this.namesGroups(groups))
+      .then(() => setTimeout(() => { this.showMask = false }, 1000))
+      .then(() => {
+        if (this.$route.params.id) {
+          this.getDocument(this.$route.params.id)
+        }
+      })
   },
   methods: {
     getDocument (id) {
       DocumentService.getById(id)
+        .then((res) => res.data[0])
         .then((document) => {
-          this.document = document.data[0]
-          this.getItemsWhenUpdate(document.data[0])
+          this.document = document
+          return document
         })
+        .then((document) =>  this.getItemsWhenUpdate(document))
         .catch((err) => {
 
         })
     },
     getItemsWhenUpdate (document) {
-      const group = this.groups.filter((group) => group.name == document.group)
+      const group = this.groups.filter((group) => group.name === document.group)
       group[0].items.map((item) => {
         this.items.push(item.description)
       })

@@ -26,15 +26,18 @@ export default {
     }
   },
   created () {
-    console.log(this.user.user_type)
-    switch(this.user.user_type) {
-      case 'aluno':
-        this.$router.replace('/aluno/home')
-        break;
-      case 'professor':
-        this.$router.replace('/professor/home')
-        break;
+    console.log(this.user)
+    if (typeof this.user != undefined && this.user != null) {
+      switch(this.user.type_user) {
+        case 'aluno':
+          this.$router.replace('/aluno/home')
+          break;
+        case 'professor':
+          this.$router.replace('/professor/home')
+          break;
+      }
     }
+    
   }
 }
 </script>

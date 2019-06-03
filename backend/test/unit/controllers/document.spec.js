@@ -405,3 +405,4 @@ describe('Controller: Document', () => {
     })
   })
 })
+// adicione o pusher com dependencia deste controller
