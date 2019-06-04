@@ -22,6 +22,16 @@ describe('Router: document', () => {
     item: 'name item',
     student: '5ce30224b1bcd6cda1addc58'
   }
+  const defaultDocumentSent = {
+    name: 'document name',
+    score: 10,
+    path: 'test2.pdf',
+    evaluation: 'none',
+    sent: true,
+    group: 'name group',
+    item: 'name item',
+    student: '5ce30224b1bcd6cda1addc58'
+  }
   before(() => {
     return setupApp()
       .then(app => {
@@ -132,12 +142,30 @@ describe('Router: document', () => {
   describe('PUT /document/sent/:id', () => {
     context('when updating sent attribute of document', () => {
       it('should update sent of document and return 200 as status code', done => {
+        
         const studentId = '5ce30224b1bcd6cda1addc58'
         request
           .set('authorization', token)
           .put(`/document/sent/${studentId}`)
           .end((err, res) => {
             expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
+  describe('GET /documents/all/sent/:id', () => {
+    context('when reading all documents sent of student', () => {
+      it('should return all documents sent of student', done => {
+        const studentId = '5ce30224b1bcd6cda1addc58'
+        let document = new Document(defaultDocumentSent)
+        document._id = "5cf6d369b73efa380e617663"
+        document.save()
+        request
+          .get(`/documents/all/sent/${studentId}`)
+          .set('authorization', toke)
+          .end((err, res) => {
+            expect(res.body).to.eql([defaultDocument])
             done(err)
           })
       })
