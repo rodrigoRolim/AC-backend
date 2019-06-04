@@ -13,7 +13,7 @@ import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify, {
-  iconfont: 'fa4'
+  iconfont: 'fa1'
 })
 
 /* eslint-disable no-new */
