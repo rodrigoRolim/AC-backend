@@ -15,6 +15,16 @@ describe('Controller: Document', () => {
     item: 'name item',
     student: '5ce30224b1bcd6cda1addc58'
   }
+  const defaultDocumentSent = {
+    name: 'document name',
+    score: 10,
+    path: '/path/to/document',
+    evaluation: 'none',
+    sent: true,
+    group: 'name group',
+    item: 'name item',
+    student: '5ce30224b1bcd6cda1addc58'
+  }
   const defaultRequest = {
     params: {}
   }
@@ -398,6 +408,63 @@ describe('Controller: Document', () => {
         
         const documentController = new DocumentController(fakeDocument, path, fs)
         return documentController.sent(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
+  describe('readAllSent(): readin all documents sent by department', () => {
+    it('should return all documents sent by department', () => {
+      const fakeidstudent = 'fake-id-student'
+      const request = {
+        params: {
+          id: fakeidstudent
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+
+      class fakeDocument {
+        static find () {}
+      }
+
+      const fakeDocumenFindStub = sinon.stub(fakeDocument, 'find')
+      fakeDocumenFindStub.withArgs({ student: fakeidstudent, sent: true }).resolves([defaultDocumentSent])
+
+      const documentController = new DocumentController(fakeDocument, path, fs)
+
+      return documentController.readAllSents(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultDocumentSent])
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return 400 as status code', () => {
+        const fakeidstudent = 'fake-id-student'
+        const request = {
+          params: {
+            id: fakeidstudent
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+  
+        class fakeDocument {
+          static find () {}
+        }
+  
+        response.status.withArgs(400).returns(response)
+
+        const fakeDocumenFindStub = sinon.stub(fakeDocument, 'find')
+        fakeDocumenFindStub.withArgs({ student: fakeidstudent, sent: true }).reject({ message: 'Erro' })
+  
+        const documentController = new DocumentController(fakeDocument, path, fs)
+  
+        return documentController.readAllSents(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
