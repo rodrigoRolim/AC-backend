@@ -8,10 +8,13 @@ import Vuetify from 'vuetify'
 import AdminGraduation from '@/components/professor/AdminGraduation'
 import ProfessorLogin from '@/components/professor/ProfessorLogin'
 import ProfessorHome from '@/components/professor/ProfessorHome'
+import 'font-awesome/css/font-awesome.min.css'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  iconfont: 'fa4'
+})
 
 /* eslint-disable no-new */
 new Vue({

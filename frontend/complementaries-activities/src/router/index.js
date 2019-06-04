@@ -6,6 +6,7 @@ import AdminGroup from '@/components/professor/AdminGroup'
 import AdminDepartment from '@/components/professor/AdminDepartment'
 import ProfessorLogin from '@/components/professor/ProfessorLogin'
 import ProfessorHome from '@/components/professor/ProfessorHome'
+import ProfessorDocuments from '@/components/professor/ProfessorDocuments'
 import Home from '@/components/Home'
 import StudentLogin from '@/components/student/StudentLogin'
 import AddStudent from '@/components/student/AddStudent'
@@ -49,6 +50,11 @@ let router = new Router({
         requiresAuth: true,
         is_professor: true
       }
+    },
+    {
+      path: '/professor/aluno/documentos/:id',
+      name: 'ProfessorDocuments',
+      component: ProfessorDocuments
     },
     {
       path: '/admin/professores',

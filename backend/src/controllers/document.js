@@ -33,6 +33,12 @@ class DocumentController {
       .then((documents) => res.send(documents))
       .catch((err) => res.status(400).send(err.message))
   }
+  readAllSents (req, res) {
+
+    return this.Document.find({ student: req.params.id, sent: true })
+      .then((documents) => res.send(documents))
+      .catch((err) => res.status(400).send(err.message))
+  }
   getFile (req, res) {
 
     const fileLocation = this.path.join(__dirname, '..', '..', 'uploads', req.params.file)

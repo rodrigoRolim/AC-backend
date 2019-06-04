@@ -14,7 +14,7 @@
     <v-layout class="table">
        <v-card>
         <v-card-title>
-          Nutrition
+          Alunos
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -38,7 +38,6 @@
             <v-btn
               color="#00796B"
               class="mr-2"
-              :disabled="props.item.sent"
               small
               :to="`/professor/aluno/documentos/${props.item._id}`"
             >
@@ -60,7 +59,6 @@
        </v-card>
     </v-layout>
   </v-app>
-
 </template>
 
 <script>

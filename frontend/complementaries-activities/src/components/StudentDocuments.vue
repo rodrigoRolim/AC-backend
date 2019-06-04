@@ -1,11 +1,11 @@
 <template>
   <v-layout class="table">
-  <v-alert
-    :value="successUpload"
-    :type="alert"
-    >
-      {{ messageAlert }}
-  </v-alert>
+    <v-alert
+      :value="successUpload"
+      :type="alert"
+      >
+        {{ messageAlert }}
+    </v-alert>
    <v-toolbar flat color="white">
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
@@ -75,9 +75,9 @@
         </v-alert>
       </template>
       <template v-slot:no-data>
-          <v-alert :value="true" color="#78909C" icon="warning">
-            nenhum documento cadastrado
-          </v-alert>
+        <v-alert :value="true" color="#78909C" icon="warning">
+          nenhum documento cadastrado
+        </v-alert>
       </template>
      </v-data-table>
     </v-card>
@@ -125,6 +125,9 @@ export default {
     this.turnAllSent()
   },
   methods: {
+    func () {
+      console.log("inferno")
+    },
     turnAllSent () {
       if (this.documents.length !== 0) {
         console.log(this.documents.filter((doc) => doc.sent).length)
@@ -132,14 +135,7 @@ export default {
       } else {
         this.isAllSent = false
       }
-    }/* ,
-    isAllHaveMinScore () {
-      if (this.documents.length !== 0) {
-        
-      } else {
-        return false
-      }
-    } */, 
+    }, 
     getIcon (evaluation) {
       switch (evaluation) {
         case 'none':

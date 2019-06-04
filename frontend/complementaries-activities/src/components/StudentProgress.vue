@@ -1,5 +1,6 @@
 <template>
   <v-card class="text-xs-center progress" v-if="groups">
+  <!--<v-icon>fa-trophy</v-icon>-->
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
       v-for="(group, index) in groups"
@@ -7,10 +8,10 @@
       :rotate="360"
       :size="120"
       :width="15"
-      :value="getValue(group)[0]"
+      :value="getProgress(group)[0]"
       :color="getColor(index)"
     >
-      {{ getValue(group)[1] }} <small>pontos</small> <strong>{{group.name}}</strong>
+      {{ getProgress(group)[1] }} <small>pontos</small> <strong>{{group.name}}</strong>
     </v-progress-circular>
    
   </v-card>
@@ -31,14 +32,17 @@ export default {
     }
   },
   created () {
-  
+
     GroupService.readAll()
+      .then((res) => res.data)
       .then((groups) => {
-        this.groups = groups.data
+        this.groups = groups
+        return
       })
+      .then(() => this.aprobation())
   },
   methods: {
-    getValue (group) {
+    getProgress (group) {
       let score = 0
 
       if (this.documents.length > 0) {
@@ -52,6 +56,20 @@ export default {
     },
     getColor (count) {
       return this.colors[count%3]
+    },
+    aprobation () {
+      let totals = []
+      for (let i = 0; i < this.groups.length; i++) {
+        totals[i] = 0
+        for (let j = 0; j < this.documents.length; j++) {
+          if (this.documents[j].group == this.groups[i].name) {
+            
+            totals[i] += this.documents[j].score
+            console.log(this.documents[j].score)
+          }
+        }
+      }
+      console.log(totals)
     }
   }
 }

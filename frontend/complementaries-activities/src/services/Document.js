@@ -13,6 +13,9 @@ export default {
 
     return http.get(`/document/all/${idStudent}`)
   },
+  readAllSents: (idStudent) => {
+    return http.get(`/document/all/sents/${idStudent}`)
+  },
   delete: (path) => {
 
     return http.delete(`/document/${path}`)

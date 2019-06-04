@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialog" scrollable max-width="800px" >
+    <v-dialog v-model="dialog" scrollable max-width="850px" >
       <template v-slot:activator="{ on }">
         <v-btn color="secondary" small dark v-on="on" class="mr-1"><v-icon color="white">picture_as_pdf
         </v-icon></v-btn>
@@ -22,8 +22,32 @@
           ></v-divider>
           <v-icon class="mr-2" @click="renderPage(document.path, pdfScale+=0.1, pageNum)">zoom_in</v-icon>
           <v-icon @click="renderPage(document.path, pdfScale-=0.1, pageNum)">zoom_out</v-icon>
+          <v-divider
+            class="mx-3"
+            inset
+            vertical
+          ></v-divider>
+          <professor-feedback @comments="getComment"></professor-feedback>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" @click="dialog = false" dark depressed>Ok</v-btn>
+
+            <v-flex xs12 sm6 md3>
+              <v-radio-group v-model="evaluation" lign-center justify-center row class="ma-0 align-center">
+                <v-radio
+                  label="reprovar"
+                  color="red"
+                  value="reproved"
+                ></v-radio>
+                <v-radio
+                  label="aprovar"
+                  color="success"
+                  value="aproved"
+                ></v-radio>
+              </v-radio-group>
+            </v-flex>
+
+            <v-spacer></v-spacer>
+           <v-btn color="secondary" @click="dialog = false" dark depressed >fechar</v-btn>
+           <v-btn color="blue darken-1" @click="dialog = false" dark depressed >Confirmar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -31,12 +55,16 @@
 </template>
 <script>
 import DocumentService from '@/services/Document'
+import ProfessorFeedback from './ProfessorFeedback'
 import pdfjs from 'pdfjs-dist'
 export default {
   name: 'ShowDocument',
+  components: { ProfessorFeedback },
   props: ['document'],
   data () {
     return {
+      evaluation: '',
+      comments: '',
       dialog: false,
       pdfScale: 1,
       pageNum: 1,
@@ -48,8 +76,16 @@ export default {
     this.getDocument(this.document.path)
     console.log(this.dialog)
   },
+  computed: {
+    getDialog () {
+      
+      return this.dialog
+    }
+  },
   methods: {
-  
+    getComment (comments) {
+      this.comments = comments
+    },
     renderPage (path, scale_increment, pageNum) {
 
       this.pageNum = (pageNum > this.numberPages) ? this.numberPages : pageNum
