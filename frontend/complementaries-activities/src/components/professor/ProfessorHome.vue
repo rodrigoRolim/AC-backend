@@ -94,7 +94,7 @@ export default {
     StudentService.readAll(this.professor.department)
       .then((res) => res.data)
       .then(students => this.students = students)
-      .then(() => setTimeout(() => { this.showMask = false }, 1000))
+      .then(() => setTimeout(() => { this.showMask = false }, 200))
   },
   methods: {
     logout () {
