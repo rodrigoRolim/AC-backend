@@ -45,7 +45,7 @@
         </v-icon>
         </td>
         <td class="justify-center layout px-0">
-          <show-sent-document :document="props.item"></show-sent-document>
+          <show-sent-document :document="props.item" @refresh="updateEvaluation"></show-sent-document>
         </td> 
       </template>
       <template v-slot:no-results>
@@ -93,6 +93,10 @@ export default {
     }
   },
   methods: {
+    updateEvaluation (value) {
+      const position = this.documents.indexOf(value.document)
+      this.documents[position].evaluation = value.evaluation
+    },
      getIcon (evaluation) {
       switch (evaluation) {
         case 'none':
@@ -106,5 +110,7 @@ export default {
 </script>
 
 <style scoped>
-
+.check_circle {
+  color: green
+}
 </style>
