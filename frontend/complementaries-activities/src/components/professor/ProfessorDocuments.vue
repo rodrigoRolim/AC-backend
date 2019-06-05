@@ -1,5 +1,6 @@
 <template>
   <v-app>
+   <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
         <v-btn flat to="/admin/cursos">cursos</v-btn>
@@ -10,7 +11,7 @@
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <student-progress v-if="documents" :documents="documents"></student-progress>
+    <professor-progress v-if="documents" :documents="documents"></professor-progress>
     <sent-documents v-if="documents" :documents="documents"></sent-documents>
   </v-app>
 </template>
@@ -18,15 +19,17 @@
 <script>
 import Comments from '../Comments'
 import AcNavbar from '../AcNavbar'
+import MaskLoad from '../MaskLoad'
 import SentDocuments from '../SentDocuments'
-import StudentProgress from '../StudentProgress'
+import ProfessorProgress from '../ProfessorProgress'
 import DocumentService from '@/services/Document'
 import ShowDocument from  '../ShowDocument'
 export default {
   name: 'StudentProgess',
-  components: { Comments, ShowDocument, AcNavbar, StudentProgress, SentDocuments },
+  components: { Comments, ShowDocument, AcNavbar, ProfessorProgress, SentDocuments, MaskLoad },
   data () {
     return {
+      showMask: false,
       choiced: '',
       reproveBtn: false,
       aproveBtn: false,
@@ -63,13 +66,14 @@ export default {
   methods: {
     
     initializeDocuments (studentid) {
-
+      this.showMask = true
       DocumentService.readAllSents(studentid)
         .then((res) => res.data)
         .then((documents) => {
           this.documents = documents
           return
         })
+        .then(() => setTimeout(() => { this.showMask = false }, 2000))
         .catch((err) => console.log(err))
     },
     getIcon (evaluation) {
@@ -114,7 +118,7 @@ export default {
   margin: 0px auto;
   margin-bottom: 20px;
 }
-.v-btn {
+.table .v-btn {
   min-width: 15%
 }
 .v-alert {
