@@ -47,7 +47,7 @@
 
             <v-spacer></v-spacer>
            <v-btn color="secondary" @click="dialog = false" dark depressed >fechar</v-btn>
-           <v-btn color="blue darken-1" @click="dialog = false" dark depressed >Confirmar</v-btn>
+           <v-btn color="blue darken-1" @click="update" dark depressed >Confirmar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -83,6 +83,31 @@ export default {
     }
   },
   methods: {
+    update () {
+      
+      this.document.evaluation = this.evaluation
+      
+      // agora voce tem que salvar isso no banco e não permtir que o professor aprove um documento mais de uma vez
+
+      this.dialog = false
+      //{ position: }
+      // setar em board o score min também
+    },
+    updateDocument () {
+      const update_document = { document: this.document, evaluation: this.evaluation }
+      this.$emit('refresh', update_document)
+    },
+    updateBoard () {
+      
+      const boardItems = this.$store.getters.getBoard
+      const boardItem = boardItems.filter(item => item.group == this.document.group)
+      const position = boardItems.indexOf(boardItem[0])
+      const raw = this.document.score
+      const percent = (boardItem[0].raw + raw)*100/boardItem[0].min
+      const update_board = { position: position, raw: raw, percent: percent}
+      
+      this.$store.dispatch('update', update_board)
+    }
     getComment (comments) {
       this.comments = comments
     },
