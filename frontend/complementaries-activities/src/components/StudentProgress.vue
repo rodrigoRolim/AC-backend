@@ -1,19 +1,30 @@
 <template>
-  <v-card class="text-xs-center progress" v-if="groups">
-  <!--<v-icon>fa-trophy</v-icon>-->
+  <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
+      v-if="scoreboard && !aproved"
       v-for="(group, index) in groups"
       v-bind:key="group._id"
       :rotate="360"
-      :size="120"
+      :size="130"
       :width="15"
-      :value="getProgress(group)[0]"
+      :value="scoreboard[index].score*100/group.scoreMax"
       :color="getColor(index)"
     >
-      {{ getProgress(group)[1] }} <small>pontos</small> <strong>{{group.name}}</strong>
+      {{ scoreboard[index].score }} <small>pontos</small> <strong>{{group.name}}</strong>
     </v-progress-circular>
-   
+    </v-progress-circular>
+    <v-progress-circular
+      v-if="aproved"
+      :rotate="360"
+      :size="130"
+      :width="15"
+      :value="scoreboard.total"
+      color="#00C853"
+    >
+      <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
+      <span>aprovado!</span>
+    </v-progress-circular>
   </v-card>
 </template>
 
@@ -25,8 +36,10 @@ export default {
   data () {
     return {
       interval: {},
+      aproved: false,
       value: 0,
       groups: null,
+      scoreboard: null,
       pointed_color: 0,
       colors: ['teal', 'primary', 'red']
     }
@@ -39,37 +52,47 @@ export default {
         this.groups = groups
         return
       })
+      .then(() => this.setScoreboard())
       .then(() => this.aprobation())
+      .then((aproved) => this.aproved = aproved)
   },
   methods: {
-    getProgress (group) {
-      let score = 0
-
-      if (this.documents.length > 0) {
-        for (let i = 0; i < this.documents.length; i++) {
-          if (group.name == this.documents[i].group) {
-            score += this.documents[i].score
-          }
-        }
-      }
-      return [score*100/group.scoreMax, score]
-    },
     getColor (count) {
       return this.colors[count%3]
     },
-    aprobation () {
-      let totals = []
+    setScoreboard () {
+      
+      let totals_groups = []
+      let total = 0
+
       for (let i = 0; i < this.groups.length; i++) {
-        totals[i] = 0
+        totals_groups[i] = 0
         for (let j = 0; j < this.documents.length; j++) {
           if (this.documents[j].group == this.groups[i].name) {
-            
-            totals[i] += this.documents[j].score
-            console.log(this.documents[j].score)
+            totals_groups[i] += this.documents[j].score
+            total += this.documents[j].score
           }
         }
       }
-      console.log(totals)
+
+     const scores = totals_groups.map((item,i) => {
+        return { 
+          group: this.groups[i].name, 
+          score: item, 
+          aproved: item >= this.groups[i].scoreMin,
+          evaluation: this.documents[i].evaluation    
+        }
+      })
+     const score_validates = scores.filter((item) => item.evaluation !== "reproved")
+     console.log(score_validates)
+     this.scoreboard = Object.assign([], score_validates, { total: total, aproved: total >= 70 })
+ 
+    },
+    aprobation () {
+
+      const aproveds = this.scoreboard.filter((score) => score.aproved && score.evaluation !== 'reproved')
+      console.log(aproveds)
+      return aproveds.length == this.groups.length && this.scoreboard.aproved
     }
   }
 }
@@ -85,5 +108,8 @@ export default {
 }
 strong {
   font-size: 1.15rem
+}
+#trophy {
+  font-size: 20px;
 }
 </style>
