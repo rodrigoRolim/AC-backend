@@ -9,5 +9,8 @@ export default {
   },
   readAll: (idDepartment) => {
     return http.get(`/student/all/department/${idDepartment}`)
+  },
+  setSituation: (idStudent, newSituation) => {
+    return http.get(`/student/update/situation/${idStudent}`, newSituation)
   }
 }
