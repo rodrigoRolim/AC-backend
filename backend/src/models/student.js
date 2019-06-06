@@ -30,6 +30,12 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  situation: {
+    type: String,
+    enum: ['approved', 'debting'],
+    default: 'debting',
+    required: true
+  },
   type_user: {
     type: String,
     enum: ['aluno'], 
