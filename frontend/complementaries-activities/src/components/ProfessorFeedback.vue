@@ -24,7 +24,7 @@
                   outline
                   name="input-7-4"
                   label="escreva os motivos de não aprovar"
-                  v-model="comment"
+                  v-model="comments"
                 ></v-textarea>
                </v-flex>
             </v-layout>
@@ -45,18 +45,21 @@ export default {
   data () {
     return {
       dialog: false,
-      comment: ''
+      comments: ''
     }
   },
   methods: {
     sendComment () {
-      this.dialog=false
-      this.$emit('comments', this.comment)
+      console.log(this.comments)
+      this.$emit('feedback', this.comments)
+      this.dialog = false
     }
   }
 }
 </script>
 
 <style scoped>
-
+.v-btn {
+  min-width: 5%;
+}
 </style>
