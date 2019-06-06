@@ -14,6 +14,7 @@ describe('Route: Student', () => {
     email: 'name@mail',
     graduation: '5cd60a0312c3e687ea34667f',
     user_type: 'aluno',
+    situation: 'debting',
     department: '5cf01570ec365a1bcccc7b58',
     password: '12345'
   }
@@ -109,6 +110,19 @@ describe('Route: Student', () => {
           .end((err, res) => {
             expect(res.body).to.eql([defaultStudent])
             done(err)
+          })
+      })
+    })
+  })
+  describe('PUT /student/update/situation/:id', () => {
+    context('when updating situation of student from debting for approved', () => {
+      it('should return 200 as status code', done => {
+        request
+          .set('authorization', token)
+          .put(`/student/update/situation/${defaultId }`)
+          .send({ situation: 'approved'})
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
           })
       })
     })
