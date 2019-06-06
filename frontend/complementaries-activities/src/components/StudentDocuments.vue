@@ -45,14 +45,14 @@
         </v-icon>
         </td>
         <td class="text-md-left">
-          <comments></comments>
+          <comments :feedback="props.item.feedback"></comments>
         </td>
         <td class="justify-center layout px-0">
           <show-document :document="props.item"></show-document>
           <v-btn
             color="#00796B"
             class="mr-2"
-            :disabled="props.item.sent"
+            :disabled="props.item.sent && props.item.evaluation !== 'reproved'"
             small
             :to="`/aluno/documento/add/${props.item._id}`"
           >
@@ -61,7 +61,7 @@
           <v-btn
             color="#FF1744"
             class="mr-2"
-            :disabled="props.item.sent"
+            :disabled="props.item.sent && props.item.evaluation !== 'reproved'"
             small
             @click="deleteDocument(props.item)"
           >
@@ -124,14 +124,15 @@ export default {
     console.log(this.documents)
     this.turnAllSent()
   },
+  computeds: {
+
+  },
   methods: {
-    func () {
-      console.log("inferno")
-    },
     turnAllSent () {
       if (this.documents.length !== 0) {
-        console.log(this.documents.filter((doc) => doc.sent).length)
-        this.isAllSent = this.documents.filter((doc) => doc.sent).length === this.documents.length
+        console.log(this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved').length)
+        const qtdDocuments = this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved') 
+        this.isAllSent = (qtdDocuments.length === this.documents.length)
       } else {
         this.isAllSent = false
       }
@@ -142,6 +143,8 @@ export default {
           return 'fiber_manual_record'
         case 'aproved':
           return 'check_circle'
+        case 'reproved':
+          return 'remove_circle'
       }
     },
     getAlert (type, message) {
@@ -176,11 +179,18 @@ export default {
           setTimeout(this.getAlert('success', 'Enviados com sucesso!'), 2000)
           this.documents.map((doc) => {
             doc.sent = true
+            if (doc.evaluation == 'reproved') {
+              doc.evaluation = 'none'
+            }
           })
           return
         })
         .then(() => {
           this.turnAllSent()
+        })
+        .catch((err) => {
+          console.log(err)
+          setTimeout(this.getAlert('error', 'Não foi possível enviar, tente mais uma vez!'), 2000)
         })
     },
     popDocument (doc) {
@@ -209,5 +219,8 @@ export default {
 }
 .check_circle {
   color: green
+}
+.remove_circle {
+  color: red
 }
 </style>
