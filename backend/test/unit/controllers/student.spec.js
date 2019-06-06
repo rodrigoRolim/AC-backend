@@ -14,7 +14,7 @@ describe('Management student', () => {
     graduation: 'engenharia',
     department: 'id-department',
     user_type: 'aluno',
-    already_sent: false
+    situation: 'student situation'
   }
   const defaultRequest = {
     params: {}
