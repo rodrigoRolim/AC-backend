@@ -12,9 +12,9 @@ import 'font-awesome/css/font-awesome.min.css'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
-Vue.use(Vuetify/* , {
+Vue.use(Vuetify, {
   iconfont: 'fa1'
-} */)
+})
 
 /* eslint-disable no-new */
 new Vue({
