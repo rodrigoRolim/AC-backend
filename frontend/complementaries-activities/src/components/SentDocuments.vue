@@ -9,13 +9,13 @@
    <v-toolbar flat color="white">
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn 
+    <!--<v-btn 
     color="secondary" 
     v-if="documents.length > 0"
     depressed 
     :disabled="false"
     :loading="false"
-    class="mb-1">enviar documentos</v-btn>
+    class="mb-1">enviar documentos</v-btn>-->
    </v-toolbar>
     <v-card>
       <v-card-title>
@@ -40,8 +40,9 @@
         <td class="text-md-left">{{ props.item.item }}</td>
         <td class="text-md-left">{{ props.item.score }}</td>
         <td class="text-md-left">
+
         <v-icon v-bind:class="getIcon(props.item.evaluation)">
-          {{ getIcon(props.item.evaluation)  }}
+          {{ getIcon(props.item.evaluation) }}
         </v-icon>
         </td>
         <td class="justify-center layout px-0">
@@ -92,17 +93,26 @@ export default {
       ]
     }
   },
+  created () {
+    console.log(this.documents)
+  },
   methods: {
     updateEvaluation (value) {
+      console.log(value)
       const position = this.documents.indexOf(value.document)
       this.documents[position].evaluation = value.evaluation
+      this.$emit('reload', true)
     },
-     getIcon (evaluation) {
+    getIcon (evaluation) {
+      console.log('sentdoc')
+      console.log(evaluation)
       switch (evaluation) {
         case 'none':
           return 'fiber_manual_record'
         case 'aproved':
           return 'check_circle'
+        case 'reproved':
+          return 'remove_circle'
       }
     },
   }
@@ -112,5 +122,8 @@ export default {
 <style scoped>
 .check_circle {
   color: green
+}
+.remove_circle {
+  color: red
 }
 </style>
