@@ -232,4 +232,53 @@ describe('Management student', () => {
       })
     })
   })
+  describe('setSituation(): setting situation of student', () => {
+    it('should return 200 as status code', () => {
+      const fakeidstudent = 'fake-id-student'
+      const newsituation = 'new situation'
+
+      const requestWithBody = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
+      const response = {
+        sendStatus: sinon.spy()
+      }
+      
+      class fakeStudent {
+        static findOneAndUpdate () {}
+      }
+      const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
+      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, requestWithBody.body ).resolves()
+      const studentController = new StudentController(fakeStudent)
+
+      return studentController.setSituation(requestWithBody, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200)
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return 422 as status code', () => {
+        const fakeidstudent = 'fake-id-student'
+        const newsituation = 'new situation'
+  
+        const requestWithBody = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        
+        response.status.withArgs(422).returns(response)
+
+        class fakeStudent {
+          static findOneAndUpdate () {}
+        }
+        const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
+        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, requestWithBody.body ).rejects({ message: 'Error' })
+        const studentController = new StudentController(fakeStudent)
+  
+        return studentController.setSituation(requestWithBody, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })
