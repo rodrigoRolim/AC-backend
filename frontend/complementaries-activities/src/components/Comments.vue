@@ -19,11 +19,11 @@
           class="headline grey lighten-2"
           primary-title
         >
-          {{ title }}
+          Motivos segundo o seu professor
         </v-card-title>
 
         <v-card-text>
-          {{ message }}
+          {{ feedback }}
         </v-card-text>
 
         <v-divider></v-divider>
@@ -35,7 +35,7 @@
             flat
             @click="dialog = false"
           >
-            I accept
+           ok
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -46,7 +46,7 @@
 <script>
 export default {
   name: 'commments',
-  props: ['title', 'message'],
+  props: ['feedback'],
   data () {
     return {
       dialog: false
