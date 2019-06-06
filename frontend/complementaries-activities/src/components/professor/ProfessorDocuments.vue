@@ -66,6 +66,7 @@ export default {
   methods: {
     
     initializeDocuments (studentid) {
+      console.log('por aqyu')
       this.showMask = true
       DocumentService.readAllSents(studentid)
         .then((res) => res.data)
@@ -75,6 +76,9 @@ export default {
         })
         .then(() => setTimeout(() => { this.showMask = false }, 2000))
         .catch((err) => console.log(err))
+    },
+    reloadDocuments () {
+      // this.initializeDocuments(this.$route.params.id)
     },
     getIcon (evaluation) {
       switch (evaluation) {
