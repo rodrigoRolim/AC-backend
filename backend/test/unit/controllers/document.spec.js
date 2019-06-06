@@ -10,6 +10,7 @@ describe('Controller: Document', () => {
     score: 10,
     path: '/path/to/document',
     evaluation: 'none',
+    feedback: 'professor comments',
     sent: false,
     group: 'name group',
     item: 'name item',
@@ -19,6 +20,7 @@ describe('Controller: Document', () => {
     name: 'document name',
     score: 10,
     path: '/path/to/document',
+    feedback: 'professor comments',
     evaluation: 'none',
     sent: true,
     group: 'name group',
@@ -34,7 +36,7 @@ describe('Controller: Document', () => {
         path: 'path/to',
       }
       const request = Object.assign({}, 
-        { body: { document: JSON.stringify(defaultDocument)}, file: file }, defaultRequest)
+        { body: { document: JSON.stringify(defaultDocument) }, file: file }, defaultRequest)
       const response = {
         send: sinon.spy(),
         status: sinon.stub()
@@ -377,7 +379,8 @@ describe('Controller: Document', () => {
       }
 
       const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
-      updateManyStub.withArgs({ student: fakestudentid, sent: false  }, { sent: true }).resolves()
+      updateManyStub.withArgs({ student: fakestudentid, $or: [ { sent: true }, { sent: false } ], 
+        evaluation: { $not: /aproved/ } }, { $set: { evaluation: 'none', sent: true } }).resolves()
 
     
       const documentController = new DocumentController(fakeDocument, path, fs)
@@ -404,7 +407,8 @@ describe('Controller: Document', () => {
 
         response.status.withArgs(400).returns(response)
         const updateManyStub = sinon.stub(fakeDocument, 'updateMany')
-        updateManyStub.withArgs({ student: fakestudentid, sent: false  }, { sent: true }).rejects({ message: 'Error' })
+        updateManyStub.withArgs({ student: fakestudentid, $or: [ { sent: true }, { sent: false } ], 
+          evaluation: { $not: /aproved/ } }, { $set: { evaluation: 'none', sent: true } }).rejects({ message: 'Error' })
         
         const documentController = new DocumentController(fakeDocument, path, fs)
         return documentController.sent(request, response)
