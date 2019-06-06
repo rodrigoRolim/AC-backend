@@ -14,5 +14,6 @@ const studentController = new StudentController(Student, jwt, compare, castingId
 router.post('/add', (req, res) => studentController.create(req, res))
 router.post('/login', (req, res) => studentController.login(req, res))
 router.get('/all/department/:id', (req, res) => studentController.getStudentsOfDepartment(req, res))
+router.put('/update/situation/:id', (req, res) => studentController.setSituation(req, res))
 
 export default router
