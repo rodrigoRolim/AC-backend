@@ -28,11 +28,11 @@ const schema = new mongoose.Schema({
     default: false
   },
   group: { 
-    type: String,
+    type: mongoose.Schema.Types.ObjectId, ref: 'Group',
     required: true
   },
   item: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId, ref: 'Group.item',
     required: true
   },
   student: {

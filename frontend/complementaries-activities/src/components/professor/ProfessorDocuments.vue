@@ -23,7 +23,9 @@ import MaskLoad from '../MaskLoad'
 import SentDocuments from '../SentDocuments'
 import ProfessorProgress from '../ProfessorProgress'
 import DocumentService from '@/services/Document'
+import GroupService from '@/services/Group'
 import ShowDocument from  '../ShowDocument'
+
 export default {
   name: 'StudentProgess',
   components: { Comments, ShowDocument, AcNavbar, ProfessorProgress, SentDocuments, MaskLoad },
@@ -61,24 +63,51 @@ export default {
   },
   created () {
     console.log(this.choiced)
-    this.initializeDocuments(this.$route.params.id)
+    this.initialize(this.$route.params.id)
   },
   methods: {
     
-    initializeDocuments (studentid) {
-      console.log('por aqyu')
-      this.showMask = true
-      DocumentService.readAllSents(studentid)
+    initialize (idStudent) {
+      GroupService.readAll()
+        .then((res) => res.data)
+        .then((groups) => this.getDocuments(idStudent, groups))
+    },
+    getDocuments (idStudent, groups) {
+       DocumentService.readAll(idStudent)
         .then((res) => res.data)
         .then((documents) => {
-          this.documents = documents
-          return
+          if (documents) {
+            this.documents = this.replaceIdForNames(groups, documents)
+          } else {
+            this.documents = null
+          }
+          //this.documentsResponse = this.replaceIdForNames(groupsItems, documents)
+          setTimeout(() => {
+            this.showMask = false 
+          }, 1000)
         })
-        .then(() => setTimeout(() => { this.showMask = false }, 2000))
-        .catch((err) => console.log(err))
     },
-    reloadDocuments () {
-      // this.initializeDocuments(this.$route.params.id)
+    getNameGroup(groupId, groups) {
+
+      const group = groups.filter((group) => group._id == groupId)
+      return group
+    },
+    getNameItem (group, idItem) {
+
+      const item = group[0].items.filter((item) => item._id == idItem)
+      return item
+    },
+    replaceIdForNames (groups, documents) {
+
+      const newdocuments = documents.map((document) => {
+        const group = this.getNameGroup(document.group, groups)
+        const item = this.getNameItem(group, document.item)
+        document.group = group[0].name
+        document.item = item[0].description
+        return document
+      })
+  
+      return newdocuments
     },
     getIcon (evaluation) {
       switch (evaluation) {

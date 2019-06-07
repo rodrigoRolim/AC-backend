@@ -10,9 +10,7 @@ class StudentController {
 
     return student.save()
       .then(() => res.status(201).send(student))
-      .catch((err) => {
-        console.log(err.message)
-        res.status(400).send(err.message)})
+      .catch((err) => res.status(400).send(err.message))
   }
   login (req, res) {
     
@@ -26,7 +24,7 @@ class StudentController {
 
               const _id = student._id
               const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
-              console.log(student)
+ 
               res.status(201).send({ token: token, auth: resp, user: student })
             } else {
               res.status(404).send('No authorization')
@@ -36,7 +34,7 @@ class StudentController {
       .catch((err) => res.status(400).send(err.message))
   }
   getStudentsOfDepartment (req, res) {
-    console.log(req.params.id)
+
     return this.Student.aggregate(
       [
           {
@@ -70,9 +68,11 @@ class StudentController {
 
   }
   setSituation (req, res) {
-    return this.Student.findOneAndUpdate({ _id: req.params.id }, { situation: req.body } )
+    console.log(req.params.id)
+    console.log(req.body.situation)
+    return this.Student.findOneAndUpdate({ _id: req.params.id }, { $set: { situation: req.body.situation } } )
       .then(() => res.sendStatus(200))
-      .catch((err) => res.status(422).send(err))
+      .catch((err) => res.status(422).send(err.message))
   }
   // criar um get all students de determinado departamento, mas somente os que já enviaram seus documentos
   // criar um atualizador do atributo already_student e dispará-lo ao professor pelo pusher: findOneAndUpdate

@@ -11,6 +11,8 @@ export default {
     return http.get(`/student/all/department/${idDepartment}`)
   },
   setSituation: (idStudent, newSituation) => {
-    return http.get(`/student/update/situation/${idStudent}`, newSituation)
+    console.log(idStudent)
+    console.log(newSituation)
+    return http.put(`/student/update/situation/${idStudent}`, { situation: newSituation })
   }
 }

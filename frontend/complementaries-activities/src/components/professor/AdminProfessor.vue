@@ -14,6 +14,13 @@
       
     </ac-navbar>
     <v-layout class="table">
+      <v-alert
+        class="alert"
+        :type="typeAlert"
+        :value="showAlert"
+        >
+        {{message}}
+      </v-alert>
       <v-toolbar flat color="white" >
         <v-toolbar-title>Lista de professores</v-toolbar-title>
         <v-divider
@@ -129,6 +136,9 @@ import AcNavbar from '../AcNavbar'
       selectedName: '',
       dialog: false,
       search: '',
+      message: '',
+      typeAlert: 'error',
+      showAlert: false,
       headers: [
         {
           text: 'nome (professor responsável)',
@@ -188,27 +198,24 @@ import AcNavbar from '../AcNavbar'
           .then((res) => res.data)
           .then((departments) => this.setDepartments(departments))
           .then(() => this.initializeProfessors())
-          .catch((err) => {
-            console.log(err)
-          })
+          .catch((err) => this.getAlert('desculpas, houve um error'))
       },
       initializeProfessors () {
         ProfessorService.readAll()
-          .then((professors) => this.replaceIdToName(professors.data))
+          .then((res) => res.data)
+          .then((professors) => this.replaceIdAllToName(professors))
           .then((professors) => this.professors = professors)
           .then(() => setTimeout(() => { this.showMask = false }, 1000))
-          .catch((err) => {
-            this.showMask = false
-            console.log(err)
-            // implementar mesagem de erro, sem graça
-          })
+          .catch((err) => this.getAlert('error', 'error ao inicilizar lista de professores'))
       },
       
       setDepartments (departments) {
         this.departments = departments
-        departments.map(dep => {
-          this.departmentNames.push(dep.name)
-        })
+        if (departments.length > 0) {
+          departments.map(dep => {
+            this.departmentNames.push(dep.name)
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.professors.indexOf(item)
@@ -232,49 +239,73 @@ import AcNavbar from '../AcNavbar'
       save () {
         this.editedItem.department = this.selectedName
         if (this.editedIndex > -1) {
+          this.replaceNameToId()
           const professorUpdate = { 
             name: this.editedItem.name,
-            email: this.editedItem.email,                        
-            professor: this.editedItem.professor
+            email: this.editedItem.email,
+            password: this.editedItem.password,                        
+            department: this.editedItem.department,
+            password: this.editedItem.password
           }
-          ProfessorService.updateResponsible(this.editedItem._id, professorUpdate)
-            .then((res) => {
-              if (res.data == 'OK') {
-                alert('atualizado com sucesso')
-              }
-            })
-          Object.assign(this.professors[this.editedIndex], this.editedItem)
+          ProfessorService.update(this.editedItem._id, professorUpdate)
+            .then((res) => this.getAlert('success', 'atualizado com sucesso'))
+            .then(() => this.replaceIdToName(this.editedItem))
+            .then((professor) => Object.assign(this.professors[this.editedIndex], professor))
+            .catch((err) => this.getAlert('error', 'ocorreu um error'))
+          
         } else {
           this.replaceNameToId()
-           ProfessorService.save(this.editedItem).
-            then((res) => {
-              alert('cadastrado com sucesso')
-              this.professors.push(this.replaceIdToName([res.data])[0])
-            })
+          ProfessorService.save(this.editedItem)
+            .then((res) => res.data)
+            .then((professors) => this.professors.push(this.replaceIdAllToName([professors])[0]))
+            .then(() => this.getAlert('success', 'salvo com sucesso'))
             .catch((err) => {
-              console.log(err)
-              // implementar messagem de erro
+              this.getAlert('error', err.response.data)
             })
         }
         this.close()
       },
       replaceNameToId () {
-        const department = this.departments.filter((dep) => 
+        if (this.departments.length > 0) {
+          const department = this.departments.filter((dep) => 
             dep.name === this.editedItem.department)
-        this.editedItem.department = department[0]._id
+          this.editedItem.department = department[0]._id
+        }
       },
-      replaceIdToName (professors) {
+      replaceIdToName (professor) {
+        const department = this.departments.filter((dep) => dep._id == professor.department)[0]
+        professor.department = department.name
+        return professor
+      },
+      replaceIdAllToName (professors) {
 
+        console.log(professors)
         let newProfessors = []
-        professors.map((professor) => {
+        //if (typeof professors.department != 'undefined') {
+           console.log('veio aqui')
+           professors.map((professor) => {
+             console.log(professor)
+             console.log(this.departments)
+             if (typeof professor.department != 'undefined') {
+              const department = this.departments.filter((dep) => dep._id == professor.department)
+              console.log(department)
+              professor.department = department[0].name
+             }
 
-          const department = this.departments.filter((dep) => dep._id == professor.department)
-          professor.department = department[0].name
-
-          newProfessors.push(professor)
-        })
+            newProfessors.push(professor)
+          })
+        //}
+       console.log(newProfessors)
         
         return newProfessors
+      },
+      getAlert (type, message) {
+        this.typeAlert = type
+        this.message = message
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false
+        }, 5000)
       }
     }
   }
@@ -287,9 +318,11 @@ import AcNavbar from '../AcNavbar'
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 75%;
+  width: 90%;
   margin: 0 auto;
   height: 70vh;
 }
-
+.alert {
+  width: 100%;
+}
 </style>

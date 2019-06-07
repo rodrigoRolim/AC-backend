@@ -246,7 +246,7 @@ describe('Management student', () => {
         static findOneAndUpdate () {}
       }
       const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, requestWithBody.body ).resolves()
+      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: requestWithBody.body } }).resolves()
       const studentController = new StudentController(fakeStudent)
 
       return studentController.setSituation(requestWithBody, response)
@@ -271,7 +271,7 @@ describe('Management student', () => {
           static findOneAndUpdate () {}
         }
         const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, requestWithBody.body ).rejects({ message: 'Error' })
+        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: requestWithBody.body } }).rejects({ message: 'Error' })
         const studentController = new StudentController(fakeStudent)
   
         return studentController.setSituation(requestWithBody, response)

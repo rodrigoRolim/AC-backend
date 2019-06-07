@@ -36,15 +36,7 @@ export default {
   },
   created () {
     this.showMask = true
-    const idStudent = JSON.parse(localStorage.getItem('user'))._id
-    DocumentService.readAll(idStudent)
-      .then((documents) => {
-        this.documentsResponse = documents.data
-        setTimeout(() => {
-          this.showMask = false 
-        }, 1000)
-      })
-
+    this.initialize(JSON.parse(localStorage.getItem('user'))._id)
   },
   methods: {
     logout () {
@@ -52,6 +44,48 @@ export default {
       localStorage.removeItem('user')
       this.$router.replace('/aluno')
     },
+    initialize (idStudent) {
+      GroupService.readAll()
+        .then((res) => res.data)
+        .then((groups) => this.getDocuments(idStudent, groups))
+    },
+    getDocuments (idStudent, groups) {
+       DocumentService.readAll(idStudent)
+        .then((res) => res.data)
+        .then((documents) => {
+          if (documents.length > 0) {
+            this.documentsResponse = this.replaceIdForNames(groups, documents)
+          } else {
+            this.documentsResponse = []
+          }
+          //this.documentsResponse = this.replaceIdForNames(groupsItems, documents)
+          setTimeout(() => {
+            this.showMask = false 
+          }, 1000)
+        })
+    },
+    getNameGroup(groupId, groups) {
+
+      const group = groups.filter((group) => group._id == groupId)
+      return group
+    },
+    getNameItem (group, idItem) {
+
+      const item = group[0].items.filter((item) => item._id == idItem)
+      return item
+    },
+    replaceIdForNames (groups, documents) {
+
+      const newdocuments = documents.map((document) => {
+        const group = this.getNameGroup(document.group, groups)
+        const item = this.getNameItem(group, document.item)
+        document.group = group[0].name
+        document.item = item[0].description
+        return document
+      })
+  
+      return newdocuments
+    }
   }
 }
 </script>

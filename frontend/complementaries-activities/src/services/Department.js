@@ -9,5 +9,8 @@ export default {
   },
   delete: (id) => {
     return http.delete(`department/delete/${id}`)
+  },
+  update: (id, department) => {
+    return http.put(`/department/update/${id}`, department)
   } 
 }

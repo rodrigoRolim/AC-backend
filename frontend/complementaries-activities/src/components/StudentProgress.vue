@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="!aprobation()"
+      v-if="!approved"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -15,7 +15,7 @@
     </v-progress-circular>
  
     <v-progress-circular
-      v-if="aprobation()"
+      v-if="approved"
       :rotate="360"
       :size="130"
       :width="15"
@@ -23,8 +23,11 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span>aprovado!</span>
+      <span class="text-approved">aprovado!</span>
     </v-progress-circular>
+    <v-flex v-if="approved">
+      <small>Ainda não foi avaliado pelo(a) professor(a)</small>
+    </v-flex>
   </v-card>
 </template>
 
@@ -37,6 +40,7 @@ export default {
     return {
       interval: {},
       scoreboard: [],
+      approved: false,
       total: 0,
       value: 0,
       groups: null,
@@ -54,6 +58,7 @@ export default {
       })
       .then(() => this.setScoreboard())
       .then(() => this.aprobation())
+      .then((approved) => this.approved = approved)
       .catch((err) => console.log(err))
    /*
       .then((aproved) => this.aproved = aproved) */
@@ -72,12 +77,12 @@ export default {
         const score = scores_valides.reduce((acc, doc_ap) => {
             return acc + doc_ap.score
           }, 0)
-  
+                  // usar o id de group no lugar do nome
         return { group: group.name, percent: score*100/group.scoreMin, raw: score, min: group.scoreMin }
       })
  
       this.scoreboard = scores
-      console.log(scores)
+
       this.$store.dispatch('set', scores)
     },
     aprobation () {
@@ -85,16 +90,18 @@ export default {
       const total = this.scoreboard.reduce((acc, groupScore) => {
         return acc + groupScore.raw
       }, 0)
-      console.log(total)
-      console.log(this.scoreboard)
+
       const aproveds_groups = this.scoreboard.filter((item) => item.raw >= item.min)
-      console.log(aproveds_groups.length)
+
       if (total >= 70 && aproveds_groups.length == this.groups.length) {
         this.total = total
         return true
       }
       return false
-    }
+    },
+    /* approved () {
+      // criar função de getById() de estudante, atualizar user do store se situation for undefined no store 
+    } */
   }
 }
 </script>
@@ -112,5 +119,8 @@ strong {
 }
 #trophy {
   font-size: 20px;
+}
+.text-approved {
+  color: #004D40
 }
 </style>

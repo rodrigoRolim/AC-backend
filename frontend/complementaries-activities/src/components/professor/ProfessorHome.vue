@@ -34,6 +34,11 @@
             <td class="text-md-left">{{ props.item.ra }}</td>
             <td class="text-md-left">{{ props.item.graduation }}</td>
             <td class="text-md-left">{{ props.item.email }}</td>
+            <td class="text-md-left">
+            <v-icon large v-bind:class="props.item.situation">
+              {{ getIcon(props.item.situation) }}
+            </v-icon>
+            </td>
             <td class="text-md-left"> 
             <v-btn
               color="#00796B"
@@ -83,6 +88,7 @@ export default {
         { text: 'Registro Acadêmico (RA)', value: 'ra' },
         { text: 'Curso', value: 'graduation' },
         { text: 'Email', value: 'email' },
+        { text: 'Situação', value: 'situation' },
         { text: 'documentos', value: 'action'}
       ],
       students: []
@@ -91,20 +97,35 @@ export default {
   created () {
     console.log(this.professor.department)
     this.showMask = true
-    StudentService.readAll(this.professor.department)
+    if (typeof this.professor.department !== 'undefined') {
+      console.log('entrou')
+       StudentService.readAll(this.professor.department)
       .then((res) => res.data)
       .then(students => this.students = students)
       .then(() => setTimeout(() => { this.showMask = false }, 200))
+      .catch((err) => console.log(err))
+    } else {
+      this.showMask = false
+    }
+   
   },
   methods: {
     logout () {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       this.$router.replace('/professor')
+    },
+    getIcon(situation) {
+      switch(situation) {
+        case 'debting':
+          return 'fa-exclamation-triangle'
+        case 'approved':
+          return 'fa-check-square'
+      }
     }
   },
   // pusher going to here
-  getNewSenderStudents () {
+ /*  getNewSenderStudents () {
     Pusher.logToConsole = true;
 
     let pusher = new Pusher('9dc5a8662a93a62e45bb', {
@@ -116,7 +137,7 @@ export default {
     channel.bind('my-event', function(data) {
       alert(JSON.stringify(data));
     });
-  }
+  } */
 }
 </script>
 
@@ -132,5 +153,11 @@ export default {
 }
 .table  .v-btn {
   min-width: 15%;
+}
+.debting {
+  color: orange;
+}
+.approved {
+  color: #66BB6A
 }
 </style>

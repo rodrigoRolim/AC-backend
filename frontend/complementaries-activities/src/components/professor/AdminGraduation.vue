@@ -12,7 +12,9 @@
       </v-toolbar-items>
        
       </ac-navbar>
-        <v-alert :value="departments.length === 0" type="info">
+        
+     <v-layout class="table">
+     <v-alert :value="departments.length === 0" type="info">
           Não há departamentos cadastrados, 
           você precisa primeiro cadastrar um departamento para cadastrar um curso
         </v-alert>
@@ -22,7 +24,6 @@
         <v-alert :value="denied" type="warning">
           já existe um curso com esse nome!
         </v-alert>
-     <v-layout class="table">
       <v-toolbar flat color="white">
         <v-toolbar-title>Lista de cursos</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -49,6 +50,7 @@
                   <v-select
                     :items="departmentNames"
                     label="departamento responsável*"
+                    :rules="nameRules"
                     v-model="editedItem.department"
                     required
                   ></v-select>
@@ -61,7 +63,8 @@
             <v-spacer></v-spacer>
             <v-btn color="error" @click="close">Cancel</v-btn>
             <v-btn color="primary"
-            :disabled="!valid"
+             depressed
+            :disabled="validated"
             @click="save">Save</v-btn>
           </v-card-actions>
         </v-card>
@@ -151,8 +154,8 @@ export default {
         v => !!v || 'Name is required'
       ],
       editedItem: {
-        name: '',
-        department: ''
+        name: null,
+        department: null
       },
       defaultItem: {
         name: ''
@@ -188,6 +191,9 @@ export default {
     },
     formTitle () {
       return this.editedIndex === -1 ? 'Novo curso' : 'Editar Curso'
+    },
+    validated () {
+      return this.editedItem.name == null || this.editedItem.department == null
     }
   },
   watch: {
@@ -205,6 +211,7 @@ export default {
         .then((res) => res.data)
         .then((graduations) => this.setGraduations(graduations))
         .then(() => this.initializeDepartments())
+        .catch((err) => this.showMask = false)
     },
     initializeDepartments () {
       DepartmentService.readAll()
@@ -313,7 +320,7 @@ export default {
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 75%;
+  width: 90%;
   margin: 0 auto;
   height: 70vh;
 }

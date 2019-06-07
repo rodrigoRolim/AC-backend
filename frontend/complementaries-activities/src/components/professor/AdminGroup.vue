@@ -243,7 +243,7 @@ import GroupService from '@/services/Group.js'
       save () {
         if (this.editedIndex > -1) {
           
-          GroupService.updatingGroup(this.editedItem._id, this.editItem)
+          GroupService.updatingGroup(this.editedItem._id, this.editedItem)
             .then((res) => {
               console.log(res)
               if (res.data == 'OK') {
@@ -270,7 +270,7 @@ import GroupService from '@/services/Group.js'
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 75%;
+  width: 90%;
   margin: 0 auto;
   height: 70vh;
 }

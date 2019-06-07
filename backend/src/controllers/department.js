@@ -29,6 +29,8 @@ class DepartmentController {
   }
   update (req, res) {
     const { params: { id }} = req
+    console.log(id)
+    console.log(req.body)
     return this.Department.update({ _id: id }, req.body)
       .then((resp) => res.status(201).send(resp))
       .catch((err) => res.status(422).send(err.message))

@@ -58,16 +58,13 @@ class DocumentController {
   update (req, res) {
 
     const { params: { id } } = req
-    console.log(req.body)
+
     return this.Document.findOneAndUpdate({ _id: id }, req.body, { returnNewDocument: true })
-      .then((doc) => {
-        console.log(doc)
-        res.send(doc)
-      })
+      .then((doc) => res.send(doc))
       .catch((err) => res.status(422).send(err.message))
   }
   sent (req, res) {
-    console.log(req.params)
+
     return this.Document.updateMany({ student: req.params.id, $or: [ { sent: true }, { sent: false } ], 
       evaluation: { $not: /aproved/ } }, { $set: { evaluation: 'none', sent: true } })
       .then(() => res.sendStatus(200))  

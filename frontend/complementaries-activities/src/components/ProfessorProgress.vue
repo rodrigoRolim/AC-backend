@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="!aprobation()"
+      v-if="!approved"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -15,7 +15,7 @@
     </v-progress-circular>
 
     <v-progress-circular
-      v-if="aprobation()"
+      v-if="approved"
       :rotate="360"
       :size="130"
       :width="15"
@@ -23,13 +23,17 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span>aprovado!</span>
+      <span class="text-approved">aprovado!</span>
     </v-progress-circular>
+  <v-flex v-if="approved">
+    <v-btn color="#004D40" @click="approve" dark depressed>aprovar aluno</v-btn>
+  </v-flex>
   </v-card>
 </template>
 
 <script>
 import GroupService from '@/services/Group'
+import StudentService from '@/services/Student'
 export default {
   name: 'StudentProgress',
   props: ['documents'],
@@ -37,6 +41,7 @@ export default {
     return {
       interval: {},
       scoreboard: [],
+      approved: false,
       total: 0,
       value: 0,
       groups: null,
@@ -54,11 +59,21 @@ export default {
       })
       .then(() => this.setScoreboard())
       .then(() => this.aprobation())
+      .then((approved) => this.approved = approved)
       .catch((err) => console.log(err))
    /*
       .then((aproved) => this.aproved = aproved) */
   },
   methods: {
+    approve () {
+      const idStudent = this.$route.params.id
+      const newSituation = 'approved'
+      StudentService.setSituation(idStudent, newSituation)
+        .then((res) => {
+          console.log(res.status)
+        })
+        .catch((err) => console.log(err.message))
+    },
     getColor (count) {
       return this.colors[count%3]
     },
@@ -68,17 +83,14 @@ export default {
         const doc_aproveds = this.documents.filter(doc => {
             return doc.evaluation == 'aproved' && doc.group == group.name
           })
-        console.log(doc_aproveds)
         const score = doc_aproveds.reduce((acc, doc_ap) => {
             return acc + doc_ap.score
           }, 0)
-        console.log(score)
         
         return { group: group.name, percent: score*100/group.scoreMin, raw: score, min: group.scoreMin }
       })
  
       this.scoreboard = scores
-      console.log(scores)
       this.$store.dispatch('set', scores)
     },
     aprobation () {
@@ -86,10 +98,9 @@ export default {
       const total = this.scoreboard.reduce((acc, groupScore) => {
         return acc + groupScore.raw
       }, 0)
-      console.log(total)
-      console.log(this.scoreboard)
+
       const aproveds_groups = this.scoreboard.filter((item) => item.raw >= item.min)
-      console.log(aproveds_groups.length)
+      console.log(aproveds_groups)
       if (total >= 70 && aproveds_groups.length == this.groups.length) {
         this.total = total
         return true
@@ -113,5 +124,8 @@ strong {
 }
 #trophy {
   font-size: 20px;
+}
+.text-approved {
+  color: #004D40
 }
 </style>

@@ -13,6 +13,13 @@
        
       </ac-navbar>
       <v-layout class="table">
+        <v-alert
+        class="alert"
+        :type="typeAlert"
+        :value="showAlert"
+        >
+        {{message}}
+        </v-alert>
         <v-toolbar flat color="white">
           <v-toolbar-title>Lista de departamentos</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -105,7 +112,7 @@
         </v-data-table>
         <div class="text-xs-center pt-0">
           <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-      </div>
+        </div>
       </v-card>
     </v-layout>
 
@@ -123,6 +130,9 @@ export default {
       showMask: false,
       dialog: false,
       editedIndex: -1,
+      message: '',
+      typeAlert: 'error',
+      showAlert: false,
       valid: true,
       nameRules: [
         v => !!v || 'Name is required'
@@ -183,7 +193,7 @@ export default {
         })
         .then(() => setTimeout(() => { this.showMask = false}, 1000))
         .catch((err) => {
-          
+          this.getAlert('error', err.response.data)
         })
     },
     editItem (item) {
@@ -196,11 +206,11 @@ export default {
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
         DepartmentService.delete(item._id).then((res) => {
-          alert(res.data.message)
+          this.getAlert('success', 'deletado com sucesso')
           this.departments.splice(index, 1)
         })
         .catch((err) => {
-          alert('O departamento provavelmente esta sendo usado em algum curso, não pode excluí-lo')
+          this.getAlert('error', err.response.data)
         })
       }
     },
@@ -218,12 +228,11 @@ export default {
     },
     save () {
       if (this.editedIndex > -1) {
-       /*  GraduationService.updatingdepartment(this.editedItem._id, this.editedItem)
+        // falta resolver a atualização de departamento, cara
+        DepartmentService.update(this.editedItem._id, this.editedItem)
           .then((res) => {
-            if (res.data.ok == 1) {
-              alert('atualizado com sucesso')
-            }
-          }) */
+            console.log(res)
+          })
         Object.assign(this.departments[this.editedIndex], this.editedItem)
       } else {
         DepartmentService.save(this.editedItem)
@@ -232,6 +241,14 @@ export default {
           })
       }
       this.close()
+    },
+    getAlert (type, message) {
+      this.typeAlert = type
+      this.message = message
+      this.showAlert = true
+      setTimeout(() => {
+        this.showAlert = false
+      }, 5000)
     }
   }
 }
@@ -251,9 +268,12 @@ export default {
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 75%;
+  width: 90%;
   margin: 0 auto;
   height: 70vh;
+}
+.alert {
+  width: 100%;
 }
 .title {
   background-color: white;

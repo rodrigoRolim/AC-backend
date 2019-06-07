@@ -180,7 +180,21 @@ export default {
       })
       
     },
+    getIdGroupItem (nameGroup, nameItem) {
+      const group = this.groups.filter((group) => group.name == nameGroup)[0]
+      const item = this.getIdItem(group.items, nameItem)
+      return [group._id, item._id]
+    },
+    getIdItem (items, nameItem) {
+      const item = items.filter((item) => item.description == nameItem)[0]
+      return item
+    },
     save () {
+      // ! impact 
+      // 
+      const ids = this.getIdGroupItem(this.document.group, this.document.item)
+      this.document.group = ids[0]
+      this.document.item = ids[1]
 
       const formData = new FormData()
       formData.append('document', JSON.stringify(this.document))
