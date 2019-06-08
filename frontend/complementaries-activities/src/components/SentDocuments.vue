@@ -48,7 +48,8 @@
         </v-icon>
         </td>
         <td class="justify-center layout px-0">
-          <show-sent-document :document="props.item" @refresh="updateEvaluation"></show-sent-document>
+        {{props.item.group}}
+          <show-sent-document :situation="situation" :document="props.item" @refresh="updateEvaluation"></show-sent-document>
         </td> 
       </template>
       <template v-slot:no-results>
@@ -77,7 +78,7 @@ import ShowSentDocument from './ShowSentDocument'
 export default {
   name: 'SentDocuments',
   components: { Comments, ShowSentDocument },
-  props: ['documents'],
+  props: ['documents', 'situation'],
   data () {
     return {
       search: '',
@@ -104,7 +105,8 @@ export default {
     }
   },
   created () {
-    //console.log(this.documents)
+    // fazer um store para estado de aprovamento de aluno
+    console.log(this.$route.params.id)
   },
   computed: {
     pages () {
@@ -119,14 +121,12 @@ export default {
   },
   methods: {
     updateEvaluation (value) {
-      //console.log(value)
+
       const position = this.documents.indexOf(value.document)
       this.documents[position].evaluation = value.evaluation
-      this.$emit('reload', true)
     },
     getIcon (evaluation) {
-      //console.log('sentdoc')
-      //console.log(evaluation)
+
       switch (evaluation) {
         case 'none':
           return 'fiber_manual_record'

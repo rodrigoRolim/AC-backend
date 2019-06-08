@@ -13,6 +13,13 @@
 
     </ac-navbar>
     <v-layout class="table">
+     <v-alert
+        class="alert"
+        :type="typeAlert"
+        :value="showAlert"
+        >
+        {{message}}
+      </v-alert>
     <v-toolbar flat color="white">
       <v-toolbar-title>Lista de grupos</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -29,16 +36,34 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex md12>
-                    <v-text-field v-model="editedItem.name" label="Nome do grupo"></v-text-field>
+                    <v-text-field 
+                    v-model="editedItem.name" 
+                    label="Nome do grupo"
+                    :rules="validations"
+                    ></v-text-field>
                   </v-flex>
                    <v-flex md12>
-                    <v-text-field v-model="editedItem.description" label="Descrição do grupo"></v-text-field>
+                    <v-text-field 
+                    v-model="editedItem.description" 
+                    label="Descrição do grupo"
+                    :rules="validations"
+                    ></v-text-field>
                   </v-flex>
                   <v-flex md12>
-                    <v-text-field type="number"  v-model="editedItem.scoreMin" label="Pontuação mínima"></v-text-field>
+                    <v-text-field 
+                    type="number"  
+                    v-model="editedItem.scoreMin" 
+                    label="Pontuação mínima"
+                    :rules="validations"
+                    ></v-text-field>
                   </v-flex>
                   <v-flex md12>
-                    <v-text-field type="number" v-model="editedItem.scoreMax" label="Pontuação máxima"></v-text-field>
+                    <v-text-field 
+                    type="number" 
+                    v-model="editedItem.scoreMax" 
+                    label="Pontuação máxima"
+                    :rules="validations"
+                    ></v-text-field>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -46,8 +71,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+              <v-btn color="error" depressed @click="close">Cancel</v-btn>
+              <v-btn color="secondary" :disabled="validated" depressed @click="save">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -134,6 +159,12 @@ import GroupService from '@/services/Group.js'
         dialog: false,
         editedIndex: -1,
         search: '',
+        message: '',
+        typeAlert: 'error',
+        showAlert: false,
+        validations: [
+          v => !!v || 'Campo obrigatório*'
+        ], 
         editedItem: {
           name: '',
           description: '',
@@ -170,6 +201,12 @@ import GroupService from '@/services/Group.js'
     computed: {
       formTitle () {
         return this.editedIndex === -1 ? 'Novo grupo' : 'Editar grupo'
+      },
+      validated () {
+        return this.editedItem.name == '' ||  
+               this.editedItem.description == '' || 
+               this.editedItem.scoreMin == 0 ||
+               this.editedItem.scoreMax == 0 
       }
     },
 
@@ -187,12 +224,10 @@ import GroupService from '@/services/Group.js'
           .then((res) => res.data)
           .then((groups) => {
             this.groups = groups
+            return
           })
           .then(() => setTimeout(() => { this.showMask = false }, 1000))
-          .catch((err) => {
-            console.log(err)
-            // mensagem de erro
-          })
+          .catch((err) =>  this.getAlert('error', 'ocorreu um erro ao tentar inicilizar os grupos'))
       },
       logout () {
         localStorage.removeItem('token')
@@ -210,11 +245,12 @@ import GroupService from '@/services/Group.js'
         if (response) {
           GroupService.deleteGroup(item._id)
           .then((res) => {
-            if (res.status == 204) {
-              const index = this.groups.indexOf(item)
-              this.groups.splice(index, 1)
-            }
+            const index = this.groups.indexOf(item)
+            this.groups.splice(index, 1)
+            return 
           })
+          .then(() => this.getAlert('success', 'item deletado com sucesso'))
+          .catch((err) => this.getAlert('error', 'não foi possível deletar o item'))
         }
      
       },
@@ -229,37 +265,41 @@ import GroupService from '@/services/Group.js'
       removeItem (group, item) {
         const userResponse = confirm('tem certeza que você deseja excluir este item?')
         if (userResponse) {
-           GroupService.removeItem(group._id, item)
+          GroupService.removeItem(group._id, item)
             .then((res) => {
-              if (res.status == 204) {
-                const indexGroup = this.groups.indexOf(group)
-                const indexItem = this.groups[indexGroup].items.indexOf(item)
-                this.groups[indexGroup].items.splice(indexItem, 1)
-              }
+  
+              const indexGroup = this.groups.indexOf(group)
+              const indexItem = this.groups[indexGroup].items.indexOf(item)
+              this.groups[indexGroup].items.splice(indexItem, 1)
+              return 
             })
+            .then(() => this.getAlert('success', 'deletado com sucesso'))
+            .catch((err) =>  this.getAlert('error', 'não foi possível deletá-lo'))
         }
-       
       },
       save () {
         if (this.editedIndex > -1) {
           
           GroupService.updatingGroup(this.editedItem._id, this.editedItem)
-            .then((res) => {
-              console.log(res)
-              if (res.data == 'OK') {
-                alert('atualizado com sucesso')
-                Object.assign(this.groups[this.editedIndex], this.editedItem)
-              }
-            })
+            .then((res) => this.getAlert('success', 'atualizado com sucesso'))
+            .then(() => Object.assign(this.groups[this.editedIndex], this.editedItem))
+            .catch((err) =>  this.getAlert('error', 'não foi possível atualizá-lo'))
           
         } else {
-          GroupService.addGroup(this.editedItem).
-            then((res) => {
-              this.groups.push(res.data)
-              alert('cadastrado com sucesso')
-            })
+          GroupService.addGroup(this.editedItem)
+            .then((res) => this.groups.push(res.data))
+            .then(() => this.getAlert('success', 'cadastrado com sucesso'))
+            .catch((err) =>  this.getAlert('error', 'não foi possível salvá-lo'))
         }
         this.close()
+      },
+      getAlert (type, message) {
+        this.typeAlert = type
+        this.message = message
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false
+        }, 5000)
       }
     }
   }
@@ -284,5 +324,8 @@ import GroupService from '@/services/Group.js'
 .format-text {
 
   width: 50%;
+}
+.alert {
+  width: 100%;
 }
 </style>

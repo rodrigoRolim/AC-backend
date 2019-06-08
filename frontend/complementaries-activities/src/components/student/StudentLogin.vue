@@ -120,6 +120,7 @@ export default {
         })
     },
     createSession (response) {
+      console.log(response)
       this.setUser(response.user)
       this.setToken(response.token)
     },

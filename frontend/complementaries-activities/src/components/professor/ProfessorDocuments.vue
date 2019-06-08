@@ -11,8 +11,8 @@
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <professor-progress v-if="documents" :documents="documents"></professor-progress>
-    <sent-documents v-if="documents" :documents="documents"></sent-documents>
+    <professor-progress v-if="situation" :documents="documents" :situation="situation"></professor-progress>
+    <sent-documents v-if="situation" :documents="documents" :situation="situation"></sent-documents>
   </v-app>
 </template>
 
@@ -24,6 +24,7 @@ import SentDocuments from '../SentDocuments'
 import ProfessorProgress from '../ProfessorProgress'
 import DocumentService from '@/services/Document'
 import GroupService from '@/services/Group'
+import StudentService from '@/services/Student'
 import ShowDocument from  '../ShowDocument'
 
 export default {
@@ -58,11 +59,11 @@ export default {
         { text: 'Feedback', value: 'feedback', sortable: false, align: 'left' },
         { text: 'ações', value: 'actions', sortable: false, align: 'left' }
       ],
-      documents: null
+      documents: null,
+      situation: null
     }
   },
   created () {
-    console.log(this.choiced)
     this.initialize(this.$route.params.id)
   },
   methods: {
@@ -71,6 +72,14 @@ export default {
       GroupService.readAll()
         .then((res) => res.data)
         .then((groups) => this.getDocuments(idStudent, groups))
+        .then(() => this.getSituation())
+        .catch((err) => console.log(err))
+    },
+    getSituation () {
+      StudentService.getSituation(this.$route.params.id)
+        .then((res) => res.data)
+        .then((situation) => this.situation = situation)
+        .catch((err) => console.log(err))
     },
     getDocuments (idStudent, groups) {
        DocumentService.readAll(idStudent)
@@ -86,9 +95,9 @@ export default {
             this.showMask = false 
           }, 1000)
         })
+        .catch((err) => console.log(err))
     },
     getNameGroup(groupId, groups) {
-
       const group = groups.filter((group) => group._id == groupId)
       return group
     },
@@ -106,7 +115,7 @@ export default {
         document.item = item[0].description
         return document
       })
-  
+
       return newdocuments
     },
     getIcon (evaluation) {

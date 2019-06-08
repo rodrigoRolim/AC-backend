@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="!approved"
+      v-if="!approved && !situation == 'approved'"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -15,7 +15,7 @@
     </v-progress-circular>
  
     <v-progress-circular
-      v-if="approved"
+      v-if="approved || situation == 'approved'"
       :rotate="360"
       :size="130"
       :width="15"
@@ -26,16 +26,17 @@
       <span class="text-approved">aprovado!</span>
     </v-progress-circular>
     <v-flex v-if="approved">
-      <small>Ainda não foi avaliado pelo(a) professor(a)</small>
+      <small v-if="!situation == 'approved'">Ainda não foi avaliado pelo(a) professor(a)</small>
     </v-flex>
   </v-card>
 </template>
 
 <script>
 import GroupService from '@/services/Group'
+
 export default {
   name: 'StudentProgress',
-  props: ['documents'],
+  props: ['documents', 'situation'],
   data () {
     return {
       interval: {},
@@ -49,7 +50,7 @@ export default {
     }
   },
   created () {
-
+    const student = JSON.parse(localStorage.getItem('user'))
     GroupService.readAll()
       .then((res) => res.data)
       .then((groups) => {

@@ -10,8 +10,8 @@
         <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <student-progress v-if="documentsResponse" :documents="documentsResponse"></student-progress>
-    <student-documents v-if="documentsResponse" :documents="documentsResponse"></student-documents>
+    <student-progress v-if="situation && documents" :documents="documents" :situation="situation"></student-progress>
+    <student-documents v-if="situation && documents" :documents="documents" :situation="situation"></student-documents>
   </v-app>
 </template>
 
@@ -20,6 +20,7 @@ import AcNavbar from '../AcNavbar'
 import MaskLoad from '../MaskLoad'
 import StudentDocuments from '../StudentDocuments'
 import StudentProgress from '../StudentProgress'
+import StudentService from '@/services/Student'
 import DocumentService from '@/services/Document'
 import GroupService from '@/services/Group'
 import pdfjs from 'pdfjs-dist'
@@ -31,7 +32,8 @@ export default {
     return {
       showMask: false,
       pdf: null,
-      documentsResponse: null
+      documents: null,
+      situation: null
     }
   },
   created () {
@@ -44,25 +46,34 @@ export default {
       localStorage.removeItem('user')
       this.$router.replace('/aluno')
     },
+    getSituation (idStudent) {
+      StudentService.getSituation(idStudent)
+        .then((res) => res.data)
+        .then((situation) => this.situation = situation)
+        .catch((err) => console.log(err))
+    },
     initialize (idStudent) {
       GroupService.readAll()
         .then((res) => res.data)
         .then((groups) => this.getDocuments(idStudent, groups))
+        .then(() => this.getSituation(idStudent))
+        .catch((err) => console.log(err))
     },
     getDocuments (idStudent, groups) {
        DocumentService.readAll(idStudent)
         .then((res) => res.data)
         .then((documents) => {
           if (documents.length > 0) {
-            this.documentsResponse = this.replaceIdForNames(groups, documents)
+            this.documents = this.replaceIdForNames(groups, documents)
           } else {
-            this.documentsResponse = []
+            this.documents = []
           }
-          //this.documentsResponse = this.replaceIdForNames(groupsItems, documents)
+          //this.documents = this.replaceIdForNames(groupsItems, documents)
           setTimeout(() => {
             this.showMask = false 
           }, 1000)
         })
+        .catch((err) => console.log(err))
     },
     getNameGroup(groupId, groups) {
 

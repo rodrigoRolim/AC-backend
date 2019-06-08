@@ -13,7 +13,7 @@
     color="secondary" 
     v-if="documents.length > 0"
     @click="sentDocuments" depressed 
-    :disabled="loadBtn || isAllSent"
+    :disabled="loadBtn || isAllSent || situation == 'approved'"
     :loading="loadBtn"
     class="mb-1">enviar documentos</v-btn>
    </v-toolbar>
@@ -45,7 +45,7 @@
         </v-icon>
         </td>
         <td class="text-md-left">
-          <comments :feedback="props.item.feedback"></comments>
+          <comments v-if="props.item.feedback" :feedback="props.item.feedback"></comments>
         </td>
         <td class="justify-center layout px-0">
           <show-document :document="props.item"></show-document>
@@ -91,7 +91,7 @@ import ShowDocument from  './ShowDocument'
 export default {
   name: 'StudentProgess',
   components: { },
-  props: ['documents'],
+  props: ['documents', 'situation'],
   components: { Comments, ShowDocument },
   data () {
     return {
