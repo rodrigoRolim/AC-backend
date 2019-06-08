@@ -5,8 +5,7 @@ export default {
     return http.post('/professor/login', professor)
   },
   save: (professor) => {
-    let token = JSON.parse(localStorage.getItem('token'))
-    http.defaults.headers.common['Authorization'] = `${token}`
+
     return http.post('/professor/add', professor)
   },
   readAll: () => {
@@ -18,9 +17,5 @@ export default {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
     return http.put(`/professor/update/${id}`, professor)
-  },
-  unsetGraduationOfProfessor: (idGraduation) => {
-    return http.put(`/professor/admin/unset/graduation/${idGraduation}`)
-  } // excluído do modelo professor, excluir daqui tbm
-
+  }
 }

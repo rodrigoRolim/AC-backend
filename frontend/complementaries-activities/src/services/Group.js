@@ -35,5 +35,10 @@ export default {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
     return http.put(`/group/delete/item/${idGroup}`, item)
+  },
+  getByName: (nameGroup) => {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.get(`/group/${nameGroup}`)
   }
 }

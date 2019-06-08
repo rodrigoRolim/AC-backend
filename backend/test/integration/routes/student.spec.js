@@ -114,6 +114,22 @@ describe('Route: Student', () => {
       })
     })
   })
+  describe('GET /student/:id', () => {
+    context('when reading all students of especified department', () => {
+      it('should return all students from especified department', done => {
+        
+        const idStudent = '56cb91bdc3464f14678934ca'
+
+        resquest
+          .set('authorization', token)
+          .get(`/student/${idStudent}`)
+          .end((err, res) => {
+            expect(res.body).to.eql(defaultStudent.situation)
+            done(err)
+          })
+      })
+    })
+  })
   describe('PUT /student/update/situation/:id', () => {
     context('when updating situation of student from debting for approved', () => {
       it('should return 200 as status code', done => {

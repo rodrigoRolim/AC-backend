@@ -167,7 +167,7 @@ router.beforeEach((to, from, next) => {
       }
       if (to.matched.some(record => record.meta.is_student)) {
         
-        if (typeof user !== null && user.user_type == 'aluno') {
+        if (typeof user !== null && user.type_user == 'aluno') {
           next()
         } else {
           next({ name: 'Home' })

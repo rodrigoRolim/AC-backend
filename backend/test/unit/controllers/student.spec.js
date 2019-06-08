@@ -237,7 +237,7 @@ describe('Management student', () => {
       const fakeidstudent = 'fake-id-student'
       const newsituation = 'new situation'
 
-      const requestWithBody = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
+      const request = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
       const response = {
         sendStatus: sinon.spy()
       }
@@ -246,10 +246,10 @@ describe('Management student', () => {
         static findOneAndUpdate () {}
       }
       const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: requestWithBody.body } }).resolves()
+      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: request.body } }).resolves()
       const studentController = new StudentController(fakeStudent)
 
-      return studentController.setSituation(requestWithBody, response)
+      return studentController.setSituation(request, response)
         .then(() => {
           sinon.assert.calledWith(response.sendStatus, 200)
         })
@@ -259,7 +259,7 @@ describe('Management student', () => {
         const fakeidstudent = 'fake-id-student'
         const newsituation = 'new situation'
   
-        const requestWithBody = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
+        const request = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
         const response = {
           send: sinon.spy(),
           status: sinon.stub()
@@ -271,10 +271,58 @@ describe('Management student', () => {
           static findOneAndUpdate () {}
         }
         const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: requestWithBody.body } }).rejects({ message: 'Error' })
+        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: request.body } }).rejects({ message: 'Error' })
         const studentController = new StudentController(fakeStudent)
   
-        return studentController.setSituation(requestWithBody, response)
+        return studentController.setSituation(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
+  describe('getSituation() getting situaition of student', () => {
+    it('should return studend situation', () => {
+      const fakeidstudent = 'fake-id-student'
+      const situation = 'situation'
+
+      const request = { params: { id: fakeidstudent } }
+      const response = {
+        send: sinon.spy()
+      }
+      
+      class fakeStudent {
+        static findOne () {}
+      }
+      const fakeStudentFindOneStub = sinon.stub(fakeStudent, 'findOne')
+      fakeStudentFindOneStub.withArgs({ _id: fakeidstudent }).resolves(situation)
+      const studentController = new StudentController(fakeStudent)
+
+      return studentController.setSituation(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, 'situation')
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return studend situation', () => {
+        const fakeidstudent = 'fake-id-student'
+        const situation = 'situation'
+  
+        const request = { params: { id: fakeidstudent } }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        
+        class fakeStudent {
+          static findOne () {}
+        }
+        response.status.withArgs(400).returns(response)
+        const fakeStudentFindOneStub = sinon.stub(fakeStudent, 'findOne')
+        fakeStudentFindOneStub.withArgs({ _id: fakeidstudent }).rejects({ message: 'Error' })
+        const studentController = new StudentController(fakeStudent)
+  
+        return studentController.setSituation(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })

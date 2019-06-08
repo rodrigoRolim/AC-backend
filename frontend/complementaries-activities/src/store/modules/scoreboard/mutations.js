@@ -1,5 +1,6 @@
 export default {
   SET: (state, value) => {
+    console.log(value)
     state.scoreboard = value
   },
   DELETE: (state, value) => {
@@ -10,10 +11,12 @@ export default {
     state.scoreboard.push(value)
   },
   UPDATE: (state, value) => {
-    console.log('veio aqui')
-    console.log(value)
     state.scoreboard[value.position].raw = value.raw
     state.scoreboard[value.position].percent = value.percent
+  },
+  APPROVED: (state, value) => {
+    
+    state.scoreboard = Object.assign(state.scoreboard, { approved: value })
     console.log(state.scoreboard)
   }
 }

@@ -7,5 +7,8 @@ export default {
   },
   update: (context, value) => {
     context.commit('UPDATE', value)
+  },
+  approved: (context, value) => {
+    context.commit('APPROVED', value)
   }
 }

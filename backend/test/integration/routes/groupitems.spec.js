@@ -22,7 +22,7 @@ describe('Management groups', () => {
   const defaultGroupWithItemCreate = {
     __v: 0,
     _id: '56cb91bdc3464f14678934ca',
-    name: 'Default group',
+    name: 'Default group 3',
     description: 'group description',
     items: []
   }
@@ -92,6 +92,18 @@ describe('Management groups', () => {
           expect(res.body).to.eql([defaultGroupWithItemCreate])
           done(err)
         })
+      })
+    })
+    context('when an name is given', () => {
+      it('should return a group ', done => {
+        const name = 'Default group'
+        request
+          .get(`/group/${name}`)
+          .set('authorization', token)
+          .end((err, res) => {
+            expect(res.body).to.eql(defaultGroupWithItem)
+            done(err)
+          })
       })
     })
   })

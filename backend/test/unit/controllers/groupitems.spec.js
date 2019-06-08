@@ -416,5 +416,61 @@ describe('controller: groups and items', () => {
       })
     })
   })
+  describe('getById() getting group by id', () => {
+    it('should return group', () => {
+      const fakenamegroup = 'fake-name-group'
+      const request = {
+        params: {
+          name: fakenamegroup
+        }
+      }
+      const response = {
+        send: sinon.spy()
+      }
+
+      class fakeGroupItem {
+        static find () {}
+      }
+      const fakeGroupFindStub = sinon.stub(fakeGroupItem, 'findById')
+      fakeGroupFindStub.withArgs({ name: fakenamegroup }).resolves(defaultGroup)
+
+      const groupItemsController = new GroupItemsController(fakeGroupItem)
+
+      return groupItemsController.getById(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, defaultGroup)
+        })
+    })
+    context('when an error occurs', () => {
+      it('should return group', () => {
+        const fakenamegroup = 'fake-name-group'
+        const request = {
+          params: {
+            name: fakenamegroup
+          }
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+
+        
+        class fakeGroupItem {
+          static find () {}
+        }
+        
+        response.status.withArgs(400).returns(response)
+        const fakeGroupFindStub = sinon.stub(fakeGroupItem, 'findById')
+        fakeGroupFindStub.withArgs({ name: fakenamegroup }).rejects({ message: 'Error' })
+  
+        const groupItemsController = new GroupItemsController(fakeGroupItem)
+  
+        return groupItemsController.getById(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
+  })
 })
 
