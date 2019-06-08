@@ -42,6 +42,11 @@ class GroupItemsController {
       .then(() => res.sendStatus(204))
       .catch((err) => res.status(400).send(err.message))
   }
+  getByName (req, res) {
+    return this.Group.find({ name: req.params.name })
+      .then((group) => res.send(group))
+      .catch((err) => res.status(400).send(err.message))
+  }
 }
 
 export default GroupItemsController

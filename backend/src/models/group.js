@@ -7,7 +7,10 @@ const schemaItem = new mongoose.Schema({
 })
 
 const schemaGroup = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   seq: Number,
   scoreMin: Number,
   scoreMax: Number,

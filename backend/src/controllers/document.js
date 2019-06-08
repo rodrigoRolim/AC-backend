@@ -56,15 +56,15 @@ class DocumentController {
       .catch((err) => res.status(400).send(err.message))
   }
   update (req, res) {
-
+    // extrair id de student em document e usar no canal
     const { params: { id } } = req
-
+    console.log(id)
     return this.Document.findOneAndUpdate({ _id: id }, req.body, { returnNewDocument: true })
       .then((doc) => res.send(doc))
       .catch((err) => res.status(422).send(err.message))
   }
   sent (req, res) {
-
+    // pusher: o canal o usado é o id de estudante
     return this.Document.updateMany({ student: req.params.id, $or: [ { sent: true }, { sent: false } ], 
       evaluation: { $not: /aproved/ } }, { $set: { evaluation: 'none', sent: true } })
       .then(() => res.sendStatus(200))  

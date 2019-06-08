@@ -51,7 +51,8 @@ schema.set('toJSON', {
     email: ret.email,
     graduation: ret.graduation,
     department: ret.department,
-    user_type: ret.user_type,
+    type_user: ret.type_user,
+    situation: ret.situation,
     documents: ret.documents
   })
 })

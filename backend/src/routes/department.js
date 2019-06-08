@@ -7,9 +7,9 @@ import verifyRelathionship from  '../middleware/verifyRelathionships'
 const router = express.Router()
 const departmentController = new DepartmentController(Department)
 
-router.post('/add', (req, res) => departmentController.create(req, res))
-router.get('/all', (req, res) => departmentController.readAll(req, res))
-router.put('/update/:id', (req, res) => departmentController.update(req, res))
-router.delete('/delete/:id', verifyRelathionship.relationsGraduations, (req, res) => departmentController.delete(req, res))
+router.post('/add', verify.verifyJWT,(req, res) => departmentController.create(req, res))
+router.get('/all', verify.verifyJWT,(req, res) => departmentController.readAll(req, res))
+router.put('/update/:id', verify.verifyJWT, (req, res) => departmentController.update(req, res))
+router.delete('/delete/:id', verify.verifyJWT, verifyRelathionship.relationsGraduations, (req, res) => departmentController.delete(req, res))
 
 export default router

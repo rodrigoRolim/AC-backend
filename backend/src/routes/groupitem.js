@@ -13,5 +13,6 @@ router.delete('/delete/:id', verify.verifyJWT, (req, res) => groupItemsControlle
 router.put('/update/item/:id', verify.verifyJWT, (req, res) => groupItemsController.updateItem(req, res))
 router.put('/update/:id', verify.verifyJWT, (req, res) => groupItemsController.update(req, res))
 router.put('/delete/item/:id', verify.verifyJWT, (req, res) => groupItemsController.pullItem(req, res))
+router.get('/:name', verify.verifyJWT, (req, res) => groupItemsController.getByName(req, res))
 
 export default router

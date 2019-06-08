@@ -4,10 +4,10 @@ import Document from '../models/document'
 export default {
   relationsGraduations: (req, res, next) => {
     
-    console.log(req.params.id)
+
     Graduation.find({ department: req.params.id })
       .then((graduations) => {
-        console.log(graduations)
+
         if (graduations.length > 0) {
           res.status(403).send('o departamento tem relações com cursos')
           next('false')

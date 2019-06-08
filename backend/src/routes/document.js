@@ -1,6 +1,7 @@
 import express from 'express'
-import DocumentController from '../../src/controllers/document'
-import Document from '../../src/models/document'
+import DocumentController from '../controllers/document'
+import Document from '../models/document'
+import StudentMiddle from '../middleware/student'
 import verify from '../auth'
 import multer from 'multer'
 import fs from 'mz/fs'
@@ -41,14 +42,15 @@ const router = express.Router()
 // passar o pusher no construtor
 const documentController = new DocumentController(Document, path,fs)
 
-router.post('/add', upload.single('file'), (req, res) => documentController.create(req, res))
-router.get('/all/:id', (req, res) => documentController.readAll(req, res))
-router.get('/all/sents/:id', (req, res) => documentController.readAllSents(req, res))
-router.get('/uploads/:file', (req, res) => documentController.getFile(req, res))
-router.get('/:id', (req, res) => documentController.getById(req, res))
-router.delete('/uploads/:file', (req, res) => documentController.delete(req, res))
-router.put('/update/:id', (req, res) => documentController.update(req, res))
-router.put('/sent/:id', (req, res) => documentController.sent(req, res))
+
+router.post('/add', verify.verifyJWT, upload.single('file'), (req, res) => documentController.create(req, res))
+router.get('/all/:id', verify.verifyJWT, (req, res) => documentController.readAll(req, res))
+router.get('/all/sents/:id', verify.verifyJWT, (req, res) => documentController.readAllSents(req, res))
+router.get('/uploads/:file', verify.verifyJWT, (req, res) => documentController.getFile(req, res))
+router.get('/:id', verify.verifyJWT, (req, res) => documentController.getById(req, res))
+router.delete('/uploads/:file', verify.verifyJWT, (req, res) => documentController.delete(req, res))
+router.put('/update/:id', verify.verifyJWT, (req, res) => documentController.update(req, res))
+router.put('/sent/:id', verify.verifyJWT, StudentMiddle.approved, (req, res) => documentController.sent(req, res))
 
 router.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_TYPES") {

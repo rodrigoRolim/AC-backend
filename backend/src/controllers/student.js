@@ -74,6 +74,11 @@ class StudentController {
       .then(() => res.sendStatus(200))
       .catch((err) => res.status(422).send(err.message))
   }
+  getSituation (req, res) {
+    return this.Student.findOne({ _id: req.params.id })
+      .then((student) => res.send(student.situation))
+      .catch((err) => res.status(400).send(err.message))
+  }
   // criar um get all students de determinado departamento, mas somente os que já enviaram seus documentos
   // criar um atualizador do atributo already_student e dispará-lo ao professor pelo pusher: findOneAndUpdate
 }
