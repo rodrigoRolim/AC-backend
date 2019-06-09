@@ -79,6 +79,10 @@ class StudentController {
       .then((student) => res.send(student.situation))
       .catch((err) => res.status(400).send(err.message))
   }
+  launchAll (req, res) {
+    return this.Student.update({ ra: { $in: req.body } }, { $set: { situation: 'launched' } }, { multi: true })
+      .then(() => res.sendStatus(200))
+  }
   // criar um get all students de determinado departamento, mas somente os que já enviaram seus documentos
   // criar um atualizador do atributo already_student e dispará-lo ao professor pelo pusher: findOneAndUpdate
 }
