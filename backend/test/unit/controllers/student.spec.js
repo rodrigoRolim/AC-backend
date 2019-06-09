@@ -374,4 +374,30 @@ describe('Management student', () => {
       })
     })
   })
+  describe('update(): updating student', () => {
+    it('should return 200 as status code when student has been updated', () => {
+      const fakeidstudent = 'fake-id-student'
+      const request = {
+        params: {
+          id: fakeidstudent
+        },
+        body: defaultStudent
+      }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+      class fakeStudent {
+        static findOneAndUpdate () {}
+      }
+      const findOneAndUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
+      findOneAndUpdateStub.withArgs({ _id: fakeidstudent }, defaultStudent).resolves()
+
+      const studentController = new StudentController(fakeStudent)
+
+      return studentController.update(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200)
+        })
+    })
+  })
 })
