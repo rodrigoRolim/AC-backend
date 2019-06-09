@@ -349,5 +349,29 @@ describe('Management student', () => {
           sinon.assert.calledWith(response.sendStatus, 200)
         })
     })
+    context('when an error occurs', () => {
+      it('should return 422 as status code', () => {
+        const ras = ['ra1', 'ra2', 'etc']
+        const request = { body: ras }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeStudent {
+          static update () {}
+        }
+
+        response.status.withArgs(422).returns(response)
+        const updateStub = sinon.stub(fakeStudent, 'update')
+        updateStub.withArgs({ ra: { $in: ras } }, { $set: { situation: 'launched' } }, { multi: true }).rejects({ message: 'Erro' })
+
+        const studentController = new StudentController(fakeStudent)
+
+        return studentController.launchAll(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
   })
 })
