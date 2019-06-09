@@ -153,6 +153,21 @@ describe('Route: Student', () => {
           .send({ situation: 'approved'})
           .end((err, res) => {
             expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
+  describe('PUT /student/update/:id', () => {
+    context('when updating situation of student from debting for approved', () => {
+      it('should return 200 as status code', done => {
+        request
+          .set('authorization', token)
+          .put(`/student/update/${defaultId }`)
+          .send(defaultNewStudent)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
           })
       })
     })
