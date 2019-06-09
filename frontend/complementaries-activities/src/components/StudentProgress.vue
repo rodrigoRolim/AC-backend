@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="!approved && !situation == 'approved'"
+      v-if="!(approved && situation == 'approved')"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -23,10 +23,10 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span class="text-approved">aprovado!</span>
+      <span v-if="!situation == 'approved'" class="text-approved">aprovado!</span>
     </v-progress-circular>
     <v-flex v-if="approved">
-      <small v-if="!situation == 'approved'">Ainda não foi avaliado pelo(a) professor(a)</small>
+      <small v-if="approved || situation == 'approved'">Ainda não foi completamente avaliado pelo(a) professor(a)</small>
     </v-flex>
   </v-card>
 </template>
@@ -50,6 +50,9 @@ export default {
     }
   },
   created () {
+    console.log(this.approved)
+    console.log(!(this.situation == 'approved' && this.approved))
+    console.log(this.$store.getters.getBoard)
     const student = JSON.parse(localStorage.getItem('user'))
     GroupService.readAll()
       .then((res) => res.data)
@@ -58,11 +61,13 @@ export default {
         return
       })
       .then(() => this.setScoreboard())
-      .then(() => this.aprobation())
-      .then((approved) => this.approved = approved)
+      .then(() => this.aprobation(this.$store.getters.getBoard))
       .catch((err) => console.log(err))
    /*
       .then((aproved) => this.aproved = aproved) */
+  },
+  updated() {
+    this.aprobation(this.$store.getters.getBoard)
   },
   methods: {
     getColor (count) {
@@ -86,8 +91,8 @@ export default {
 
       this.$store.dispatch('set', scores)
     },
-    aprobation () {
-      this.scoreboard = this.$store.getters.getBoard
+    aprobation (scoreboard) {
+      this.scoreboard = scoreboard
       const total = this.scoreboard.reduce((acc, groupScore) => {
         return acc + groupScore.raw
       }, 0)
@@ -96,9 +101,12 @@ export default {
 
       if (total >= 70 && aproveds_groups.length == this.groups.length) {
         this.total = total
-        return true
+        this.approved = true
+      } else {
+        this.total = total
+        this.approved = false
       }
-      return false
+     
     },
     /* approved () {
       // criar função de getById() de estudante, atualizar user do store se situation for undefined no store 

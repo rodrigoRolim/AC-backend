@@ -48,7 +48,6 @@
         </v-icon>
         </td>
         <td class="justify-center layout px-0">
-        {{props.item.group}}
           <show-sent-document :situation="situation" :document="props.item" @refresh="updateEvaluation"></show-sent-document>
         </td> 
       </template>
@@ -86,7 +85,7 @@ export default {
       messageAlert: '',
       alert: 'success',
       pagination: {
-        rowsPerPage: 5,
+        rowsPerPage: 4,
         page: 1
       },
       headers: [

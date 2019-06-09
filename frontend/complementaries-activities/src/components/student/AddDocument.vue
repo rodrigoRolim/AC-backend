@@ -152,20 +152,29 @@ export default {
     getDocument (id) {
       DocumentService.getById(id)
         .then((res) => res.data[0])
-        .then((document) => {
-          this.document = document
-          return document
-        })
         .then((document) =>  this.getItemsWhenUpdate(document))
+        .then((document) => {
+          this.document = this.changeIdForNames(document)
+        })
         .catch((err) => {
 
         })
     },
+    changeIdForNames (document) {
+      
+      const group = this.groups.filter((group) => group._id == document.group)[0]
+      const item = group.items.filter((item) => item._id == document.item)[0]
+      document.group = group.name
+      document.item = item.name
+      
+      return document
+    },
     getItemsWhenUpdate (document) {
-      const group = this.groups.filter((group) => group.name === document.group)
-      group[0].items.map((item) => {
+      const group = this.groups.filter((group) => group._id === document.group)[0]
+      group.items.map((item) => {
         this.items.push(item.description)
       })
+      return document
     },
     namesGroups (groups) {
       groups.map((group) => {
@@ -195,12 +204,13 @@ export default {
       const ids = this.getIdGroupItem(this.document.group, this.document.item)
       this.document.group = ids[0]
       this.document.item = ids[1]
-
+   
       const formData = new FormData()
-      formData.append('document', JSON.stringify(this.document))
+      
       //this.load = true
       if (typeof this.$route.params.id == 'undefined') {
         
+        formData.append('document', JSON.stringify(this.document))
         formData.append('file', this.docFile)
         DocumentService.save(formData)
           .then((res) => {
@@ -212,6 +222,8 @@ export default {
           })
       } else {
         const idDoc = this.$route.params.id
+        this.document.evaluation = 'none'
+        formData.append('document', JSON.stringify(this.document))
         DocumentService.update(idDoc, JSON.parse(formData.get('document')))
           .then((res) => {
             this.getAlert('success', 'atualizado com sucesso!')

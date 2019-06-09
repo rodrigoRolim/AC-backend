@@ -3,18 +3,59 @@
     <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/admin/cursos">cursos</v-btn>
-        <v-btn flat to="/admin/departamentos">departamentos</v-btn>
-        <v-btn flat to="/admin/professores">professores</v-btn>
-        <v-btn flat to="/admin/grupos">grupos</v-btn>
-        <v-btn flat to="/professor/home">alunos</v-btn>
-        <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
+        <v-btn color="secondary" dark depressed to="/professor/home">alunos<v-icon class="ml-2">fa-graduation-cap</v-icon></v-btn>
+       <v-menu
+        transition="slide-y-transition"
+        bottom
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="purple"
+              color="primary"
+              depressed
+              dark
+              v-on="on"
+            >
+              recursos <v-icon dark class="ml-2">build</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-tile to="/admin/cursos">
+              <v-list-tile-title>cursos</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile to="/admin/departamentos">
+              <v-list-tile-title>departamentos</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile to="/admin/professores">
+              <v-list-tile-title>professores</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile to="/admin/grupos">
+              <v-list-tile-title>grupos</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-btn color="error" depressed  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
     <v-layout class="table">
        <v-card>
         <v-card-title>
           Alunos
+           <v-spacer></v-spacer>
+            <v-checkbox
+              class="ma-0 pa-0"
+              v-model="search"
+              label="aprovados"
+              color="indigo"
+              value="approved"
+            ></v-checkbox>
+            <v-checkbox
+            class="ma-0 pa-0"
+              v-model="search"
+              label="devendo"
+              color="indigo"
+              value="debting"
+            ></v-checkbox>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -24,12 +65,23 @@
             hide-details
           ></v-text-field>
         </v-card-title>
+
         <v-data-table
+          v-model="selected"
           :headers="headers"
           :items="students"
           :search="search"
+          item-key="ra"
+          select-all
         >
           <template v-slot:items="props">
+           <td>
+            <v-checkbox
+              v-model="props.selected"
+              primary
+              hide-details
+            ></v-checkbox>
+           </td>
             <td>{{ props.item.name }}</td>
             <td class="text-md-left">{{ props.item.ra }}</td>
             <td class="text-md-left">{{ props.item.graduation }}</td>
@@ -60,6 +112,7 @@
               nenhum aluno enviou documento até o momento
             </v-alert>
           </template>
+         
         </v-data-table>
        </v-card>
     </v-layout>
@@ -78,6 +131,7 @@ export default {
     return {
       showMask: false,
       search: '',
+      selected: [],
       professor: JSON.parse(localStorage.getItem('user')),
       headers: [
         {

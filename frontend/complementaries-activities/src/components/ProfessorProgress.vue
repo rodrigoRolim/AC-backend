@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="!situation == 'approved' || !approved"
+      v-if="situation == 'debting' && newsituation == 'debting'"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -15,7 +15,7 @@
     </v-progress-circular>
 
     <v-progress-circular
-      v-if="situation == 'approved' && approved"
+      v-if="approved"
       :rotate="360"
       :size="130"
       :width="15"
@@ -25,7 +25,7 @@
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
       <span v-if="situation == 'approved' && approved" class="text-approved">aprovado!</span>
     </v-progress-circular>
-  <v-flex v-if="!situation == 'approved' && !approved">
+  <v-flex v-if="situation == 'debting' && approved">
     <v-btn color="#004D40" @click="approve" dark depressed>aprovar aluno</v-btn>
   </v-flex>
   </v-card>
@@ -43,6 +43,7 @@ export default {
       scoreboard: [],
       hiddenProgress: false,
       approved: false,
+      newsituation: 'debting',
       total: 0,
       value: 0,
       groups: null,
@@ -51,8 +52,17 @@ export default {
     }
   },
   created () {
-
-    GroupService.readAll()
+    this.newsituation = this.situation
+    this.initialize()
+  },
+  updated() {
+    console.log('update')
+    this.aprobation(this.$store.getters.getBoard)
+  },  
+  methods: {
+    // criar um store para aprovação de aluno
+    initialize () {
+      GroupService.readAll()
       .then((res) => res.data)
       .then((groups) => {
         this.groups = groups
@@ -61,20 +71,14 @@ export default {
       .then(() => this.setScoreboard())
       .then(() => this.aprobation(this.$store.getters.getBoard))
       .catch((err) => console.log(err))
-
-  },
-  updated() {
-    console.log('update')
-    this.aprobation(this.$store.getters.getBoard)
-  },  
-  methods: {
-    // criar um store para aprovação de aluno
+    },
     approve () {
       const idStudent = this.$route.params.id
       const newSituation = 'approved'
       StudentService.setSituation(idStudent, newSituation)
         .then((res) => console.log(res.status))
-        .then(() => this.hiddenProgress = true)
+        .then(() => this.newsituation = 'approved')
+        .then(() => this.approved = true)
         .catch((err) => console.log(err.message))
     },
     getColor (count) {
@@ -102,6 +106,8 @@ export default {
         return acc + groupScore.raw
       }, 0)
       const aproveds_groups = this.scoreboard.filter((item) => item.raw >= item.min)
+      console.log(aproveds_groups)
+      console.log(this.groups)
       if (total >= 70 && aproveds_groups.length == this.groups.length) {
         this.total = total
         this.approved = true

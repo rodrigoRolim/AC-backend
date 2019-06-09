@@ -164,11 +164,31 @@ export default {
           .then((res) => {
             this.popDocument(doc)
             setTimeout(this.getAlert('success', 'Excluído com sucesso!'), 2000)
+            return
           })
+          .then(() =>this.updateBoardStore(doc))
           .catch((err) => {
             this.getAlert('error', 'houve um problema na hora de excluir')
           })
       }
+    },
+     updateBoardStore (document) {
+
+      const boardItems = this.$store.getters.getBoard
+      const boardItem = boardItems.filter(item => item.group == document.group)[0]
+
+      const position = boardItems.indexOf(boardItem)
+      let raw = document.score
+
+      let percent = 0
+      let new_raw = 0
+        
+      new_raw = boardItem.raw - raw
+      percent = (boardItem.raw - raw)*100/boardItem.min
+    
+      const update_board = { position: position, raw: new_raw, percent: percent }
+
+      this.$store.dispatch('update', update_board)
     },
     sentDocuments () {
       this.loadBtn = true

@@ -27,7 +27,7 @@
             inset
             vertical
           ></v-divider>
-          <professor-feedback class="mr-5" @feedback="getComment" v-if="!situation == 'approved'"></professor-feedback>
+          <professor-feedback class="mr-5" @feedback="getComment" v-if="situation == 'debting'"></professor-feedback>
           <v-spacer></v-spacer>
 
           <v-flex xs7 sm7 md4 class="ml-5">
@@ -74,6 +74,7 @@ export default {
     }
   },
   created () {
+    console.log(this.situation)
     this.evaluation = this.document.evaluation
     this.getDocument(this.document.path)
   },

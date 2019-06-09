@@ -1,16 +1,41 @@
 <template>
   <v-app>
   <mask-load v-if="showMask"></mask-load>
-  <ac-navbar>
-    <v-toolbar-items>
-      <v-btn flat to="/admin/cursos">cursos</v-btn>
-      <v-btn flat to="/admin/departamentos">departamentos</v-btn>
-      <v-btn flat to="/admin/professores">professores</v-btn>
-      <v-btn flat to="/admin/grupos">grupos</v-btn>
-      <v-btn flat to="/professor/home">alunos</v-btn>
-      <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
-    </v-toolbar-items>
-
+   <ac-navbar>
+      <v-toolbar-items>
+        <v-btn color="secondary" dark depressed to="/professor/home">alunos<v-icon class="ml-2">fa-graduation-cap</v-icon></v-btn>
+       <v-menu
+        transition="slide-y-transition"
+        bottom
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="purple"
+              color="primary"
+              depressed
+              dark
+              v-on="on"
+            >
+              recursos <v-icon dark class="ml-2">build</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-tile to="/admin/cursos">
+              <v-list-tile-title>cursos</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile to="/admin/departamentos">
+              <v-list-tile-title>departamentos</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile to="/admin/professores">
+              <v-list-tile-title>professores</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile to="/admin/grupos">
+              <v-list-tile-title>grupos</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-btn color="error" depressed  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
+      </v-toolbar-items>
     </ac-navbar>
     <v-layout class="table">
      <v-alert
