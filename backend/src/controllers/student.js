@@ -33,6 +33,11 @@ class StudentController {
       })
       .catch((err) => res.status(400).send(err.message))
   }
+  getById (req, res) {
+    return this.Student.find({ _id: req.params.id })
+      .then((student) => res.send(student))
+      .catch((err) => res.status(422).send(err.message))
+  }
   getStudentsOfDepartment (req, res) {
 
     return this.Student.aggregate(

@@ -428,4 +428,51 @@ describe('Management student', () => {
       })
     })
   })
+  describe('getById(): getting student by id', () => {
+    it('should call send with one student', () => {
+      const fakeId = 'a-fake-id';
+      const request = {
+        params: {
+          id: fakeId
+        }
+      };
+      const response = {
+        send: sinon.spy()
+      };
+
+      Student.find = sinon.stub();
+      Student.find.withArgs({ _id: fakeId }).resolves([defaultStudent]);
+
+      const studentController = new StudentController(Student);
+
+      return studentController.getById(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultStudent]);
+        });
+    })
+    context('when an error occurs', () => {
+      it('should return 422 as status code', () => {
+        const fakeId = 'a-fake-id';
+        const request = {
+          params: {
+            id: fakeId
+          }
+        };
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        };
+
+        Student.find = sinon.stub();
+        Student.find.withArgs({ _id: fakeId }).rejects({ message: 'Error' });
+        response.status.withArgs(422).returns(response)
+        const studentController = new StudentController(Student);
+
+        return studentController.getById(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error');
+          });
+      })
+    })
+  })
 })

@@ -128,17 +128,33 @@ describe('Route: Student', () => {
       })
     })
   })
-  describe('GET /student/:id', () => {
-    context('when reading all students of especified department', () => {
-      it('should return all students from especified department', done => {
+  describe('GET /student/situation/:id', () => {
+    context('when getting situation of student', () => {
+      it('should return situation of student', done => {
         
         const idStudent = '56cb91bdc3464f14678934ca'
 
         resquest
           .set('authorization', token)
-          .get(`/student/${idStudent}`)
+          .get(`/student/situation/${idStudent}`)
           .end((err, res) => {
             expect(res.body).to.eql(defaultStudent.situation)
+            done(err)
+          })
+      })
+    })
+  })
+  describe('GET /student/:id', () => {
+    context('when getting student by id', () => {
+      it('should return one student', done => {
+        
+        const idStudent = '56cb91bdc3464f14678934ca'
+
+        resquest
+          .set('authorization', token)
+          .get(`/student/situation/${idStudent}`)
+          .end((err, res) => {
+            expect(res.body).to.eql([defaultStudent])
             done(err)
           })
       })
