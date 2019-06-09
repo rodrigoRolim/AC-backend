@@ -9,6 +9,11 @@ export default {
 
     return http.post('/student/login', userStudent)
   },
+  update (idStudent, student) {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.put(`/student/update/${idStudent}`, student)
+  },
   readAll: (idDepartment) => {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
@@ -22,8 +27,13 @@ export default {
   getSituation: (idStudent) => {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
-    return http.get(`/student/${idStudent}`)
+    return http.get(`/student/situation/${idStudent}`)
   },
+  getById (idStudent) {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.get(`/student/${idStudent}`)
+  }, 
   launchAll: (ras) => {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
