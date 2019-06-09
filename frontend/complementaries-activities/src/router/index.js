@@ -14,6 +14,7 @@ import StudentHome from '@/components/student/StudentHome'
 import AddDocument from '@/components/student/AddDocument'
 import Denied from '@/components/Denied'
 import AddFirstProfessor from '../../only-development/AddFirstProfessor'
+import EditStudent from '@/components/student/EditStudent'
 
 Vue.use(Router)
 
@@ -97,6 +98,15 @@ let router = new Router({
       path: '/aluno/home',
       component: StudentHome,
       name: 'StudentHome',
+      meta: {
+        requiresAuth: true,
+        is_student: true
+      }
+    },
+    {
+      path: '/aluno/perfil',
+      component: EditStudent,
+      name: 'EditStudent',
       meta: {
         requiresAuth: true,
         is_student: true
