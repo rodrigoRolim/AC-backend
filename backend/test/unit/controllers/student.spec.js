@@ -329,4 +329,25 @@ describe('Management student', () => {
       })
     })
   })
+  describe('launchAll (): launch students', () => {
+    it('should update situation of studante to launched', () => {
+      const ras = ['ra1', 'ra2', 'etc']
+      const request = { body: ras }
+      const response = {
+        sendStatus: sinon.spy()
+      }
+      class fakeStudent {
+        static update () {}
+      }
+      const updateStub = sinon.stub(fakeStudent, 'update')
+      updateStub.withArgs({ ra: { $in: ras } }, { $set: { situation: 'launched' } }, { multi: true }).resolves()
+
+      const studentController = new StudentController(fakeStudent)
+
+      return studentController.launchAll(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 200)
+        })
+    })
+  })
 })
