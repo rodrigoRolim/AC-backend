@@ -3,9 +3,30 @@
     <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn depressed color="secondary" dark to="/aluno/home">Home <v-icon dark right>home</v-icon></v-btn>
+        <v-btn depressed color="secondary" dark to="/aluno/home">Documentos <v-icon dark right>fa-file</v-icon></v-btn>
+        <v-menu
+        transition="slide-y-transition"
+        bottom
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="purple"
+              color="primary"
+              depressed
+              dark
+              v-on="on"
+            >
+              menu <v-icon dark right>menu</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-tile to="/aluno/perfil">
+              <v-list-tile-title>perfil</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
         <v-btn depressed  dark color="blue-grey" to="/aluno/documento/add">
-        documento <v-icon right dark>cloud_upload</v-icon>
+        upload <v-icon right dark>cloud_upload</v-icon>
         </v-btn>
         <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
       </v-toolbar-items>

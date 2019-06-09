@@ -16,7 +16,7 @@
               dark
               v-on="on"
             >
-              recursos <v-icon dark class="ml-2">build</v-icon>
+              menu <v-icon dark right>menu</v-icon>
             </v-btn>
           </template>
           <v-list>

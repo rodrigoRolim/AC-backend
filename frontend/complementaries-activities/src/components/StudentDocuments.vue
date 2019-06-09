@@ -123,7 +123,6 @@ export default {
     }
   },
   created () {
-    console.log(this.documents)
     this.turnAllSent()
   },
   computeds: {

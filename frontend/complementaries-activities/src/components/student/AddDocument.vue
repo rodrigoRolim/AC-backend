@@ -3,9 +3,30 @@
     <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn depressed color="secondary" dark to="/aluno/home">Home <v-icon dark right>home</v-icon></v-btn>
+        <v-btn depressed color="secondary" dark to="/aluno/home">Documentos <v-icon dark right>fa-file</v-icon></v-btn>
+        <v-menu
+        transition="slide-y-transition"
+        bottom
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="purple"
+              color="primary"
+              depressed
+              dark
+              v-on="on"
+            >
+              menu <v-icon dark right>menu</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-tile to="/aluno/perfil">
+              <v-list-tile-title>perfil</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
         <v-btn depressed  dark color="blue-grey" to="/aluno/documento/add">
-        documento <v-icon right dark>cloud_upload</v-icon>
+        upload <v-icon right dark>cloud_upload</v-icon>
         </v-btn>
         <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
       </v-toolbar-items>
@@ -103,6 +124,8 @@ import AcNavbar from '../AcNavbar'
 import MaskLoad from '../MaskLoad'
 import DocumentService from '@/services/Document.js'
 import GroupService from '@/services/Group'
+import StudentService from '@/services/Student'
+
 export default {
   name: 'AddDocument',
   components: { AcNavbar, MaskLoad },
@@ -127,6 +150,7 @@ export default {
       items: [],
       groups: [],
       groupsNames: [],
+      situation: null,
       docName: '',
       docUrl: '',
       docFile: ''
@@ -141,6 +165,7 @@ export default {
         return groups
       })
       .then((groups) => this.namesGroups(groups))
+      .then(() => this.getSituation(this.student))
       .then(() => setTimeout(() => { this.showMask = false }, 1000))
       .then(() => {
         if (this.$route.params.id) {
@@ -159,6 +184,11 @@ export default {
         .catch((err) => {
 
         })
+    },
+    getSituation (idStudent) {
+      StudentService.getSituation(idStudent)
+        .then((res) => res.data)
+        .then((situation) => this.situation = situation)
     },
     changeIdForNames (document) {
       
@@ -199,16 +229,14 @@ export default {
       return item
     },
     save () {
-      // ! impact 
-      // 
+
       const ids = this.getIdGroupItem(this.document.group, this.document.item)
       this.document.group = ids[0]
       this.document.item = ids[1]
    
       const formData = new FormData()
-      
-      //this.load = true
-      if (typeof this.$route.params.id == 'undefined') {
+      if (this.situation == 'debting') {
+        if (typeof this.$route.params.id == 'undefined') {
         
         formData.append('document', JSON.stringify(this.document))
         formData.append('file', this.docFile)
@@ -220,15 +248,19 @@ export default {
           .catch((err) => {
             this.getAlert('error', err.response.data.error)
           })
+        } else {
+          const idDoc = this.$route.params.id
+          this.document.evaluation = 'none'
+          formData.append('document', JSON.stringify(this.document))
+          DocumentService.update(idDoc, JSON.parse(formData.get('document')))
+            .then((res) => {
+              this.getAlert('success', 'atualizado com sucesso!')
+            })
+        }
       } else {
-        const idDoc = this.$route.params.id
-        this.document.evaluation = 'none'
-        formData.append('document', JSON.stringify(this.document))
-        DocumentService.update(idDoc, JSON.parse(formData.get('document')))
-          .then((res) => {
-            this.getAlert('success', 'atualizado com sucesso!')
-          })
+        this.getAlert('info', 'você já está aprovado, não pode mais enviar documentos')
       }
+     
     },
     getAlert (type, message) {
       this.reset()

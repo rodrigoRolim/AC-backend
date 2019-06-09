@@ -21,7 +21,7 @@
               dark
               v-on="on"
             >
-              recursos <v-icon dark right>build</v-icon>
+              menu <v-icon dark right>menu</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -192,7 +192,12 @@ export default {
         .then((res) => res.data)
         .then(students => this.students = students)
         .then(() => setTimeout(() => { this.showMask = false }, 200))
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          if (!err.response.data.auth) {
+            this.logout()
+            this.showMask = false
+          }
+        })
     } else {
       this.showMask = false
     }
