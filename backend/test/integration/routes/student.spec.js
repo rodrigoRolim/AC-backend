@@ -98,6 +98,20 @@ describe('Route: Student', () => {
       })
     })
   })
+  describe('POST /student/launch/all', () => {
+    context('when launching approved students', () =>{
+      it('should return 200 as status code', done => {
+        const ras = ['a12345']
+        request
+          .post('/student/launching/all')
+          .send(ras)
+          .end((err, res) => {
+            expect(res.status).to.eql(200)
+            done(err)
+          })
+      })
+    })
+  })
   describe('GET /student/all/department/:id', () => {
     context('when reading all students of especified department', () => {
       it('should return all students from especified department', done => {
