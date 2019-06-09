@@ -3,7 +3,12 @@
     <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn color="secondary" dark depressed to="/professor/home">alunos<v-icon class="ml-2">fa-graduation-cap</v-icon></v-btn>
+        <v-btn color="secondary" 
+        dark 
+        depressed 
+        to="/professor/home">
+          alunos<v-icon right>fa-graduation-cap</v-icon>
+        </v-btn>
        <v-menu
         transition="slide-y-transition"
         bottom
@@ -11,12 +16,12 @@
           <template v-slot:activator="{ on }">
             <v-btn
               class="purple"
-              color="primary"
+              color="blue-grey"
               depressed
               dark
               v-on="on"
             >
-              recursos <v-icon dark class="ml-2">build</v-icon>
+              recursos <v-icon dark right>build</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -50,7 +55,7 @@
               value="approved"
             ></v-checkbox>
             <v-checkbox
-            class="ma-0 pa-0"
+              class="ma-0 pa-0"
               v-model="search"
               label="devendo"
               color="indigo"
@@ -72,11 +77,11 @@
           :items="students"
           :search="search"
           item-key="ra"
-          select-all
         >
           <template v-slot:items="props">
            <td>
             <v-checkbox
+              :disabled="props.item.situation == 'debting'"
               v-model="props.selected"
               primary
               hide-details
@@ -134,6 +139,7 @@ export default {
       selected: [],
       professor: JSON.parse(localStorage.getItem('user')),
       headers: [
+        {text: 'Lançados', align: 'left', value: 'released'},
         {
           text: 'Aluno',
           align: 'left',
@@ -149,21 +155,24 @@ export default {
     }
   },
   created () {
-    console.log(this.professor.department)
+
     this.showMask = true
     if (typeof this.professor.department !== 'undefined') {
-      console.log('entrou')
+
        StudentService.readAll(this.professor.department)
-      .then((res) => res.data)
-      .then(students => this.students = students)
-      .then(() => setTimeout(() => { this.showMask = false }, 200))
-      .catch((err) => console.log(err))
+        .then((res) => res.data)
+        .then(students => this.students = students)
+        .then(() => setTimeout(() => { this.showMask = false }, 200))
+        .catch((err) => console.log(err))
     } else {
       this.showMask = false
     }
    
   },
   methods: {
+    launch (students) {
+      const approvedStudents = students.filter((student) => student.situation == 'approved')
+    },
     logout () {
       localStorage.removeItem('token')
       localStorage.removeItem('user')

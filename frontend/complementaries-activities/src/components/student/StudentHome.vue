@@ -3,11 +3,11 @@
     <mask-load v-if="showMask"></mask-load>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/aluno/home">Home</v-btn>
-        <v-btn flat color="blue-grey" to="/aluno/documento/add">
+        <v-btn depressed color="secondary" dark to="/aluno/home">Home <v-icon dark right>home</v-icon></v-btn>
+        <v-btn depressed  dark color="blue-grey" to="/aluno/documento/add">
         documento <v-icon right dark>cloud_upload</v-icon>
         </v-btn>
-        <v-btn color="error"  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
+        <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
       </v-toolbar-items>
     </ac-navbar>
     <student-progress v-if="situation && documents" :documents="documents" :situation="situation"></student-progress>
