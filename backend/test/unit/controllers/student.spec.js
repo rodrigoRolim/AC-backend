@@ -352,7 +352,7 @@ describe('Management student', () => {
     context('when an error occurs', () => {
       it('should return 422 as status code', () => {
         const ras = ['ra1', 'ra2', 'etc']
-        const request = { body: ras }
+        const request = { body: { ras } }
         const response = {
           send: sinon.spy(),
           status: sinon.stub()
