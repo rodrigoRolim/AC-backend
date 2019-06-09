@@ -32,7 +32,7 @@ const schema = new mongoose.Schema({
   },
   situation: {
     type: String,
-    enum: ['approved', 'debting'],
+    enum: ['approved', 'debting', 'launched'],
     default: 'debting',
     required: true
   },
