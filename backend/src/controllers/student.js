@@ -68,19 +68,20 @@ class StudentController {
 
   }
   setSituation (req, res) {
-    console.log(req.params.id)
-    console.log(req.body.situation)
+
     return this.Student.findOneAndUpdate({ _id: req.params.id }, { $set: { situation: req.body.situation } } )
       .then(() => res.sendStatus(200))
       .catch((err) => res.status(422).send(err.message))
   }
   getSituation (req, res) {
+
     return this.Student.findOne({ _id: req.params.id })
       .then((student) => res.send(student.situation))
       .catch((err) => res.status(400).send(err.message))
   }
   launchAll (req, res) {
-    return this.Student.update({ ra: { $in: req.body } }, { $set: { situation: 'launched' } }, { multi: true })
+    console.log(req.body)
+    return this.Student.update({ ra: { $in: req.body.ras } }, { $set: { situation: 'launched' } }, { multi: true })
       .then(() => res.sendStatus(200))
       .catch((err) => res.status(422).send(err.message))
   }
