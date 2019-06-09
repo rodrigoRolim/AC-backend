@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="!(approved && situation == 'approved')"
+      v-if="!(approved && situation !== 'debting')"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -23,7 +23,7 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span v-if="!situation == 'approved'" class="text-approved">aprovado!</span>
+      <span v-if="!situation !== 'debting'" class="text-approved">aprovado!</span>
     </v-progress-circular>
     <v-flex v-if="approved">
       <small v-if="approved || situation == 'approved'">Ainda não foi completamente avaliado pelo(a) professor(a)</small>
@@ -50,9 +50,7 @@ export default {
     }
   },
   created () {
-    console.log(this.approved)
-    console.log(!(this.situation == 'approved' && this.approved))
-    console.log(this.$store.getters.getBoard)
+
     const student = JSON.parse(localStorage.getItem('user'))
     GroupService.readAll()
       .then((res) => res.data)

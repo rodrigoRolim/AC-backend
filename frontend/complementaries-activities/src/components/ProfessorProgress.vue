@@ -23,7 +23,7 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span v-if="situation == 'approved' && approved" class="text-approved">aprovado!</span>
+      <span v-if="situation !== 'debting' && approved" class="text-approved">aprovado!</span>
     </v-progress-circular>
   <v-flex v-if="situation == 'debting' && approved">
     <v-btn color="#004D40" @click="approve" dark depressed>aprovar aluno</v-btn>
@@ -56,7 +56,7 @@ export default {
     this.initialize()
   },
   updated() {
-    console.log('update')
+
     this.aprobation(this.$store.getters.getBoard)
   },  
   methods: {
@@ -75,11 +75,20 @@ export default {
     approve () {
       const idStudent = this.$route.params.id
       const newSituation = 'approved'
-      StudentService.setSituation(idStudent, newSituation)
+      
+      if (this.situation == 'debting') {
+        StudentService.setSituation(idStudent, newSituation)
         .then((res) => console.log(res.status))
         .then(() => this.newsituation = 'approved')
         .then(() => this.approved = true)
-        .catch((err) => console.log(err.message))
+        .catch((err) => this.getAlert('erro', 'ocorreu um erro, tente mais uma vez'))
+      } else {
+        this.getAlert('info', 'aluno já está aprovado')
+      }
+      
+    },
+    getAlert (type, message) {
+      this.$emit('alert', { type: type, message: message})
     },
     getColor (count) {
       return this.colors[count%3]
@@ -106,14 +115,11 @@ export default {
         return acc + groupScore.raw
       }, 0)
       const aproveds_groups = this.scoreboard.filter((item) => item.raw >= item.min)
-      console.log(aproveds_groups)
-      console.log(this.groups)
+
       if (total >= 70 && aproveds_groups.length == this.groups.length) {
         this.total = total
         this.approved = true
-        console.log('if')
       } else {
-        console.log('aqui')
         this.total = total
         this.approved = false
       }

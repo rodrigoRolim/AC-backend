@@ -43,6 +43,24 @@
       </v-toolbar-items>
     </ac-navbar>
     <v-layout class="table">
+     <v-alert
+     class="alert"
+      :value="showAlert"
+      :type="alertType"
+      >
+        {{ message }}
+      </v-alert>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Lista de documentos</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn 
+          color="secondary" 
+          depressed 
+          :disabled="selected.length == 0"
+          :loading="loadBtn"
+          @click="launchAll"
+          class="mb-1">lançar <v-icon right >fa-rocket</v-icon></v-btn>
+      </v-toolbar>
        <v-card>
         <v-card-title>
           Alunos
@@ -53,6 +71,13 @@
               label="aprovados"
               color="indigo"
               value="approved"
+            ></v-checkbox>
+            <v-checkbox
+              class="ma-0 pa-0"
+              v-model="search"
+              label="lançados"
+              color="indigo"
+              value="launched"
             ></v-checkbox>
             <v-checkbox
               class="ma-0 pa-0"
@@ -81,7 +106,7 @@
           <template v-slot:items="props">
            <td>
             <v-checkbox
-              :disabled="props.item.situation == 'debting'"
+              :disabled="props.item.situation == 'debting' || props.item.situation == 'launched'"
               v-model="props.selected"
               primary
               hide-details
@@ -135,6 +160,10 @@ export default {
   data () {
     return {
       showMask: false,
+      alertType: 'success',
+      showAlert: false,
+      loadBtn: false,
+      message: '',
       search: '',
       selected: [],
       professor: JSON.parse(localStorage.getItem('user')),
@@ -170,8 +199,28 @@ export default {
    
   },
   methods: {
-    launch (students) {
-      const approvedStudents = students.filter((student) => student.situation == 'approved')
+ 
+    launchAll () {
+
+      const approvedStudents = this.selected.filter((student) => student.situation == 'approved')
+      const ras = approvedStudents.map((approvedStud) => approvedStud.ra)
+      if (ras.length > 0) {
+        StudentService.launchAll(ras)
+        .then((res) => res.data)
+        .then((status) => this.loadBtn = true)
+        .then(() => this.turnAllLaunched(approvedStudents))
+        .then(() => this.getAlert('success', 'lançados com sucesso!'))
+        .catch((err) => this.getAlert('error', 'ocorreu um erro, tente mais uma vez'))
+      } else {
+        this.getAlert('info', 'não há novos alunos aprovados para lançar')
+      }
+    },
+    turnAllLaunched (approveds) {
+      const launcheds = approveds.map((app) => {
+        app.situation = 'launched'
+        return app
+      })
+      console.log(launcheds)
     },
     logout () {
       localStorage.removeItem('token')
@@ -184,8 +233,19 @@ export default {
           return 'fa-exclamation-triangle'
         case 'approved':
           return 'fa-check-square'
+        case 'launched':
+          return 'fa-rocket'
       }
-    }
+    },
+    getAlert (type, message) {
+      this.alertType = type
+      this.message = message
+      this.showAlert = true
+      this.loadBtn = false
+      setTimeout(() => {
+        this.showAlert = false
+      }, 5000)
+    },
   },
   // pusher going to here
  /*  getNewSenderStudents () {
@@ -222,5 +282,11 @@ export default {
 }
 .approved {
   color: #66BB6A
+}
+.launched {
+  color: blue
+}
+.alert {
+  width: 100%;
 }
 </style>

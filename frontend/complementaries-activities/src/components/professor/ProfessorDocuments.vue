@@ -37,8 +37,14 @@
         <v-btn color="error" depressed  @click="logout()">sair<i class="material-icons">exit_to_app</i></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <professor-progress v-if="situation" :documents="documents" :situation="situation"></professor-progress>
-    <sent-documents v-if="situation" :documents="documents" :situation="situation"></sent-documents>
+    <v-alert
+      :value="showAlert"
+      :type="alertType"
+      >
+        {{ message }}
+    </v-alert>
+    <professor-progress @alert="callAlert" v-if="situation" :documents="documents" :situation="situation"></professor-progress>
+    <sent-documents @alert="callAlert" v-if="situation" :documents="documents" :situation="situation"></sent-documents>
   </v-app>
 </template>
 
@@ -60,6 +66,9 @@ export default {
     return {
       showMask: false,
       choiced: '',
+      showAlert: false,
+      alertType: 'success',
+      message: '',
       reproveBtn: false,
       aproveBtn: false,
       loadBtn: false,
@@ -93,7 +102,9 @@ export default {
     this.initialize(this.$route.params.id)
   },
   methods: {
-    
+    reloadPage () {
+      this.initialize(this.$route.params.id)
+    },
     initialize (idStudent) {
       GroupService.readAll()
         .then((res) => res.data)
@@ -154,13 +165,16 @@ export default {
           return 'remove_circle'
       }
     },
+    callAlert (alert) {
+      this.getAlert(alert.type, alert.message)
+    },
     getAlert (type, message) {
-      this.alert = type
-      this.messageAlert = message
-      this.successUpload = true
+      this.alertType = type
+      this.message = message
+      this.showAlert = true
       this.loadBtn = false
       setTimeout(() => {
-        this.successUpload = false
+        this.showAlert = false
       }, 5000)
     },
     confirmAvaliations () {

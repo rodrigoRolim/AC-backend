@@ -10,12 +10,14 @@
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn 
-    color="secondary" 
-    v-if="documents.length > 0"
-    @click="sentDocuments" depressed 
-    :disabled="loadBtn || isAllSent || situation == 'approved'"
-    :loading="loadBtn"
-    class="mb-1">enviar documentos</v-btn>
+      color="secondary" 
+      v-if="documents.length > 0"
+      @click="sentDocuments" depressed 
+      :disabled="loadBtn || isAllSent || situation == 'approved'"
+      :loading="loadBtn"
+      class="mb-1">
+      enviar documentos
+    </v-btn>
    </v-toolbar>
     <v-card>
       <v-card-title>
@@ -130,7 +132,6 @@ export default {
   methods: {
     turnAllSent () {
       if (this.documents.length !== 0) {
-        console.log(this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved').length)
         const qtdDocuments = this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved') 
         this.isAllSent = (qtdDocuments.length === this.documents.length)
       } else {
@@ -209,7 +210,6 @@ export default {
           this.turnAllSent()
         })
         .catch((err) => {
-          console.log(err)
           setTimeout(this.getAlert('error', 'Não foi possível enviar, tente mais uma vez!'), 2000)
         })
     },
