@@ -1,6 +1,7 @@
 import express from 'express'
 import StudentController from '../controllers/student'
 import Student from '../models/student'
+import verify from '../auth'
 import Util from 'util'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
