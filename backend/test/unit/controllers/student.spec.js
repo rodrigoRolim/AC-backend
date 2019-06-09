@@ -399,5 +399,33 @@ describe('Management student', () => {
           sinon.assert.calledWith(response.sendStatus, 200)
         })
     })
+    context('when an error occurs', () => {
+      it('should return 422 as status code', () => {
+        const fakeidstudent = 'fake-id-student'
+        const request = {
+          params: {
+            id: fakeidstudent
+          },
+          body: defaultStudent
+        }
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        }
+        class fakeStudent {
+          static findOneAndUpdate () {}
+        }
+        response.status.withArgs(422).returns(response)
+        const findOneAndUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
+        findOneAndUpdateStub.withArgs({ _id: fakeidstudent }, defaultStudent).rejects({ message: 'Error' })
+
+        const studentController = new StudentController(fakeStudent)
+
+        return studentController.update(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error')
+          })
+      })
+    })
   })
 })
