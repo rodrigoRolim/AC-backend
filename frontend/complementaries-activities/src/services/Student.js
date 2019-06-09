@@ -23,5 +23,10 @@ export default {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
     return http.get(`/student/${idStudent}`)
+  },
+  launchAll: (ras) => {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.post('/student/launch/all', { ras })
   }
 }
