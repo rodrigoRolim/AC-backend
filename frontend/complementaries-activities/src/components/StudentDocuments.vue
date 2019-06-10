@@ -158,7 +158,7 @@ export default {
     },
     deleteDocument (doc) {
       // verificar se o sent é falso no lado do servidor: middleware
-       const userResponse = confirm('tem certeza que deseja excluir este item?')
+      const userResponse = confirm('tem certeza que deseja excluir este item?')
       if (userResponse) {
          DocumentService.delete(doc.path)
           .then((res) => {
@@ -172,7 +172,7 @@ export default {
           })
       }
     },
-     updateBoardStore (document) {
+    updateBoardStore (document) {
 
       const boardItems = this.$store.getters.getBoard
       const boardItem = boardItems.filter(item => item.group == document.group)[0]

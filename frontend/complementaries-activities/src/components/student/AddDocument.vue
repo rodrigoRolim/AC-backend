@@ -157,6 +157,7 @@ export default {
     }
   },
   created () {
+    this.student = JSON.parse(localStorage.getItem('user'))._id
     this.showMask = true
     GroupService.readAll()
       .then((res) => res.data)

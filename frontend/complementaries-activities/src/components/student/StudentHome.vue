@@ -86,6 +86,7 @@ export default {
         .then((documents) => {
           if (documents.length > 0) {
             this.documents = this.replaceIdForNames(groups, documents)
+            //this.Pusher()
           } else {
             this.documents = []
           }
@@ -117,7 +118,29 @@ export default {
       })
   
       return newdocuments
-    }
+    },
+    
+    /* Pusher () {
+      
+      Pusher.logToConsole = true;
+
+      let pusher = new Pusher('9dc5a8662a93a62e45bb', {
+        cluster: 'us2',
+        forceTLS: true
+      });
+      const changeDocument = this.changeDocument
+      let channel = pusher.subscribe(JSON.parse(localStorage.getItem('user'))._id);
+      var docs = this.documents
+      channel.bind('my-event', function(data) {
+        
+        const document = docs.filter((doc) => doc._id == data.message.id)
+ 
+        const position = docs.indexOf(document[0])
+        docs[position].evaluation = data.message.evaluation
+
+      });
+
+    } */
   }
 }
 </script>

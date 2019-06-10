@@ -59,10 +59,8 @@ export default {
         return
       })
       .then(() => this.setScoreboard())
-      .then(() => this.aprobation(this.$store.getters.getBoard))
-      .catch((err) => console.log(err))
-   /*
-      .then((aproved) => this.aproved = aproved) */
+      //.then(() => this.Pusher())
+      .then((aproved) => this.aproved = aproved) 
   },
   updated() {
     this.aprobation(this.$store.getters.getBoard)
@@ -86,7 +84,7 @@ export default {
       })
  
       this.scoreboard = scores
-
+ 
       this.$store.dispatch('set', scores)
     },
     aprobation (scoreboard) {
@@ -106,9 +104,23 @@ export default {
       }
      
     },
-    /* approved () {
-      // criar função de getById() de estudante, atualizar user do store se situation for undefined no store 
+    /* Pusher (documents) {
+      
+      Pusher.logToConsole = true;
+
+      let pusher = new Pusher('9dc5a8662a93a62e45bb', {
+        cluster: 'us2',
+        forceTLS: true
+      });
+      const changeDocument = this.changeDocument
+      let channel = pusher.subscribe(JSON.parse(localStorage.getItem('user'))._id);
+      var setScoreBoard = this.setScoreboard
+      console.log(setScoreBoard)
+      channel.bind('my-event', function(data) {
+        setScoreBoard()
+      });
     } */
+    
   }
 }
 </script>

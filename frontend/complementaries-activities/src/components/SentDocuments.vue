@@ -63,7 +63,7 @@
       </template>
      </v-data-table>
     <div class="text-xs-center pt-2">
-      <v-pagination color="secondary"  v-model="pagination.page" :length="pages"></v-pagination>
+      <v-pagination color="secondary" v-if="documents"  v-model="pagination.page" :length="pages"></v-pagination>
     </div>
     </v-card>
   </v-layout>
