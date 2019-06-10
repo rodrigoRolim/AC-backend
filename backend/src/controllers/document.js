@@ -1,10 +1,11 @@
 class DocumentController {
   // pusher going to here
-  constructor (Document, path, fs) {
+  constructor (Document, path, fs, subscription) {
 
     this.Document = Document
     this.path = path
     this.fs = fs
+    this.subscription = subscription
   }
   create (req, res) {
 
@@ -60,14 +61,20 @@ class DocumentController {
     const { params: { id } } = req
     console.log(id)
     return this.Document.findOneAndUpdate({ _id: id }, req.body, { returnNewDocument: true })
-      .then((doc) => res.send(doc))
+      .then((doc) => {
+        this.subscription.recalculeScore(doc.student, { id: req.body._id, evaluation: req.body.evaluation })
+        res.send(doc)
+      })
       .catch((err) => res.status(422).send(err.message))
   }
   sent (req, res) {
     // pusher: o canal o usado é o id de estudante
     return this.Document.updateMany({ student: req.params.id, $or: [ { sent: true }, { sent: false } ], 
       evaluation: { $not: /aproved/ } }, { $set: { evaluation: 'none', sent: true } })
-      .then(() => res.sendStatus(200))  
+      .then(() => {
+        // this.subscription.sendStudent(req.params.id)
+        res.sendStatus(200)
+      })  
       .catch((err) => res.status(400).send(err.message))
   }
 }
