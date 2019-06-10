@@ -7,18 +7,17 @@ import multer from 'multer'
 import fs from 'mz/fs'
 import path from 'path'
 import Pusher from 'pusher'
+import Subscription from '../services/subscription'
 
-/* var pusher = new Pusher({
+var pusher = new Pusher({
   appId: '795627',
   key: '9dc5a8662a93a62e45bb',
   secret: 'a884fc3b107158db9674',
   cluster: 'us2',
   useTLS: true
-}); */
+});
+var subscription = new Subscription(pusher)
 
-/* pusher.trigger('my-channel', 'my-event', {
-  "message": "hello world"
-}); */
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ["application/pdf"]
 
@@ -40,7 +39,7 @@ const upload = multer({
 
 const router = express.Router()
 // passar o pusher no construtor
-const documentController = new DocumentController(Document, path,fs)
+const documentController = new DocumentController(Document, path, fs, subscription)
 
 
 router.post('/add', verify.verifyJWT, upload.single('file'), (req, res) => documentController.create(req, res))
