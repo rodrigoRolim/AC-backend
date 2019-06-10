@@ -475,4 +475,60 @@ describe('Management student', () => {
       })
     })
   })
+  describe('remove(): removing documents of approved student', () => {
+    it('should remove all documents of approved student', () => {
+      const fakeidstudent = 'a-fake-id-student';
+      const request = {
+        params: {
+          id: fakeidstudent
+        }
+      };
+      const response = {
+        sendStatus: sinon.spy()
+      };
+
+      class fakeStudent {
+        static remove() {}
+      }
+
+      const removeStub = sinon.stub(fakeStudent, 'remove');
+
+      removeStub.withArgs({ _id: fakeidstudent }).resolves([1]);
+
+      const studentController = new StudentController(fakeProduct);
+
+      return studentController.remove(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 204);
+        });
+    })
+    context('when an error occurs', () => {
+      const fakeidstudent = 'a-fake-id-student';
+      const request = {
+        params: {
+          id: fakeidstudent
+        }
+      };
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      };
+
+      class fakeStudent {
+        static remove() {}
+      }
+
+      const removeStub = sinon.stub(fakeStudent, 'remove')
+
+      removeStub.withArgs({ _id: fakeidstudent }).rejects({ message: 'Error' })
+      response.status.withArgs(422).returns(response)
+
+      const studentController = new StudentController(fakeProduct)
+
+      return studentController.remove(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, 'Error')
+        })
+    })
+  })
 })
