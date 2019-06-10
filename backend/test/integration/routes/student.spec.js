@@ -188,4 +188,17 @@ describe('Route: Student', () => {
       })
     })
   })
+  describe('DELETE /student/delete/:id', () => {
+    context('when deleting student', () => {
+      it('should deleting student and return 204 as status code', done => {
+        request
+          .set('authorization', token)
+          .delete(`/student/delete/${defaultId }`)
+          .end((err, res) => {
+            expect(res.status).to.eql(204)
+            done(err)
+          })
+      })
+    })
+  })
 })

@@ -20,5 +20,6 @@ router.get('/situation/:id', verify.verifyJWT, (req, res) => studentController.g
 router.post('/launch/all', verify.verifyJWT, (req, res) => studentController.launchAll(req, res))
 router.put('/update/:id', verify.verifyJWT, (req, res) => studentController.update(req, res))
 router.get('/:id', verify.verifyJWT, (req, res) => studentController.getById(req, res))
+router.delete('/delete/:id', verify.verifyJWT, (req, res) => studentController.remove(req, res))
 
 export default router
