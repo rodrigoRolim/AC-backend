@@ -43,8 +43,8 @@
       >
         {{ message }}
     </v-alert>
-    <professor-progress @alert="callAlert" v-if="situation" :documents="documents" :situation="situation"></professor-progress>
-    <sent-documents @alert="callAlert" v-if="situation" :documents="documents" :situation="situation"></sent-documents>
+    <professor-progress @alert="callAlert" v-if="situation && documents" :documents="documents" :situation="situation"></professor-progress>
+    <sent-documents @alert="callAlert" v-if="situation && documents" :documents="documents" :situation="situation"></sent-documents>
   </v-app>
 </template>
 

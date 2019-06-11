@@ -1,11 +1,11 @@
 class DocumentController {
   // pusher going to here
-  constructor (Document, path, fs, subscription) {
+  constructor (Document, path, fs) {
 
     this.Document = Document
     this.path = path
     this.fs = fs
-    this.subscription = subscription
+
   }
   create (req, res) {
 
@@ -59,10 +59,10 @@ class DocumentController {
   update (req, res) {
     // extrair id de student em document e usar no canal
     const { params: { id } } = req
-    console.log(id)
+
     return this.Document.findOneAndUpdate({ _id: id }, req.body, { returnNewDocument: true })
       .then((doc) => {
-        this.subscription.recalculeScore(doc.student, { id: req.body._id, evaluation: req.body.evaluation })
+        //this.subscription.recalculeScore(doc.student, { id: req.body._id, evaluation: req.body.evaluation })
         res.send(doc)
       })
       .catch((err) => res.status(422).send(err.message))
@@ -77,8 +77,13 @@ class DocumentController {
       })  
       .catch((err) => res.status(400).send(err.message))
   }
+  /* findAndRemoveAllDocumenByStudent (req, res) {
+    const documentService = new DocumentService(Document, path, fs)
+    return this.Document.find({ student: { $in: req.params.ids } })
+      .then((documents) => documentService.removeAllDocumentsByStudent(documents))
+      .then(() => res.sendStatus(204))
+      .catch((err) => res.status(422).send(err.message))
+  } */
 }
 
 export default DocumentController
-
-

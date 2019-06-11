@@ -13,7 +13,7 @@
       color="secondary" 
       v-if="documents.length > 0"
       @click="sentDocuments" depressed 
-      :disabled="loadBtn || isAllSent || situation == 'approved'"
+      :disabled="loadBtn || situation == 'approved'"
       :loading="loadBtn"
       class="mb-1">
       enviar documentos
@@ -123,19 +123,24 @@ export default {
     }
   },
   created () {
-    this.turnAllSent()
-  },
-  computeds: {
-
+    //this.turnAllSent()
   },
   methods: {
-    turnAllSent () {
+  /*   turnAllSent () {
       if (this.documents.length !== 0) {
         const qtdDocuments = this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved') 
         this.isAllSent = (qtdDocuments.length === this.documents.length)
       } else {
         this.isAllSent = false
       }
+    }, */
+    allsents () {
+      if (this.documents.length !== 0) {
+        const qtdDocuments = this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved')
+        return (qtdDocuments.length === this.documents.length)
+      } else {
+        return false
+      }      
     }, 
     getIcon (evaluation) {
       switch (evaluation) {
@@ -193,8 +198,9 @@ export default {
     sentDocuments () {
       this.loadBtn = true
       const studentid = JSON.parse(localStorage.getItem('user'))._id
-
-      DocumentService.send(studentid)
+      console.log(this.allsents())
+      if (!this.allsents()) {
+        DocumentService.send(studentid)
         .then((res) => {
           setTimeout(this.getAlert('success', 'Enviados com sucesso!'), 2000)
           this.documents.map((doc) => {
@@ -203,14 +209,11 @@ export default {
               doc.evaluation = 'none'
             }
           })
-          return
         })
-        .then(() => {
-          this.turnAllSent()
-        })
-        .catch((err) => {
-          setTimeout(this.getAlert('error', 'Não foi possível enviar, tente mais uma vez!'), 2000)
-        })
+        .catch((err) => setTimeout(this.getAlert('error', 'Não foi possível enviar, tente mais uma vez!'), 2000))
+      } else {
+        this.getAlert('info', 'Não há documentos reprovados ou não avaliados para se enviar!')
+      }
     },
     popDocument (doc) {
       const index = this.documents.indexOf(doc)

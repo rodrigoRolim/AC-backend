@@ -31,11 +31,11 @@
                 required
               ></v-text-field>
               <v-text-field
-                ref="Registro acadêmico (RA)*"
+                ref="siape"
                 v-model="student.ra"
                 :error-messages="errorMessages"
                 :rules="[() => !!student.ra || 'This field is required']"
-                label="Registro acadêmico (RA)*"
+                label="Registro acadêmico (SIAPE)*"
                 placeholder="a122345"
                 required
               ></v-text-field>    

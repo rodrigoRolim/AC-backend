@@ -215,6 +215,7 @@ export default {
         .then((status) => this.loadBtn = true)
         .then(() => this.turnAllLaunched(approvedStudents))
         .then(() => this.getAlert('success', 'lançados com sucesso!'))
+        .then(() => this.selected = [])
         .catch((err) => this.getAlert('error', 'ocorreu um erro, tente mais uma vez'))
       } else {
         this.getAlert('info', 'não há novos alunos aprovados para lançar')

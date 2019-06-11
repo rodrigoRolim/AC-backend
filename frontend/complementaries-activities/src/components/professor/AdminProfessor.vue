@@ -126,6 +126,13 @@
             >
               edit
             </v-icon>
+            <v-icon
+              small
+              class="mr-2"
+              @click="deleteItem(props.item)"
+            >
+              delete
+            </v-icon>
           </td>
         </template>
         <template v-slot:no-data>
@@ -249,7 +256,13 @@ import AcNavbar from '../AcNavbar'
 
       deleteItem (item) {
         const index = this.professors.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.professors.splice(index, 1)
+        if (confirm('Are you sure you want to delete this item?')){
+          ProfessorService.delete(item._id)
+            .then((res) => res.data)
+            .then(() => this.professors.splice(index, 1))
+            .then(() => this.getAlert('success', 'excluído com sucesso'))
+            .catch((err) => this.getAlert('error', 'não foi possível excluir'))
+        }
       },
 
       close () {

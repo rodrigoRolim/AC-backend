@@ -2,7 +2,7 @@
   <v-card class="text-xs-center progress" >
    <v-toolbar-title class="grey--text text--darken-2">Progresso</v-toolbar-title>
     <v-progress-circular
-      v-if="situation == 'debting' && newsituation == 'debting'"
+      v-if="newsituation == 'debting' && newsituation == 'debting'"
       v-for="(score, index) in this.$store.getters.getBoard"
       v-bind:key="index"
       :rotate="360"
@@ -23,9 +23,9 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span v-if="situation !== 'debting' && approved" class="text-approved">aprovado!</span>
+      <span v-if="newsituation == 'approved' && approved" class="text-approved">aprovado!</span>
     </v-progress-circular>
-  <v-flex v-if="situation == 'debting' && approved">
+  <v-flex v-if="newsituation == 'debting' && approved">
     <v-btn color="#004D40" @click="approve" dark depressed>aprovar aluno</v-btn>
   </v-flex>
   </v-card>

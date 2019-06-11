@@ -306,7 +306,7 @@ describe('Controller: Document', () => {
         body: updatedDocument
       }
       const response = {
-        sendStatus: sinon.spy()
+        send: sinon.spy()
       }
 
       class fakeDocument {
@@ -320,7 +320,7 @@ describe('Controller: Document', () => {
 
       return documentController.update(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.sendStatus, 200)
+          sinon.assert.calledWith(response.send, updatedDocument)
         })
     })
     context('when an error occurs', () => {
@@ -420,7 +420,7 @@ describe('Controller: Document', () => {
       })
     })
   })
-  describe('readAllSent(): readin all documents sent by department', () => {
+  describe('readAllSent(): reading all documents sent by department', () => {
     it('should return all documents sent by department', () => {
       const fakeidstudent = 'fake-id-student'
       const request = {
@@ -466,7 +466,7 @@ describe('Controller: Document', () => {
         response.status.withArgs(400).returns(response)
 
         const fakeDocumenFindStub = sinon.stub(fakeDocument, 'find')
-        fakeDocumenFindStub.withArgs({ student: fakeidstudent, sent: true }).reject({ message: 'Erro' })
+        fakeDocumenFindStub.withArgs({ student: fakeidstudent, sent: true }).rejects({ message: 'Error' })
   
         const documentController = new DocumentController(fakeDocument, path, fs)
   
@@ -478,4 +478,5 @@ describe('Controller: Document', () => {
     })
   })
 })
+
 // adicione o pusher com dependencia deste controller

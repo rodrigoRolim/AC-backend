@@ -13,7 +13,7 @@ describe('isSent() of document middleware', () => {
     user_type: 'aluno',
     situation: 'approved'
   }
-  contex('when the approved student try send document to professor', () => {
+  context('when the approved student try send document to professor', () => {
     it('should return 403 status code and message', done => {
       const reqFake = {
         params: {

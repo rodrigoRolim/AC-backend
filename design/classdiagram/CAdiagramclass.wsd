@@ -1,21 +1,19 @@
 @startuml
 
 hide members
-class Document <<Entity>>{
-    -name: string
-    -ra: string
-    -document: Document
-}
-class student <<Entity>> { 
+class document  <<(M, #00ffbb)Model>> {
 
 }
-class professor <<Entity>> {
+class student <<(M, #00ffbb)Model>> { 
 
 }
-class group <<Entity>> {
+class professor <<(M, #00ffbb)Model>> {
 
 }
-class item <<Entity>> {
+class group <<(M, #00ffbb)Model>> {
+
+}
+class item <<(M, #00ffbb)Model>> {
 
 }
 class documentController <<(C, #00bfff)Controller>> {
@@ -27,13 +25,13 @@ class studentController <<(C, #00bfff)Controller>> {
 class professorController <<(C, #00bfff)Controller>> {
 
 }
-class professorRoutes <<(R, #ff0040)Route>> {
+class professorRoute <<(R, #ff0040)Route>> {
 
 }
-class studentRoutes <<(R, #ff0040)Route>> {
+class studentRoute <<(R, #ff0040)Route>> {
 
 }
-class documentRoutes  <<(R, #ff0040)Route>> {
+class documentRoute  <<(R, #ff0040)Route>> {
 
 }
 class groupController <<(C, #00bfff) Controller>> {
@@ -42,9 +40,14 @@ class groupController <<(C, #00bfff) Controller>> {
 class groupRouter <<(R, #ff0040)Route>> {
 
 }
-interface Score {
-    calcularPontosPorGrupo()
-    calcularPontosTotal()
+class department <<(M, #00ffbb)Model>> {
+
+}
+class departmentController <<(C, #00bfff) Controller>> {
+
+}
+class departmentRoute <<(R, #ff0040)Route>> {
+
 }
 Document "1" --- "0..*" group
 group o-- item: have >
@@ -52,13 +55,12 @@ documentController <.. Document
 
 student ..> studentController
 professor ..> professorController
-professor "1..*" -- "1" student
 student "0..*" -- "1" Document
 
-documentController ..> documentRoutes
-studentController ..> studentRoutes
-professorController ..> professorRoutes
+documentController ..> documentRoute
+studentController ..> studentRoute
+professorController ..> professorRoute
 groupController <.. group
 groupController ..> groupRouter
-Score <|.. documentController: <<implments>>
+
 @enduml

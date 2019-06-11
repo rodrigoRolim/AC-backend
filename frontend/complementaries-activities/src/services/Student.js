@@ -38,5 +38,10 @@ export default {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
     return http.post('/student/launch/all', { ras })
+  },
+  remove: (idStudent) => {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.delete(`/student/delete/${idStudent}`)
   }
 }

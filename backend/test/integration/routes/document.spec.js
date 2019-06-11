@@ -171,4 +171,16 @@ describe('Router: document', () => {
       })
     })
   })
+  /* describe('DELETE /document/:student', () => {
+    it('should return delete document', done => {
+      const pathFile = 'test.pdf'
+      request
+        .del(`/document/uploads/${pathFile}`)
+        .set('authorization', token)
+        .end((err, res) => {
+          expect(res.status).to.eql(204)
+          done(err)
+        })
+    })
+  }) */
 })

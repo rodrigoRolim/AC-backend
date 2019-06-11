@@ -59,8 +59,9 @@ export default {
         return
       })
       .then(() => this.setScoreboard())
+      .catch((err) => console.log(err))
       //.then(() => this.Pusher())
-      .then((aproved) => this.aproved = aproved) 
+      //.then((aproved) => this.aproved = aproved) 
   },
   updated() {
     this.aprobation(this.$store.getters.getBoard)
@@ -84,8 +85,9 @@ export default {
       })
  
       this.scoreboard = scores
- 
+      console.log(scores)
       this.$store.dispatch('set', scores)
+      //return scores
     },
     aprobation (scoreboard) {
       this.scoreboard = scoreboard
@@ -104,7 +106,7 @@ export default {
       }
      
     },
-    /* Pusher (documents) {
+   /*  Pusher (documents) {
       
       Pusher.logToConsole = true;
 

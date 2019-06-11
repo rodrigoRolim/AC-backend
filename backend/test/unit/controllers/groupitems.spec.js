@@ -431,12 +431,12 @@ describe('controller: groups and items', () => {
       class fakeGroupItem {
         static find () {}
       }
-      const fakeGroupFindStub = sinon.stub(fakeGroupItem, 'findById')
+      const fakeGroupFindStub = sinon.stub(fakeGroupItem, 'find')
       fakeGroupFindStub.withArgs({ name: fakenamegroup }).resolves(defaultGroup)
 
       const groupItemsController = new GroupItemsController(fakeGroupItem)
 
-      return groupItemsController.getById(request, response)
+      return groupItemsController.getByName(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, defaultGroup)
         })
@@ -460,7 +460,7 @@ describe('controller: groups and items', () => {
         }
         
         response.status.withArgs(400).returns(response)
-        const fakeGroupFindStub = sinon.stub(fakeGroupItem, 'findById')
+        const fakeGroupFindStub = sinon.stub(fakeGroupItem, 'find')
         fakeGroupFindStub.withArgs({ name: fakenamegroup }).rejects({ message: 'Error' })
   
         const groupItemsController = new GroupItemsController(fakeGroupItem)

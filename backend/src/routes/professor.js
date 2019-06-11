@@ -16,5 +16,7 @@ router.post('/login', (req, res) => professorController.login(req, res))
 router.get('/all', verify.verifyJWT, (req, res) => professorController.readAll(req, res))
 router.put('/update/:id', verify.verifyJWT, (req, res) => professorController.update(req, res))
 router.put('/admin/unset/graduation/:id', (req, res) => professorController.unsetGraduation(req, res)) // excluir!
+router.get('/:id', verify.verifyJWT, (req, res) => professorController.getById(req, res))
+router.delete('/delete/:id', verify.verifyJWT, (req, res) => professorController.remove(req, res))
 
 export default router

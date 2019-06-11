@@ -17,5 +17,15 @@ export default {
     let token = JSON.parse(localStorage.getItem('token'))
     http.defaults.headers.common['Authorization'] = `${token}`
     return http.put(`/professor/update/${id}`, professor)
+  },
+  getById: (id) => {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.get(`/student/${id}`)
+  },
+  delete: (id) => {
+    let token = JSON.parse(localStorage.getItem('token'))
+    http.defaults.headers.common['Authorization'] = `${token}`
+    return http.delete(`/professor/delete/${id}`)
   }
 }

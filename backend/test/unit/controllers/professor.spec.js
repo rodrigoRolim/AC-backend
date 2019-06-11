@@ -244,4 +244,108 @@ describe('Management professor', () => {
       })
     })
   })
+  describe('getById(): getting professor by id', () => {
+    it('should call send with one professor', () => {
+      const fakeId = 'a-fake-id';
+      const request = {
+        params: {
+          id: fakeId
+        }
+      };
+      const response = {
+        send: sinon.spy()
+      };
+
+      Professor.find = sinon.stub();
+      Professor.find.withArgs({ _id: fakeId }).resolves([defaultProfessor]);
+
+      const professorController = new ProfessorController(professorController)
+
+      return professorController.getById(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, [defaultProfessor]);
+        });
+    })
+    context('when an error occurs', () => {
+      it('should return 422 as status code', () => {
+        const fakeId = 'a-fake-id';
+        const request = {
+          params: {
+            id: fakeId
+          }
+        };
+        const response = {
+          send: sinon.spy(),
+          status: sinon.stub()
+        };
+
+        Professsor.find = sinon.stub();
+        Professor.find.withArgs({ _id: fakeId }).rejects({ message: 'Error' });
+        
+        response.status.withArgs(422).returns(response)
+        const professorController = new ProfessorController(Professor);
+
+        return professorController.getById(request, response)
+          .then(() => {
+            sinon.assert.calledWith(response.send, 'Error');
+          });
+      })
+    })
+  })
+  describe('remove(): removing documents of approved student', () => {
+    it('should remove all documents of approved student', () => {
+      const fakeidprofessor = 'a-fake-id-professor';
+      const request = {
+        params: {
+          id: fakeidprofessor
+        }
+      };
+      const response = {
+        sendStatus: sinon.spy()
+      };
+
+      class fakeProfessor {
+        static remove() {}
+      }
+
+      const removeStub = sinon.stub(fakeProfessor, 'remove');
+
+      removeStub.withArgs({ _id: fakeidprofessor }).resolves([1]);
+
+      const professorController = new ProfessorController(fakeProfessor);
+
+      return professorController.remove(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.sendStatus, 204);
+        });
+    })
+    context('when an error occurs', () => {
+      const fakeidprofessor = 'a-fake-id-student';
+      const request = {
+        params: {
+          id: fakeidprofessor
+        }
+      };
+      const response = {
+        send: sinon.spy(),
+        status: sinon.stub()
+      };
+
+      class fakeProfessor {
+        static remove() {}
+      }
+
+      const removeStub = sinon.stub(fakeProfessor, 'remove')
+
+      removeStub.withArgs({ _id: fakeidprofessor }).rejects({ message: 'Error' })
+      response.status.withArgs(422).returns(response)
+
+      const professorController = new ProfessorController(fakeProfessor)
+
+      return professorController.remove(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, 'Error')
+        })
+    })
+  })
 })

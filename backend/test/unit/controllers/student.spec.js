@@ -495,7 +495,7 @@ describe('Management student', () => {
 
       removeStub.withArgs({ _id: fakeidstudent }).resolves([1]);
 
-      const studentController = new StudentController(fakeProduct);
+      const studentController = new StudentController(fakeStudent);
 
       return studentController.remove(request, response)
         .then(() => {
@@ -523,7 +523,7 @@ describe('Management student', () => {
       removeStub.withArgs({ _id: fakeidstudent }).rejects({ message: 'Error' })
       response.status.withArgs(422).returns(response)
 
-      const studentController = new StudentController(fakeProduct)
+      const studentController = new StudentController(fakeStudent)
 
       return studentController.remove(request, response)
         .then(() => {

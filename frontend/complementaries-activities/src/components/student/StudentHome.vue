@@ -31,8 +31,8 @@
         <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <student-progress v-if="situation && documents" :documents="documents" :situation="situation"></student-progress>
-    <student-documents v-if="situation && documents" :documents="documents" :situation="situation"></student-documents>
+    <student-progress v-if="situation && documents.length > 0" :documents="documents" :situation="situation"></student-progress>
+    <student-documents v-if="documents.length > 0" :documents="documents" :situation="situation"></student-documents>
   </v-app>
 </template>
 
@@ -45,7 +45,7 @@ import StudentService from '@/services/Student'
 import DocumentService from '@/services/Document'
 import GroupService from '@/services/Group'
 import pdfjs from 'pdfjs-dist'
-
+// import Pushser from 'pusher-js'
 export default {
   name: 'StudentHome',
   components: { AcNavbar, MaskLoad, StudentDocuments, StudentProgress },
@@ -53,11 +53,12 @@ export default {
     return {
       showMask: false,
       pdf: null,
-      documents: null,
+      documents: [],
       situation: null
     }
   },
   created () {
+    console.log(this.documents && this.situation)
     this.showMask = true
     this.initialize(JSON.parse(localStorage.getItem('user'))._id)
   },
