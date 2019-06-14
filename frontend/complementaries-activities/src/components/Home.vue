@@ -11,7 +11,6 @@
         <img src="../assets/horas-atividades-complementares.png">
       </div> 
     </div>
-
   </v-app>
 </template>
 
@@ -26,12 +25,9 @@ export default {
     }
   },
   created () {
-    console.log(this.user)
     if (typeof this.user != undefined && this.user != null) {
-      console.log(this.user.type_user)
       switch(this.user.type_user) {
         case 'aluno':
-        console.log('aqui')
           this.$router.replace('/aluno/home')
           break;
         case 'professor':

@@ -11,7 +11,6 @@ const schemaGroup = new mongoose.Schema({
     type: String,
     unique: true
   },
-  seq: Number,
   scoreMin: Number,
   scoreMax: Number,
   description: String,

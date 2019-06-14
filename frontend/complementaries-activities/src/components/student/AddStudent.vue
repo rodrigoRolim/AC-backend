@@ -2,7 +2,6 @@
   <v-app>
     <ac-navbar>
       <v-toolbar-items>
-        <v-btn flat to="/admin">admin</v-btn>
         <v-btn flat to="/professor">professor</v-btn>
         <v-btn flat to="/aluno">aluno</v-btn>
       </v-toolbar-items>

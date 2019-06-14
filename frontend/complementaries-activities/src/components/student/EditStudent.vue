@@ -155,10 +155,7 @@ export default {
       })
       .then(() => this.getStudent())
       .then(() => setTimeout(() => {this.showMask = false}, 500))
-      .catch((err) => {
-        console.log(err)
-        this.getConfirmation('error', 'Ocorreu um erro, receio que você não poderá efetuar uma atualização')
-      })
+      .catch((err) => this.getConfirmation('error', 'Ocorreu um erro, receio que você não poderá efetuar uma atualização'))
   },
   computed: {
     form () {
@@ -204,6 +201,11 @@ export default {
     },
     reset () {
      this.$refs.form.reset()
+    },
+     logout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.replace('/aluno')
     }
   }
 }

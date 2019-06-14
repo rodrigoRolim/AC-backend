@@ -44,21 +44,12 @@ export default {
     save () {
       GroupService.updatingItem(this.idGroup, this.item)
         .then((res) => {
-          console.log(res)
           if (res.status == 201) {
             alert('item atualizado')
           }
         })
       this.dialog = false
-    },
-    updatingProfessor (professor, degId, profId) {
-      professor.graduation = degId
-      GroupService.updatingProfessorResponsible(profId, professor)
-        .then((res) => {
-          console.log(res)
-        })
     }
-  
   }
 }
 </script>

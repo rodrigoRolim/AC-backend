@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     sendComment () {
-      console.log(this.comments)
       this.$emit('feedback', this.comments)
       this.dialog = false
     }

@@ -4,24 +4,34 @@ class student {
     _id: number
     ra: String
     name: String
+    email: String
+    department: Department
+    situation: enum
     graduation: course
-    document: document
     password: encrypted
-    picture: binary
+    type_user: String
 }
-class documents {
+class document {
     _id: number
     name: string
+    path: String
+    feedback: String
     score: integer
-    avaliation: bit
     sent: boolean
-    group: group
-    document: binary
+    group: String
+    item: String
+    evaluation: bit
+    sent: boolean
+    student: Student
 }
 class group {
     _id: number
     name: string
     item: items
+    scoreMin: number
+    scoreMax: numeber
+    description: String
+    items: Item
 }
 class items {
     _id: number
@@ -31,17 +41,24 @@ class professor {
     _id: number
     siape: string
     name: string
-    responsible: course
-    activate: boolean
+    email: String
+    department: Department
+    password: encrypted
+    type_user: Enum
 }
-class course {
+class graduation {
     _id: number
     name: string
+    department: Department
 }
-documents -- group
+class department {
+    _id: number
+    name: String
+}
+document "*..0"--- "1" group
 group o-- items
-documents -- student
-student -- course
-student -- professor
-professor --- course 
+document "*..0" --- "1" student
+student "*..0" --- "1" department
+department "1" -- "*..0" graduation
+professor "1" --- "1" department 
 @enduml
