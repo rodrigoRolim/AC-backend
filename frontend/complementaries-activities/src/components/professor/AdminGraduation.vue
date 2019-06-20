@@ -38,16 +38,17 @@
       </v-toolbar-items>
     </ac-navbar>
      <v-layout class="table">
-     <v-alert :value="departments.length === 0" type="info">
+      <v-alert
+          class="alert"
+          :type="typeAlert"
+          :value="showAlert"
+          >
+          {{message}}
+      </v-alert>
+      <v-alert :value="departments.length === 0" type="info">
           Não há departamentos cadastrados, 
           você precisa primeiro cadastrar um departamento para cadastrar um curso
-        </v-alert>
-        <v-alert :value="success" type="success">
-          curso cadastrado com sucesso!
-        </v-alert>
-        <v-alert :value="denied" type="warning">
-          já existe um curso com esse nome!
-        </v-alert>
+      </v-alert>
       <v-toolbar flat color="white">
         <v-toolbar-title>Lista de cursos</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -166,6 +167,9 @@ export default {
   data () {
     return {
       showMask: false,
+      message: '',
+      typeAlert: 'error',
+      showAlert: false,
       success: false,
       denied: false,
       departmentNames: [],
@@ -265,13 +269,10 @@ export default {
       const index = this.graduations.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
-        GraduationService.delete(item).then((res) => {
-          alert(res.data.message)
-          this.graduations.splice(index, 1)
-        })
-        .catch((err) => {
-          // implemente uma mensagem de erro ao usuário
-        })
+        GraduationService.delete(item)
+        .then((res) => this.getAlert('success', res.data.message))
+        .then(() =>  this.graduations.splice(index, 1))
+        .catch((err) => this.getAlert('error', res.data.message))
       }
     },
     logout () {
@@ -289,23 +290,15 @@ export default {
     save () {
       if (this.editedIndex > -1) {
         GraduationService.updatingDegree(this.editedItem._id, this.editedItem)
-          .then((res) => {
-            if (res.data.ok == 1) {
-              alert('atualizado com sucesso')
-            }
-          })
+          .then((res) => this.getAlert('success', res.data.message))
         Object.assign(this.graduations[this.editedIndex], this.editedItem)
       } else {
         this.replaceNameToId()
-        GraduationService.save(this.editedItem).then((graduation) => {
-          this.alertSuccess()
-          this.graduations = []
-          this.initializeGraduations()
-        })
-        .catch((err) => {
-          this.alertDenied()
-
-        })
+        GraduationService.save(this.editedItem)
+        .then((graduation) => this.getAlert('success', ' curso cadastrado com sucesso!'))
+        .then(() =>  this.graduations = [])
+        .then(() => this.initializeGraduations())
+        .catch((err) => this.getAlert('error', 'já existe um curso com esse nome!'))
       }
       this.close()
     },
@@ -314,18 +307,14 @@ export default {
           dep.name === this.editedItem.department)
       this.editedItem.department = department[0]._id
     },
-    alertSuccess () {
-      this.success = true;
+    getAlert (type, message) {
+      this.typeAlert = type
+      this.message = message
+      this.showAlert = true
       setTimeout(() => {
-        this.success = !this.success
-      }, 4000)
-    },
-    alertDenied () {
-      this.denied = true;
-      setTimeout(() => {
-        this.denied = !this.denied
-      }, 4000)
-    },
+        this.showAlert = false
+      }, 5000)
+    }
   }
 }
 </script>

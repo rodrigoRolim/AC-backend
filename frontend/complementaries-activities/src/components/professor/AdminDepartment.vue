@@ -217,9 +217,7 @@ export default {
           this.departments = departments
         })
         .then(() => setTimeout(() => { this.showMask = false}, 1000))
-        .catch((err) => {
-          this.getAlert('error', err.response.data)
-        })
+        .catch((err) => this.getAlert('error', err.response.data))
     },
     editItem (item) {
       this.editedIndex = this.departments.indexOf(item)
@@ -230,13 +228,10 @@ export default {
       const index = this.departments.indexOf(item)
       const userResponse = confirm('Are you sure you want to delete this item?')
       if (userResponse) {
-        DepartmentService.delete(item._id).then((res) => {
-          this.getAlert('success', 'deletado com sucesso')
-          this.departments.splice(index, 1)
-        })
-        .catch((err) => {
-          this.getAlert('error', err.response.data)
-        })
+        DepartmentService.delete(item._id)
+        .then((res) => this.getAlert('success', 'deletado com sucesso'))
+        .then(() =>  this.departments.splice(index, 1))
+        .catch((err) => this.getAlert('error', err.response.data))
       }
     },
     logout () {
@@ -261,9 +256,9 @@ export default {
         Object.assign(this.departments[this.editedIndex], this.editedItem)
       } else {
         DepartmentService.save(this.editedItem)
-          .then((department) => {
-            this.departments.push(department.data)
-          })
+          .then((department) => this.departments.push(department.data))
+          .then(() => this.getAlert('success', 'departamento cadastrado com sucesso'))
+          .catch(() => this.getAlert('error', 'não foi possível salvar o departamento'))
       }
       this.close()
     },

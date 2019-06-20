@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+skinparam packgestyle rectangle
+actor Professor
+rectangle "gerenciar professores" {
+  Professor -- (selecionar curso)
+  Professor -- (verificar se curso tem professor responsável)
+  (verificar se curso tem professor responsável) <.. (adicionar professor responsável): <<extends>>
+  (verificar se curso tem professor responsável) <.. (substituir professor responsável): <<extends>>
+  Professor -- (informa dados de acesso ao professor)
+}
+@enduml

@@ -1,33 +1,33 @@
 @startuml
-actor Admin
+actor Usuario
 boundary "tela de login" as login
 control LogController as controle
 entity AdminEntity as entidade
 
-Admin ->> login: tentar acessar a conta
+Usuario ->> login: tentar acessar a conta
 activate login
 login ->> controle: requisitar Autenticação
 activate controle
 
 controle -> entidade: buscar admin
     activate entidade
-    alt Admin existe na base de dados
+    alt Usuario existe na base de dados
         
         entidade --> controle: admin encontrado
         'deactivate controle
          controle -> controle: verificar dados do admin
         alt dados válidos
             controle -->> login: admin Autenticado
-            login --> Admin: acesso permitido 
+            login --> Usuario: acesso permitido 
         else dados inválidos
             
             login <<-- controle: não Autenticado
-            login --> Admin: acesso não permitido
+            login --> Usuario: acesso não permitido
         end
        
-    else Admin não cadastrado
+    else Usuario não cadastrado
         
-        entidade --> Admin: admin não encontrado
+        entidade --> Usuario: admin não encontrado
         deactivate entidade
 end
 @enduml

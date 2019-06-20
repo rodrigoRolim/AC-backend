@@ -51,7 +51,7 @@
         {{ message }}
       </v-alert>
       <v-toolbar flat color="white">
-        <v-toolbar-title>Lista de documentos</v-toolbar-title>
+        <v-toolbar-title>Lista de Alunos</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn 
           color="secondary" 
@@ -186,6 +186,9 @@ export default {
   created () {
     // this.testPusher()
     this.showMask = true
+    if (localStorage.getItem('user') == null) {
+      this.$router.replace('/')
+    }
     if (typeof this.professor.department !== 'undefined') {
 
        StudentService.readAll(this.professor.department)

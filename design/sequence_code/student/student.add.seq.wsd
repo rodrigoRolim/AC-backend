@@ -1,10 +1,10 @@
 @startuml
-Actor Student
+Actor Aluno
 boundary "tela de cadastro de aluno" as cadastro
 control StudentController
 entity StudentEntity
-Student ->> cadastro: entrar com dados necessarios
-activate Student
+Aluno ->> cadastro: entrar com dados necessarios
+activate Aluno
 activate cadastro
 cadastro ->> cadastro: validar dados
 cadastro ->> StudentController: enviar requisicao
@@ -17,6 +17,6 @@ deactivate StudentEntity
 activate StudentController
 StudentController -->> cadastro: confirmação de cadastro
 deactivate StudentController
-cadastro -->> Student: estudante cadastrado
+cadastro -->> Aluno: estudante cadastrado
 deactivate cadastro
 @enduml

@@ -23,7 +23,7 @@
       color="#00C853"
     >
       <v-icon large color="#FDD835" class="fa4">fa-trophy</v-icon>
-      <span v-if="newsituation == 'approved' && approved" class="text-approved">aprovado!</span>
+      <span v-if="newsituation !== 'debting' && approved" class="text-approved">aprovado!</span>
     </v-progress-circular>
   <v-flex v-if="newsituation == 'debting' && approved">
     <v-btn color="#004D40" @click="approve" dark depressed>aprovar aluno</v-btn>
@@ -70,7 +70,7 @@ export default {
       })
       .then(() => this.setScoreboard())
       .then(() => this.aprobation(this.$store.getters.getBoard))
-      .catch((err) => console.log(err))
+      .catch((err) => this.getAlert('error', 'ocorreu um erro, recarrege a página'))
     },
     approve () {
       const idStudent = this.$route.params.id
@@ -78,8 +78,8 @@ export default {
       
       if (this.situation == 'debting') {
         StudentService.setSituation(idStudent, newSituation)
-        .then((res) => console.log(res.status))
-        .then(() => this.newsituation = 'approved')
+        .then((res) => res.status)
+        .then((status) => this.newsituation = 'approved')
         .then(() => this.approved = true)
         .catch((err) => this.getAlert('erro', 'ocorreu um erro, tente mais uma vez'))
       } else {

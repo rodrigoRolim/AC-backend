@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+skinparam packgestyle rectangle
+actor Professor
+rectangle "gerenciar items" {
+  Professor -- (adicionar item)
+  Professor -- (excluir item)
+  Professor -- (editar item)
+  (adicionar item) ..> (selecionar grupo): <<include>>
+  (excluir item) ..> (selecionar grupo): <<include>>
+  (editar item) ..> (selecionar grupo): <<include>>
+}
+@enduml

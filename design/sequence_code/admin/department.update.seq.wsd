@@ -1,0 +1,24 @@
+@startuml
+actor Professor
+boundary "tela de departamentos" as departamentos
+control DepartmentController
+entity DepartmentEntity
+
+Professor ->> departamentos: tentar atualizar um departamentos
+activate Professor
+activate departamentos
+departamentos ->> DepartmentController: solicitar atualização do departamentos
+deactivate departamentos
+activate DepartmentController
+DepartmentController -> DepartmentEntity: confirmar atualização do departamentos
+activate DepartmentEntity
+deactivate DepartmentController
+DepartmentEntity --> DepartmentController: mensagem de confirmação
+deactivate DepartmentEntity
+activate DepartmentController
+DepartmentController -->> departamentos: enviar mensagem de confirmação
+deactivate DepartmentController
+activate departamentos
+departamentos -->> Professor: exibir mensagem de confirmação
+deactivate departamentos
+@enduml

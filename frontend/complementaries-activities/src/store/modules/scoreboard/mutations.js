@@ -1,6 +1,5 @@
 export default {
   SET: (state, value) => {
-    console.log(value)
     state.scoreboard = value
   },
   DELETE: (state, value) => {
@@ -17,6 +16,5 @@ export default {
   APPROVED: (state, value) => {
     
     state.scoreboard = Object.assign(state.scoreboard, { approved: value })
-    console.log(state.scoreboard)
   }
 }

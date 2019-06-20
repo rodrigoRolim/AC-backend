@@ -105,11 +105,10 @@ export default {
   },
   created () {
     // fazer um store para estado de aprovamento de aluno
-    console.log(this.$route.params.id)
   },
   computed: {
     pages () {
-      console.log(this.documents)
+
       this.pagination.totalItems = this.documents.length
       if (this.pagination.rowsPerPage == null ||
         this.pagination.totalItems == null

@@ -74,7 +74,7 @@ export default {
     }
   },
   created () {
-    console.log(this.situation)
+
     this.evaluation = this.document.evaluation
     this.getDocument(this.document.path)
   },
@@ -203,7 +203,7 @@ export default {
           })
       }, (reason) => {
           // implemente mensagem de erro
-        console.error(reason)
+        //console.error(reason)
       })
     },
     getDocument (path) {

@@ -1,11 +1,11 @@
 @startuml
-actor Admin
-boundary "tela principal" as grupo
+actor Professor
+boundary "tela de grupos" as grupo
 control GroupController
 entity GroupEntity
 
-Admin ->> grupo: tentar deletar um grupo
-activate Admin
+Professor ->> grupo: tentar deletar um grupo
+activate Professor
 activate grupo
 grupo ->> GroupController: solicitar exclusão do grupo
 deactivate grupo
@@ -19,6 +19,6 @@ activate GroupController
 GroupController -->> grupo: enviar mensagem de confirmação
 deactivate GroupController
 activate grupo
-grupo -->> Admin: exibir mensagem de confirmação
+grupo -->> Professor: exibir mensagem de confirmação
 deactivate grupo
 @enduml

@@ -1,5 +1,5 @@
 @startuml
-
+left to right direction
 hide members
 class document  <<(M, #00ffbb)Model>> {
 
@@ -59,25 +59,25 @@ class graduationRoute <<(R, #ff0040)Route>> {
 
 }
 
-document ---  group
-student --- document
-professor --- department
-graduation --- student
-department --- graduation
+document --  group
+student -- document
+professor -- department
+graduation -- student
+department -- graduation
 group o-- item: have >
 
-documentController ...> document
-student <... studentController
-professor <... professorController
-graduation <... graduationController
-department <... departmentController
+documentController ..> document
+student <.. studentController
+professor <.. professorController
+graduation <.. graduationController
+department <.. departmentController
 
-documentController <... documentRoute
-studentController <... studentRoute
-professorController <... professorRoute
-groupController ...> group
-groupController <... groupRouter
+documentController <.. documentRoute
+studentController <.. studentRoute
+professorController <.. professorRoute
+groupController ..> group
+groupController <.. groupRouter
 departmentController <.. departmentRoute
-graduationController <... graduationRoute
+graduationController <.. graduationRoute
 
 @enduml
