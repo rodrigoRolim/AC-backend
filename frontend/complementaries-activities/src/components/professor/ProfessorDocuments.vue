@@ -43,7 +43,7 @@
       >
         {{ message }}
     </v-alert>
-    <professor-progress @alert="callAlert" v-if="situation && documents" :documents="documents" :situation="situation"></professor-progress>
+    <professor-progress @reload="reloadPage" @alert="callAlert" v-if="situation && documents" :documents="documents" :situation="situation"></professor-progress>
     <sent-documents @alert="callAlert" v-if="situation && documents" :documents="documents" :situation="situation"></sent-documents>
   </v-app>
 </template>
@@ -99,6 +99,7 @@ export default {
     }
   },
   created () {
+    this.showMask = true
     this.initialize(this.$route.params.id)
   },
   methods: {
@@ -110,16 +111,17 @@ export default {
         .then((res) => res.data)
         .then((groups) => this.getDocuments(idStudent, groups))
         .then(() => this.getSituation())
+        .then(() => setTimeout(() => { this.showMask = false }, 500))
         .catch((err) => console.log(err))
     },
     getSituation () {
       StudentService.getSituation(this.$route.params.id)
-        .then((res) => res.data)
+        .then((res) => res.data.situation)
         .then((situation) => this.situation = situation)
         .catch((err) => console.log(err))
     },
     getDocuments (idStudent, groups) {
-       DocumentService.readAll(idStudent)
+       DocumentService.readAllSents(idStudent)
         .then((res) => res.data)
         .then((documents) => {
           if (documents) {
@@ -127,7 +129,6 @@ export default {
           } else {
             this.documents = null
           }
-          //this.documentsResponse = this.replaceIdForNames(groupsItems, documents)
           setTimeout(() => {
             this.showMask = false 
           }, 1000)

@@ -26,7 +26,7 @@
       <span v-if="!situation !== 'debting'" class="text-approved">aprovado!</span>
     </v-progress-circular>
     <v-flex v-if="approved">
-      <small v-if="approved || situation == 'approved'">Ainda não foi completamente avaliado pelo(a) professor(a)</small>
+      <small v-if="situation !== 'approved'">Ainda não foi completamente avaliado pelo(a) professor(a)</small>
     </v-flex>
   </v-card>
 </template>

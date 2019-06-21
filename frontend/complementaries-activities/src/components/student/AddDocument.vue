@@ -188,7 +188,7 @@ export default {
     },
     getSituation (idStudent) {
       StudentService.getSituation(idStudent)
-        .then((res) => res.data)
+        .then((res) => res.data.situation)
         .then((situation) => this.situation = situation)
     },
     changeIdForNames (document) {
@@ -243,7 +243,6 @@ export default {
         formData.append('file', this.docFile)
         DocumentService.save(formData)
           .then((res) => {
-            //this.load = false
             this.getAlert('success', 'carregado com sucesso!')
           })
           .catch((err) => {

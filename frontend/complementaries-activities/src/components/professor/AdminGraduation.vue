@@ -340,4 +340,7 @@ export default {
 .title {
   background-color: white;
 }
+.alert {
+  width: 100%;
+}
 </style>

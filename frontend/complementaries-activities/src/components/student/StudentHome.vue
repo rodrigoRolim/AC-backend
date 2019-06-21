@@ -31,8 +31,8 @@
         <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
       </v-toolbar-items>
     </ac-navbar>
-    <student-progress v-if="situation && documents.length > 0" :documents="documents" :situation="situation"></student-progress>
-    <student-documents v-if="documents.length > 0" :documents="documents" :situation="situation"></student-documents>
+    <student-progress v-if="situation && documents.length >= 0" :documents="documents" :situation="situation"></student-progress>
+    <student-documents v-if="documents.length >= 0" :documents="documents" :situation="situation"></student-documents>
   </v-app>
 </template>
 
@@ -58,7 +58,6 @@ export default {
     }
   },
   created () {
-    console.log(this.documents && this.situation)
     this.showMask = true
     this.initialize(JSON.parse(localStorage.getItem('user'))._id)
   },
@@ -70,7 +69,7 @@ export default {
     },
     getSituation (idStudent) {
       StudentService.getSituation(idStudent)
-        .then((res) => res.data)
+        .then((res) => res.data.situation)
         .then((situation) => this.situation = situation)
         .catch((err) => console.log(err))
     },

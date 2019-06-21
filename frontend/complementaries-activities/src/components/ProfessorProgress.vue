@@ -80,6 +80,7 @@ export default {
         StudentService.setSituation(idStudent, newSituation)
         .then((res) => res.status)
         .then((status) => this.newsituation = 'approved')
+        .then(() => this.$emit('reload', true))
         .then(() => this.approved = true)
         .catch((err) => this.getAlert('erro', 'ocorreu um erro, tente mais uma vez'))
       } else {

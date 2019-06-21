@@ -132,7 +132,7 @@ export default {
           .then((document) => this.updateDocument(document))
           .catch((err) => console.log(err))
       } else {
-        this.getAlert()
+        this.getAlert('info', 'aluno já aprovado ou lançado')
       }
     },
     getAlert () {
@@ -163,8 +163,10 @@ export default {
 
         new_raw = boardItem.raw - raw
         percent = (boardItem.raw - raw)*100/boardItem.min
+      } else if (this.oldEvaluaton !== 'none' && boardItem.raw > 0 && this.newEvaluation == 'none') {
+        new_raw = boardItem.raw - raw
+        percent = (boardItem.raw - raw)*100/boardItem.min
       } else {
-
         new_raw = boardItem.raw
         percent = boardItem.percent
       }

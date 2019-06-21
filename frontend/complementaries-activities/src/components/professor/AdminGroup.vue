@@ -242,7 +242,12 @@ import GroupService from '@/services/Group.js'
     },
     methods: {
       reloadTable (value) {
-        this.initializeGroup()
+        if (value) {
+          this.getAlert('success', 'Item adicionado com sucesso')
+          this.initializeGroup()
+        } else {
+           this.getAlert('error', 'não foi possível adicionar o item')
+        }
       },
       initializeGroup () {
         GroupService.readAll()
@@ -266,7 +271,7 @@ import GroupService from '@/services/Group.js'
       },
 
       deleteItem (item) {
-        const response = confirm('Are you sure you want to delete this item?')
+        const response = confirm('Tem certeza disso?')
         if (response) {
           GroupService.deleteGroup(item._id)
           .then((res) => {

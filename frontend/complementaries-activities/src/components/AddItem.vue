@@ -45,23 +45,10 @@ export default {
   methods: {
     save () {
       GroupService.addItemInGroup(this.group._id, this.item)
-        .then((res) => {
-          console.log(res)
-          if (res.status == 201) {
-            alert('item adicionado')
-            this.$emit('refresh', true)
-          }
-        })
+        .then((res) => this.$emit('refresh', true))
+        .catch((err) => this.$emit('refresh', false))
       this.dialog = false
-    },
-    updatingProfessor (professor, degId, profId) {
-      professor.graduation = degId
-      GroupService.updatingProfessorResponsible(profId, professor)
-        .then((res) => {
-          console.log(res)
-        })
     }
-  
   }
 }
 </script>
