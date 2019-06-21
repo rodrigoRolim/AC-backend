@@ -3,8 +3,10 @@ import StudentController from '../../../src/controllers/student'
 import Student from  '../../../src/models/student'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import mongoose from 'mongoose'
 
 describe('Management student', () => {
+  const castingId = mongoose.Types
   const defaultStudent = {
     _id: '12345',
     ra: 'a12345',
@@ -143,12 +145,13 @@ describe('Management student', () => {
       class fakeStudent {
         static aggregate () {}
       }
-
+      castingId.ObjectId = sinon.stub()
+      castingId.ObjectId.withArgs(fakeidDepartment).returns(fakeidDepartment)
       const fakeStudentAggregateStub = sinon.stub(fakeStudent, 'aggregate')
       fakeStudentAggregateStub.withArgs([
         {
             "$match": {
-                "department": request.params.id
+                "department": fakeidDepartment
                 }
             },
             { 
@@ -166,12 +169,13 @@ describe('Management student', () => {
             }, 
             {
                 "$project": {
-                    "documents": 0
+                    "documents": 0,
+                    "password": 0
                 }
             }
         ]).resolves([defaultStudent])
 
-      const studentController = new StudentController(fakeStudent)
+      const studentController = new StudentController(fakeStudent, jwt, bcrypt.compare, castingId)
       
       return studentController.getStudentsOfDepartment(request, response)
         .then(() => {
@@ -193,7 +197,9 @@ describe('Management student', () => {
         class fakeStudent {
           static aggregate () {}
         }
-        
+
+        castingId.ObjectId = sinon.stub()
+        castingId.ObjectId.withArgs(fakeidDepartment).returns(fakeidDepartment)
         response.status.withArgs(400).returns(response)
 
         const fakeStudentAggregateStub = sinon.stub(fakeStudent, 'aggregate')
@@ -218,12 +224,13 @@ describe('Management student', () => {
               }, 
               {
                   "$project": {
-                      "documents": 0
+                      "documents": 0,
+                      "password": 0
                   }
               }
           ]).rejects({ message: 'Error' })
   
-        const studentController = new StudentController(fakeStudent)
+        const studentController = new StudentController(fakeStudent, jwt, bcrypt.compare, castingId)
         
         return studentController.getStudentsOfDepartment(request, response)
           .then(() => {
@@ -237,7 +244,7 @@ describe('Management student', () => {
       const fakeidstudent = 'fake-id-student'
       const newsituation = 'new situation'
 
-      const request = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
+      const request = Object.assign({}, { params: { id: fakeidstudent } }, { body: { situation: newsituation } })
       const response = {
         sendStatus: sinon.spy()
       }
@@ -246,7 +253,7 @@ describe('Management student', () => {
         static findOneAndUpdate () {}
       }
       const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: request.body } }).resolves()
+      fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: newsituation } }).resolves()
       const studentController = new StudentController(fakeStudent)
 
       return studentController.setSituation(request, response)
@@ -259,7 +266,7 @@ describe('Management student', () => {
         const fakeidstudent = 'fake-id-student'
         const newsituation = 'new situation'
   
-        const request = Object.assign({}, { params: { id: fakeidstudent } }, { body: newsituation })
+        const request = Object.assign({}, { params: { id: fakeidstudent } }, { body: { situation: newsituation } })
         const response = {
           send: sinon.spy(),
           status: sinon.stub()
@@ -271,7 +278,7 @@ describe('Management student', () => {
           static findOneAndUpdate () {}
         }
         const fakeStudentUpdateStub = sinon.stub(fakeStudent, 'findOneAndUpdate')
-        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: request.body } }).rejects({ message: 'Error' })
+        fakeStudentUpdateStub.withArgs({ _id: fakeidstudent }, { $set:{ situation: newsituation } }).rejects({ message: 'Error' })
         const studentController = new StudentController(fakeStudent)
   
         return studentController.setSituation(request, response)
@@ -281,11 +288,11 @@ describe('Management student', () => {
       })
     })
   })
-  describe('getSituation() getting situaition of student', () => {
+  describe('getSituation() getting situation of student', () => {
     it('should return studend situation', () => {
       const fakeidstudent = 'fake-id-student'
       const situation = 'situation'
-
+      const studentReturned = Object.assign({}, { situation: 'situation' })
       const request = { params: { id: fakeidstudent } }
       const response = {
         send: sinon.spy()
@@ -295,10 +302,10 @@ describe('Management student', () => {
         static findOne () {}
       }
       const fakeStudentFindOneStub = sinon.stub(fakeStudent, 'findOne')
-      fakeStudentFindOneStub.withArgs({ _id: fakeidstudent }).resolves(situation)
+      fakeStudentFindOneStub.withArgs({ _id: fakeidstudent }).resolves(studentReturned)
       const studentController = new StudentController(fakeStudent)
 
-      return studentController.setSituation(request, response)
+      return studentController.getSituation(request, response)
         .then(() => {
           sinon.assert.calledWith(response.send, 'situation')
         })
@@ -322,7 +329,7 @@ describe('Management student', () => {
         fakeStudentFindOneStub.withArgs({ _id: fakeidstudent }).rejects({ message: 'Error' })
         const studentController = new StudentController(fakeStudent)
   
-        return studentController.setSituation(request, response)
+        return studentController.getSituation(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
@@ -330,9 +337,9 @@ describe('Management student', () => {
     })
   })
   describe('launchAll (): launch students', () => {
-    it('should update situation of studante to launched', () => {
+    it('should update situation of student to launched', () => {
       const ras = ['ra1', 'ra2', 'etc']
-      const request = { body: ras }
+      const request = { body: { ras: ras } }
       const response = {
         sendStatus: sinon.spy()
       }
@@ -340,7 +347,8 @@ describe('Management student', () => {
         static update () {}
       }
       const updateStub = sinon.stub(fakeStudent, 'update')
-      updateStub.withArgs({ ra: { $in: ras } }, { $set: { situation: 'launched' } }, { multi: true }).resolves()
+      updateStub.withArgs({ ra: { $in: ras } }, { $set: { situation: 'launched' } }, 
+                          { multi: true }).resolves()
 
       const studentController = new StudentController(fakeStudent)
 
@@ -352,7 +360,7 @@ describe('Management student', () => {
     context('when an error occurs', () => {
       it('should return 422 as status code', () => {
         const ras = ['ra1', 'ra2', 'etc']
-        const request = { body: { ras } }
+        const request = { body: { ras: ras } }
         const response = {
           send: sinon.spy(),
           status: sinon.stub()
@@ -363,7 +371,7 @@ describe('Management student', () => {
 
         response.status.withArgs(422).returns(response)
         const updateStub = sinon.stub(fakeStudent, 'update')
-        updateStub.withArgs({ ra: { $in: ras } }, { $set: { situation: 'launched' } }, { multi: true }).rejects({ message: 'Erro' })
+        updateStub.withArgs({ ra: { $in: ras } }, { $set: { situation: 'launched' } }, { multi: true }).rejects({ message: 'Error' })
 
         const studentController = new StudentController(fakeStudent)
 
