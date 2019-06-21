@@ -18,8 +18,8 @@ describe('Router: document', () => {
     path: 'test.pdf',
     evaluation: 'none',
     sent: false,
-    group: 'name group',
-    item: 'name item',
+    group: '5d0d17e9bd5e3c152988a4f3',
+    item: '5d0d17f8f936dbf6d76dbaac',
     student: '5ce30224b1bcd6cda1addc58'
   }
   const defaultDocumentSent = {
@@ -28,8 +28,8 @@ describe('Router: document', () => {
     path: 'test2.pdf',
     evaluation: 'none',
     sent: true,
-    group: 'name group',
-    item: 'name item',
+    group: '5d0d17e9bd5e3c152988a4f3',
+    item: '5d0d17e9bd5e3c152988a4f3',
     student: '5ce30224b1bcd6cda1addc58'
   }
   before(() => {
@@ -69,9 +69,11 @@ describe('Router: document', () => {
         const defaultDocumentResponse = Object.assign({}, 
           {_id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
         request
-          .get(`/document/all${customStudentId}`)
+          .get(`/document/all/${customStudentId}`)
           .set('authorization', token)
           .end((err, res) => {
+            console.log(res.body)
+            console.log(defaultDocumentResponse)
             expect(res.body).to.eql([defaultDocumentResponse])
             done(err)
           })
@@ -97,7 +99,7 @@ describe('Router: document', () => {
         .get(`/document/uploads/${pathFile}`)
         .set('authorization', token)
         .end((err, res) => {
-          expect(res.status).to.eql(204)
+          expect(res.status).to.eql(200)
           done(err)
         })
     })
@@ -106,8 +108,8 @@ describe('Router: document', () => {
     it('should return document', done => {
       const customId = "5ce98fb42552b2f933f5e47a"
       request
-        .set('authorization', token)
         .get(`/document/${customId}`)
+        .set('authorization', token)
         .end((err, res) => {
           expect(res.body).to.eql([defaultDocument])
           done(err)
