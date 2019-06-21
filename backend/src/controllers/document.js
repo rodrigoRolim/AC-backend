@@ -35,10 +35,16 @@ class DocumentController {
       .catch((err) => res.status(400).send(err.message))
   }
   readAllSents (req, res) {
-
+    console.log('porraaaaaa')
     return this.Document.find({ student: req.params.id, sent: true })
-      .then((documents) => res.send(documents))
-      .catch((err) => res.status(400).send(err.message))
+      .then((documents) => {
+        console.log('veio aqui')
+        res.send(documents)
+      })
+      .catch((err) => {
+        console.log('foi aqui')
+        res.status(400).send(err.message)
+      })
   }
   getFile (req, res) {
 
@@ -68,13 +74,10 @@ class DocumentController {
       .catch((err) => res.status(422).send(err.message))
   }
   sent (req, res) {
-    // pusher: o canal o usado é o id de estudante
+
     return this.Document.updateMany({ student: req.params.id, $or: [ { sent: true }, { sent: false } ], 
       evaluation: { $not: /aproved/ } }, { $set: { evaluation: 'none', sent: true } })
-      .then(() => {
-        // this.subscription.sendStudent(req.params.id)
-        res.sendStatus(200)
-      })  
+      .then(() => res.sendStatus(200))  
       .catch((err) => res.status(400).send(err.message))
   }
   /* findAndRemoveAllDocumenByStudent (req, res) {
