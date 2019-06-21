@@ -28,7 +28,7 @@ class ProfessorController {
   }
   create (req, res) {
     const professor = new this.Professor(req.body)
-    console.log(req.body)
+
     return professor.save()
       .then(() => {
         res.status(201).send(professor)
