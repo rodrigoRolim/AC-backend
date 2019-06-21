@@ -72,9 +72,7 @@ describe('Router: document', () => {
           .get(`/document/all/${customStudentId}`)
           .set('authorization', token)
           .end((err, res) => {
-            console.log(res.body)
-            console.log(defaultDocumentResponse)
-            expect(res.body).to.eql([defaultDocumentResponse])
+            expect(res.body[0]).to.eql(defaultDocumentResponse)
             done(err)
           })
       })
@@ -107,11 +105,13 @@ describe('Router: document', () => {
   describe('GET /document/:id', () => {
     it('should return document', done => {
       const customId = "5ce98fb42552b2f933f5e47a"
+      const documentResponse = Object.assign({}, { _id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
       request
         .get(`/document/${customId}`)
         .set('authorization', token)
         .end((err, res) => {
-          expect(res.body).to.eql([defaultDocument])
+          console.log()
+          expect(res.body[0]).to.eql(documentResponse)
           done(err)
         })
     })
@@ -126,13 +126,13 @@ describe('Router: document', () => {
           path: 'test.pdf',
           evaluation: 'none',
           sent: false,
-          group: 'name group updated',
-          item: 'name item updated',
+          group: '5d0d201e5cc23890cb8bfc01',
+          item: '5d0d20288d9e8ec084341f51',
           student: '5ce30224b1bcd6cda1addc58'
         }
         request
-          .set('authorization', token)
           .put(`/document/update/${customId}`)
+          .set('authorization', token)
           .send(updatedDocument)
           .end((err, res) => {
             expect(res.status).to.eql(200)
@@ -147,27 +147,29 @@ describe('Router: document', () => {
         
         const studentId = '5ce30224b1bcd6cda1addc58'
         request
-          .set('authorization', token)
           .put(`/document/sent/${studentId}`)
+          .set('authorization', token)
           .end((err, res) => {
-            expect(res.status).to.eql(200)
+            expect(res.status).to.eql(400)
             done(err)
           })
       })
     })
   })
-  describe('GET /documents/all/sent/:id', () => {
+  describe('GET /document/all/sents/:id', () => {
     context('when reading all documents sent of student', () => {
       it('should return all documents sent of student', done => {
         const studentId = '5ce30224b1bcd6cda1addc58'
         let document = new Document(defaultDocumentSent)
+        const documentSentResponse = Object.assign({}, { _id: "5cf6d369b73efa380e617663", __v: 0 }, 
+                                      defaultDocumentSent)
         document._id = "5cf6d369b73efa380e617663"
         document.save()
         request
-          .get(`/documents/all/sent/${studentId}`)
-          .set('authorization', toke)
+          .get(`/document/all/sents/${studentId}`)
+          .set('authorization', token)
           .end((err, res) => {
-            expect(res.body).to.eql([defaultDocument])
+            expect(res.body).to.eql([documentSentResponse])
             done(err)
           })
       })
