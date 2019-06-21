@@ -1,4 +1,5 @@
 import Student from "../../../src/models/student"
+import Document from "../../../src/models/document"
 import jwt from 'jsonwebtoken'
 
 describe('Route: Student', () => {
@@ -12,8 +13,8 @@ describe('Route: Student', () => {
     ra: 'a12345',
     name: 'name student',
     email: 'name@mail',
-    graduation: '5cd60a0312c3e687ea34667f',
-    user_type: 'aluno',
+    graduation: 'engenharia de software',
+    type_user: 'aluno',
     situation: 'debting',
     department: '5cf01570ec365a1bcccc7b58',
     password: '12345'
@@ -23,9 +24,10 @@ describe('Route: Student', () => {
     name: 'name student again',
     email: 'nameagain@mail',
     graduation: 'engenharia de software',
-    user_type: 'aluno',
+    type_user: 'aluno',
     department: '5cf01570ec365a1bcccc7b58',
-    password: '12345'
+    password: '12345',
+    situation: 'debting',
   }
   const expectedSaveStudent = {
     _id: customId,
@@ -33,18 +35,19 @@ describe('Route: Student', () => {
     name: 'name student again',
     email: 'nameagain@mail',
     department: '5cf01570ec365a1bcccc7b58',
-    user_type: 'aluno',
+    type_user: 'aluno',
     graduation: 'engenharia de software',
+    situation: 'debting'
   }
   // salvá-lo também para o teste dá certo
-  const newDocument = {
+  const defaultDocument = {
     name: 'document name',
     score: 10,
-    path: 'test.pdf',
+    path: 'test2.pdf',
     evaluation: 'none',
     sent: true,
-    group: 'name group',
-    item: 'name item',
+    group: '5d0d17e9bd5e3c152988a4f3',
+    item: '5d0d17e9bd5e3c152988a4f3',
     student: defaultId
   }
   before(() => {
@@ -103,7 +106,8 @@ describe('Route: Student', () => {
       it('should return 200 as status code', done => {
         const ras = ['a12345']
         request
-          .post('/student/launching/all')
+          .post('/student/launch/all')
+          .set('authorization', token)
           .send(ras)
           .end((err, res) => {
             expect(res.status).to.eql(200)
@@ -115,14 +119,26 @@ describe('Route: Student', () => {
   describe('GET /student/all/department/:id', () => {
     context('when reading all students of especified department', () => {
       it('should return all students from especified department', done => {
-        
-        const idDepartment = '5cf01570ec365a1bcccc7b58'
+        const studentResp = {
+          ra: 'a12345',
+          name: 'name student',
+          email: 'name@mail',
+          graduation: 'engenharia de software',
+          type_user: 'aluno',
+          situation: 'debting',
+          department: '5cf01570ec365a1bcccc7b58'
+        }
+        let document = new Document(defaultDocument)
+        document.save()
 
-        resquest
-          .set('authorization', token)
+        const idDepartment = '5cf01570ec365a1bcccc7b58'
+        const defautlStudentResponse = Object.assign({}, { _id: '56cb91bdc3464f14678934ca', __v: 0 },
+          studentResp)
+        request
           .get(`/student/all/department/${idDepartment}`)
+          .set('authorization', token)
           .end((err, res) => {
-            expect(res.body).to.eql([defaultStudent])
+            expect(res.body).to.eql([defautlStudentResponse])
             done(err)
           })
       })
@@ -134,11 +150,11 @@ describe('Route: Student', () => {
         
         const idStudent = '56cb91bdc3464f14678934ca'
 
-        resquest
-          .set('authorization', token)
+        request
           .get(`/student/situation/${idStudent}`)
+          .set('authorization', token)
           .end((err, res) => {
-            expect(res.body).to.eql(defaultStudent.situation)
+            expect(res.body.situation).to.eql(defaultStudent.situation)
             done(err)
           })
       })
@@ -147,14 +163,24 @@ describe('Route: Student', () => {
   describe('GET /student/:id', () => {
     context('when getting student by id', () => {
       it('should return one student', done => {
-        
+        const studentResp = {
+          ra: 'a12345',
+          name: 'name student',
+          email: 'name@mail',
+          graduation: 'engenharia de software',
+          type_user: 'aluno',
+          situation: 'debting',
+          department: '5cf01570ec365a1bcccc7b58'
+        }
+        const defautlStudentResponse = Object.assign({}, { _id: '56cb91bdc3464f14678934ca' },
+        studentResp)
         const idStudent = '56cb91bdc3464f14678934ca'
 
-        resquest
+        request
+          .get(`/student/${idStudent}`)
           .set('authorization', token)
-          .get(`/student/situation/${idStudent}`)
           .end((err, res) => {
-            expect(res.body).to.eql([defaultStudent])
+            expect(res.body).to.eql([defautlStudentResponse])
             done(err)
           })
       })
@@ -164,8 +190,8 @@ describe('Route: Student', () => {
     context('when updating situation of student from debting for approved', () => {
       it('should return 200 as status code', done => {
         request
-          .set('authorization', token)
           .put(`/student/update/situation/${defaultId }`)
+          .set('authorization', token)
           .send({ situation: 'approved'})
           .end((err, res) => {
             expect(res.status).to.eql(200)
@@ -178,8 +204,8 @@ describe('Route: Student', () => {
     context('when updating situation of student from debting for approved', () => {
       it('should return 200 as status code', done => {
         request
-          .set('authorization', token)
           .put(`/student/update/${defaultId }`)
+          .set('authorization', token)
           .send(defaultNewStudent)
           .end((err, res) => {
             expect(res.status).to.eql(200)
@@ -192,8 +218,8 @@ describe('Route: Student', () => {
     context('when deleting student', () => {
       it('should deleting student and return 204 as status code', done => {
         request
-          .set('authorization', token)
           .delete(`/student/delete/${defaultId }`)
+          .set('authorization', token)
           .end((err, res) => {
             expect(res.status).to.eql(204)
             done(err)

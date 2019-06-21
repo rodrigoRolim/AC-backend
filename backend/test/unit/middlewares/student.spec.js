@@ -1,4 +1,4 @@
-import sinon from 'sinon'
+/* import sinon from 'sinon'
 import StudentMiddle from '../../../src/middleware/student'
 
 describe('isSent() of document middleware', () => {
@@ -24,4 +24,4 @@ describe('isSent() of document middleware', () => {
       StudentMiddle.approved(reqFake, resFake, done)
     })
   })
-})
+}) */

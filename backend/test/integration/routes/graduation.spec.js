@@ -8,15 +8,13 @@ describe('Routes: Graduation', () => {
   })
   const defaultId = '5cd60a0312c3e687ea34667f'
   const defaultGraduation = {
-    _id: '5cd60a0312c3e687ea34667f',
     __v: 0,
     name: 'engenharia de software',
     department: '5cd5b4d3939ac63f4957dce7'
   }
-  const newDepartment = {
-    _id: '5cf014909c0fb2a9f96747b0',
+  const newGraduation = {
     __v: 0,
-    name: 'engenharia de software',
+    name: 'engenharia da computação',
     department: '5cd5b4d3939ac63f4957dce7'
   }
   const listGraduations = {
@@ -33,19 +31,21 @@ describe('Routes: Graduation', () => {
   })
   beforeEach(() => {
     let graduation =  new Graduation(defaultGraduation)
+    graduation._id = '5cd60a0312c3e687ea34667f'
     Graduation.deleteMany({})
     return graduation.save()
   })
 
   afterEach(() => Graduation.deleteMany({}))
   
-  describe('POST /admin/home', () => {
+  describe('POST /graduation/add', () => {
     it('should return added last graduation', done => {
       request
       .post('/graduation/add')
       .set('authorization', token)
-      .send(newDepartment)
+      .send(newGraduation)
       .end((err, res) => {
+        console.log(res.body)
         expect(res.status).to.be.eql(201)
         done(err)
       })
@@ -79,7 +79,7 @@ describe('Routes: Graduation', () => {
       .put(`/graduation/update/${listGraduations._id}`)
       .set('authorization', token)
       .end((err, res) => {
-        expect(res.status).to.be.eql(400)
+        expect(res.status).to.be.eql(201)
         done(err)
       })
     })

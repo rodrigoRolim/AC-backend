@@ -20,8 +20,6 @@ describe('Management groups', () => {
     items: []
   }
   const defaultGroupWithItemCreate = {
-    __v: 0,
-    _id: '56cb91bdc3464f14678934ca',
     name: 'Default group 3',
     description: 'group description',
     items: []
@@ -46,7 +44,7 @@ describe('Management groups', () => {
         request
         .post('/group/add')
         .set('authorization', token)
-        .send(defaultGroupWithItem)
+        .send(defaultGroupWithItemCreate)
         .end((err, res) => {
           expect(res.status).to.eql(201)
           done(err)
@@ -83,13 +81,16 @@ describe('Management groups', () => {
     })
   })
   describe('GET /group/all', () => {
+    const defaultGroupItemResponse = Object.assign({}, 
+        { _id: "56cb91bdc3464f14678934ca", __v: 0}, defaultGroupWithItem)
     context('when get all groups', () => {
       it('should return all groups', done => {
+       
         request
         .get('/group/all')
         .set(`authorization`, token)
         .end((err, res) => {
-          expect(res.body).to.eql([defaultGroupWithItemCreate])
+          expect(res.body).to.eql([defaultGroupItemResponse])
           done(err)
         })
       })
@@ -101,7 +102,7 @@ describe('Management groups', () => {
           .get(`/group/${name}`)
           .set('authorization', token)
           .end((err, res) => {
-            expect(res.body).to.eql(defaultGroupWithItem)
+            expect(res.body).to.eql([defaultGroupItemResponse])
             done(err)
           })
       })

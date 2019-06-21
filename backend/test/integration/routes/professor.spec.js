@@ -121,17 +121,17 @@ describe('Routes: professor', () => {
       });
     });
   })
-  describe('GET /student/:id', () => {
+  describe('GET /professor/:id', () => {
     context('when getting professor by id', () => {
       it('should return one professor', done => {
         
         const idProfessor = '56cb91bdc3464f14678934ca'
 
-        resquest
-          .set('authorization', token)
+        request
           .get(`/professor/${idProfessor}`)
+          .set('authorization', token)
           .end((err, res) => {
-            expect(res.body).to.eql([defaultProfessor])
+            expect(res.body).to.eql([expectedProfessorUser])
             done(err)
           })
       })
@@ -141,8 +141,8 @@ describe('Routes: professor', () => {
     context('when deleting professor', () => {
       it('should deleting professor and return 204 as status code', done => {
         request
-          .set('authorization', token)
           .delete(`/professor/delete/${defaultId }`)
+          .set('authorization', token)
           .end((err, res) => {
             expect(res.status).to.eql(204)
             done(err)
