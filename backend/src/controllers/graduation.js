@@ -6,10 +6,7 @@ class CourseController {
     const graduation = new this.Graduation(req.body)
     return graduation.save()
       .then(() => res.status(201).send(graduation))
-      .catch(err => {
-        console.log(err.message)
-        res.status(400).send(err.message)
-      })
+      .catch(err => res.status(400).send(err.message))
   }
   readAll (req, res) {
     return this.Graduation.aggregate([
