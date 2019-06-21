@@ -52,8 +52,7 @@ schema.set('toJSON', {
     graduation: ret.graduation,
     department: ret.department,
     type_user: ret.type_user,
-    situation: ret.situation,
-    documents: ret.documents
+    situation: ret.situation
   })
 })
 schema.pre('save', function (next) {
