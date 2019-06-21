@@ -259,7 +259,7 @@ describe('Management professor', () => {
       Professor.find = sinon.stub();
       Professor.find.withArgs({ _id: fakeId }).resolves([defaultProfessor]);
 
-      const professorController = new ProfessorController(professorController)
+      const professorController = new ProfessorController(Professor)
 
       return professorController.getById(request, response)
         .then(() => {
@@ -279,7 +279,7 @@ describe('Management professor', () => {
           status: sinon.stub()
         };
 
-        Professsor.find = sinon.stub();
+        Professor.find = sinon.stub();
         Professor.find.withArgs({ _id: fakeId }).rejects({ message: 'Error' });
         
         response.status.withArgs(422).returns(response)
