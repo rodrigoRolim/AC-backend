@@ -7,10 +7,7 @@ class DepartmentController {
 
     return department.save() 
       .then(() => res.status(201).send(department))
-      .catch((err) => {
-        console.log(err.message)
-        res.status(400).send(err.message)
-      })
+      .catch((err) => res.status(400).send(err.message))
   }
   readAll (req, res) {
     return this.Department.find({})
@@ -19,7 +16,7 @@ class DepartmentController {
   }
   delete (req, res) {
     const { params: { id }} = req
-    console.log(id)
+
     return this.Department.deleteOne({ _id: id})
       .then(() => {
 
@@ -29,8 +26,6 @@ class DepartmentController {
   }
   update (req, res) {
     const { params: { id }} = req
-    console.log(id)
-    console.log(req.body)
     return this.Department.update({ _id: id }, req.body)
       .then((resp) => res.status(201).send(resp))
       .catch((err) => res.status(422).send(err.message))
