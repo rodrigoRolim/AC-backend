@@ -465,7 +465,7 @@ describe('controller: groups and items', () => {
   
         const groupItemsController = new GroupItemsController(fakeGroupItem)
   
-        return groupItemsController.getById(request, response)
+        return groupItemsController.getByName(request, response)
           .then(() => {
             sinon.assert.calledWith(response.send, 'Error')
           })
