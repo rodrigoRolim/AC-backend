@@ -81,7 +81,7 @@ class StudentController {
   getSituation (req, res) {
 
     return this.Student.findOne({ _id: req.params.id })
-      .then((student) => res.send(student.situation))
+      .then((student) => res.send({ situation: student.situation }))
       .catch((err) => res.status(400).send(err.message))
   }
   launchAll (req, res) {
