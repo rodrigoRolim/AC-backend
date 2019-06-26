@@ -189,6 +189,8 @@ router.beforeEach((to, from, next) => {
         } else {
           next({ name: 'Home' })
         }
+      } else {
+        next({})
       }
     }
   } else if (to.matched.some(record => record.meta.guest)) {
