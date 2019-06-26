@@ -55,7 +55,11 @@ let router = new Router({
     {
       path: '/professor/aluno/documentos/:id',
       name: 'ProfessorDocuments',
-      component: ProfessorDocuments
+      component: ProfessorDocuments,
+      meta: {
+        requiresAuth: true,
+        is_professor: true
+      }
     },
     {
       path: '/admin/professores',
@@ -131,7 +135,10 @@ let router = new Router({
     {
       path: '/admin/departamentos',
       component: AdminDepartment,
-      is_professor: true
+      meta: {
+        requiresAuth: true,
+        is_professor: true
+      }
     },
     {
       path: '/denied-access',
@@ -168,14 +175,12 @@ router.beforeEach((to, from, next) => {
     } else {
       if (to.matched.some(record => record.meta.is_professor)) {
         if (typeof user !== null && user.type_user == 'professor') {
-          console.log("aqui")
           next()
         } else {
-          console.log("nao")
           next({ name: 'Home' })
         }
       } else {
-        next()
+        next({})
       }
       if (to.matched.some(record => record.meta.is_student)) {
         
