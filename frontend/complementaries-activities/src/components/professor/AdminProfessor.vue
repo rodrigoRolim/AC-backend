@@ -57,44 +57,68 @@
           <template v-slot:activator="{ on }">
             <v-btn color="secondary" depressed dark class="mb-2" v-on="on">Novo professor</v-btn>
           </template>
-          <v-card>
+          <v-form ref="form">
+            <v-card>
             <v-card-title>
               <span class="headline">Novo professor</span>
             </v-card-title>
-
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex md12 sm12>
-                    <v-text-field v-model="editedItem.name" label="Nome do professor"></v-text-field>
-                  </v-flex>
-                  <v-flex md12 sm12>
-                    <v-text-field v-model="editedItem.siape" label="Siape"></v-text-field>
-                  </v-flex>
-                  <v-flex md12 sm12>
-                    <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
-                  </v-flex>
-                   <v-flex md12 sm12>
-                     <v-select
-                      :items="departmentNames"
-                      label="departamento responsável*"
-                      v-model="selectedName"
-                      required
-                     ></v-select>
-                  </v-flex>
-                   <v-flex md12 sm12>
-                    <v-text-field type="password" v-model="editedItem.password" label="Senha"></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-            </v-card-actions>
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-flex md12 sm12>
+                      <v-text-field 
+                        v-model="editedItem.name" 
+                        label="Nome do professor"
+                        :rules="[() => !!editedItem.name || 'Este campo é obrigatório']"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex md12 sm12>
+                      <v-text-field
+                        v-model="editedItem.siape" 
+                        label="Siape"
+                        :rules="[() => !!editedItem.siape || 'Este campo é obrigatório']"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex md12 sm12>
+                      <v-text-field
+                        v-model="editedItem.email" 
+                        label="Email"
+                        :rules="[rules.required, rules.email]"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex md12 sm12>
+                      <v-select
+                        :items="departmentNames"
+                        :rules="[rules.required]"
+                        label="departamento responsável*"
+                        v-model="editedItem.department"
+                        required
+                      ></v-select>
+                    </v-flex>
+                    <v-flex md12 sm12>
+                      <v-text-field 
+                        type="password" 
+                        v-model="editedItem.password" 
+                        label="Senha"
+                        hint="deve ter pelo menos 8 caracteres"
+                        :append-icon="show ? 'visibility' : 'visibility_off'"
+                        :rules="[rules.required, rules.min]"
+                        :type="show ? 'text' : 'password'"
+                        class="input-group--focused"
+                        @click:append="show = !show"
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                <v-btn color="blue darken-1" flat @click="save" :disabled="validated">Save</v-btn>
+              </v-card-actions>
+            
           </v-card>
+          </v-form>
         </v-dialog>
       </v-toolbar>
       <v-card>
@@ -120,6 +144,7 @@
           <td class="text-md-left">{{ props.item.department }}</td>
           <td class="justify-center layout px-0">
             <v-icon
+              v-if="user._id == props.item._id"
               small
               class="mr-2"
               @click="editItem(props.item)"
@@ -127,6 +152,7 @@
               edit
             </v-icon>
             <v-icon
+              v-if="user._id == props.item._id"
               small
               class="mr-2"
               @click="deleteItem(props.item)"
@@ -144,7 +170,7 @@
           </v-alert>
         </template>
         <template v-slot:no-data>
-          <v-alert :value="true" color="error" icon="warning">
+          <v-alert :value="true" color="#78909C" icon="warning">
             nenhum professor cadastrado
           </v-alert>
         </template>
@@ -163,6 +189,7 @@ import AcNavbar from '../AcNavbar'
   export default {
     components: { AcNavbar, MaskLoad },
     data: () => ({
+      show: false,
       showMask: false,
       selectedName: '',
       dialog: false,
@@ -170,6 +197,14 @@ import AcNavbar from '../AcNavbar'
       message: '',
       typeAlert: 'error',
       showAlert: false,
+      rules: {
+        required: value => !!value || 'Required',
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'Invalid e-mail.'
+        },
+        min: value => typeof value == 'undefined' || value.length >= 8 || 'Min 8 characters'
+      },
       headers: [
         {
           text: 'nome (professor responsável)',
@@ -181,6 +216,7 @@ import AcNavbar from '../AcNavbar'
         { text: 'departamento (responsável)', value: 'curso', sortable: false, align: 'left' },
         { text: 'Actions', value: 'name', sortable: false, align: 'left' }
       ],
+      user: JSON.parse(localStorage.getItem('user')),
       departments: [],
       departmentNames: [],
       professors: [],
@@ -204,6 +240,13 @@ import AcNavbar from '../AcNavbar'
     computed: {
       formTitle () {
         return this.editedIndex === -1 ? 'Novo professor' : 'Editar professor'
+      },
+      validated () {
+        return this.editedItem.name == '' ||  
+               this.editedItem.email == '' || 
+               this.editedItem.siape == '' ||
+               this.editedItem.department == '' ||
+               this.editedItem.password == '' 
       }
     },
 
@@ -261,11 +304,13 @@ import AcNavbar from '../AcNavbar'
             .then((res) => res.data)
             .then(() => this.professors.splice(index, 1))
             .then(() => this.getAlert('success', 'excluído com sucesso'))
+            .then(() => this.logout())
             .catch((err) => this.getAlert('error', 'não foi possível excluir'))
         }
       },
 
       close () {
+        this.reset()
         this.dialog = false
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
@@ -274,11 +319,12 @@ import AcNavbar from '../AcNavbar'
       },
 
       save () {
-        this.editedItem.department = this.selectedName
+        // this.editedItem.department = this.selectedName
         if (this.editedIndex > -1) {
           this.replaceNameToId()
           const professorUpdate = { 
             name: this.editedItem.name,
+            siape: this.editedItem.siape,
             email: this.editedItem.email,
             password: this.editedItem.password,                        
             department: this.editedItem.department,
@@ -288,7 +334,7 @@ import AcNavbar from '../AcNavbar'
             .then((res) => this.getAlert('success', 'atualizado com sucesso'))
             .then(() => this.replaceIdToName(this.editedItem))
             .then((professor) => Object.assign(this.professors[this.editedIndex], professor))
-            .catch((err) => this.getAlert('error', 'ocorreu um error'))
+            .catch((err) => this.getAlert('error', 'não foi possível atualizar agora'))
           
         } else {
           this.replaceNameToId()
@@ -300,7 +346,7 @@ import AcNavbar from '../AcNavbar'
               this.getAlert('error', err.response.data)
             })
         }
-        this.close()
+        // this.close()
       },
       replaceNameToId () {
         if (this.departments.length > 0) {
@@ -316,24 +362,16 @@ import AcNavbar from '../AcNavbar'
       },
       replaceIdAllToName (professors) {
 
-        console.log(professors)
         let newProfessors = []
-        //if (typeof professors.department != 'undefined') {
-           console.log('veio aqui')
            professors.map((professor) => {
-             console.log(professor)
-             console.log(this.departments)
              if (typeof professor.department != 'undefined') {
               const department = this.departments.filter((dep) => dep._id == professor.department)
-              console.log(department)
               professor.department = department[0].name
              }
 
             newProfessors.push(professor)
           })
-        //}
-       console.log(newProfessors)
-        
+
         return newProfessors
       },
       getAlert (type, message) {
@@ -343,8 +381,22 @@ import AcNavbar from '../AcNavbar'
         setTimeout(() => {
           this.showAlert = false
         }, 5000)
+        this.close()
+      },
+      reset () {
+        this.$refs.form.reset()
+        this.editedItem.name = ''
+        this.editedItem.siape = ''
+        this.editedItem.email = ''
+        this.editedItem.department = ''
+        this.editedItem.password = ''
       }
-    }
+    },
+    logout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.replace('/professor')
+    },
   }
 </script>
 
@@ -362,4 +414,5 @@ import AcNavbar from '../AcNavbar'
 .alert {
   width: 100%;
 }
+
 </style>

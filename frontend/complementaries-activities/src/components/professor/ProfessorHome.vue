@@ -117,19 +117,30 @@
             <td class="text-md-left">{{ props.item.graduation }}</td>
             <td class="text-md-left">{{ props.item.email }}</td>
             <td class="text-md-left">
-            <v-icon large v-bind:class="props.item.situation">
-              {{ getIcon(props.item.situation) }}
-            </v-icon>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-icon large v-on="on" v-bind:class="props.item.situation">
+                    {{ getIcon(props.item.situation) }}
+                  </v-icon>
+                </template>
+                <span>{{ getSituation(props.item.situation) }}</span>
+              </v-tooltip>
             </td>
             <td class="text-md-left"> 
-            <v-btn
-              color="#00796B"
-              class="mr-2"
-              small
-              :to="`/professor/aluno/documentos/${props.item._id}`"
-            >
-              <v-icon color="white">folder_open</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  v-on="on"
+                  color="#00796B"
+                  class="mr-2"
+                  small
+                  :to="`/professor/aluno/documentos/${props.item._id}`"
+                >
+                  <v-icon color="white">folder_open</v-icon>
+                </v-btn>
+              </template>
+              <span>visualizar documentos</span>
+            </v-tooltip>
           </td>
           </template>
           <template v-slot:no-results>
@@ -254,6 +265,16 @@ export default {
       setTimeout(() => {
         this.showAlert = false
       }, 5000)
+    },
+    getSituation (situation) {
+      switch(situation) {
+        case 'debting':
+          return 'devendo em algum grupo'
+        case 'approved':
+          return 'aprovado na disciplina'
+        case 'launched':
+          return 'já foi lançado no sistema'
+      }
     }
   }
 }

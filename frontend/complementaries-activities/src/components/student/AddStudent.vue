@@ -20,16 +20,16 @@
           
             <v-card-text>
               <v-text-field
-                ref="name"
+                ref="student.name"
                 v-model="student.name"
-                :rules="[() => !!student.name || 'This field is required']"
+                :rules="[() => !!student.name || 'Este campo é obrigatório']"
                 :error-messages="errorMessages"
                 label="Nome completo"
                 placeholder="John Doe"
                 required
               ></v-text-field>
               <v-text-field
-                ref="email"
+                ref="student.email"
                 v-model="student.email"
                 :error-messages="errorMessages"
                 :rules="[rules.required, rules.email]"
@@ -38,19 +38,19 @@
                 required
               ></v-text-field>
               <v-text-field
-                ref="Registro acadêmico (RA)*"
+                ref="student.ra"
                 v-model="student.ra"
                 :error-messages="errorMessages"
-                :rules="[() => !!student.ra || 'This field is required']"
+                :rules="[() => !!student.ra || 'Este campo é obrigatório']"
                 label="Registro acadêmico (RA)*"
                 placeholder="a122345"
                 required
               ></v-text-field>    
               <v-autocomplete
-                ref="Graduações"
+                ref="student.graduation"
                 v-model="student.graduation"
                 :error-messages="errorMessages"
-                :rules="[() => !!student.graduation || 'This field is required']"
+                :rules="[() => !!student.graduation || 'Este campo é obrigatório']"
                 :items="graduationsNames"
                 label="Graduação"
                 placeholder="Select..."
@@ -58,7 +58,7 @@
               ></v-autocomplete>
               <v-text-field
                 :append-icon="show ? 'visibility' : 'visibility_off'"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.min]"
                 :error-messages="errorMessages"
                 :type="show ? 'text' : 'password'"
                 name="input-10-2"
@@ -74,7 +74,7 @@
               <v-btn color="success" dark depressed to="/aluno">voltar</v-btn>
               <v-spacer></v-spacer>
               <v-btn color="secondary" dark depressed @click="reset">Resetar</v-btn>
-              <v-btn color="primary" dark depressed @click="createStudent">Submit</v-btn>
+              <v-btn color="primary"  depressed :disabled="validated" @click="createStudent">Submit</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -107,12 +107,12 @@ export default {
         password: ''
       },
       rules: {
-        required: value => !!value || 'Required',
+        required: value => !!value || 'Campo obrigatório',
         email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
+          return pattern.test(value) || 'Email inválido.'
         },
-        min: value => value.length >= 8 || 'Min 8 characters'
+        min: value => typeof value == 'undefined' || value.length >= 8 || 'Min de 8 caracteres'
       },
       graduationsNames: [],
       graduations: []
@@ -126,13 +126,18 @@ export default {
           this.graduationsNames.push(graduation.name)
         })
       })
-      .catch((err) => {
-        // implemente mensagens de erro para o usuário com o vuetify
-      })
+      .catch((err) => this.getConfirmation('error', 'Ocorreu um erro, tente mais uma vez'))
   },
   computed: {
     form () {
       return this.student
+    },
+    validated () {
+      return this.student.name == null ||  
+               this.student.email == null || 
+               this.student.ra == null ||
+               this.student.graduation == null ||
+               this.student.password == '' 
     }
   },
   methods: {
@@ -158,7 +163,6 @@ export default {
       this.reset()
     },
     catchIdDepartment () {
-      console.log(this.graduations)
       const graduation = this.graduations.filter(grad => 
             grad.name == this.student.graduation)
       const id = graduation[0].deps[0]._id

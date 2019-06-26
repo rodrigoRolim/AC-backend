@@ -35,16 +35,10 @@ class DocumentController {
       .catch((err) => res.status(400).send(err.message))
   }
   readAllSents (req, res) {
-    console.log('porraaaaaa')
+
     return this.Document.find({ student: req.params.id, sent: true })
-      .then((documents) => {
-        console.log('veio aqui')
-        res.send(documents)
-      })
-      .catch((err) => {
-        console.log('foi aqui')
-        res.status(400).send(err.message)
-      })
+      .then((documents) => res.send(documents))
+      .catch((err) => res.status(400).send(err.message))
   }
   getFile (req, res) {
 

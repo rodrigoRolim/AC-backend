@@ -12,7 +12,9 @@
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex md12>
-                <v-textarea label="Descrição do item" v-model="item.description"></v-textarea>
+                <v-textarea label="Descrição do item" 
+                :rules="validations"
+                v-model="item.description"></v-textarea>
               </v-flex>
             </v-layout>
           </v-container>
@@ -21,7 +23,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click="save" :disabled="validated">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -39,15 +41,24 @@ export default {
       dialog: false,
       item: {
         description: ''
-      }
+      },
+      validations: [
+        v => !!v || 'Campo obrigatório*'
+      ] 
     }
   },
   methods: {
     save () {
       GroupService.addItemInGroup(this.group._id, this.item)
         .then((res) => this.$emit('refresh', true))
+        .then(() => this.item.description = '')
         .catch((err) => this.$emit('refresh', false))
       this.dialog = false
+    }  
+  },
+  computed: {
+    validated () {
+      return this.item.description == ''
     }
   }
 }

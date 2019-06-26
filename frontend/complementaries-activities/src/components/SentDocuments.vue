@@ -39,13 +39,24 @@
       <template v-slot:items="props" class="data-table">
         <td>{{ props.item.name }}</td>
         <td class="text-md-left">{{ props.item.group }}</td>
-        <td class="text-md-left">{{ props.item.item }}</td>
+        <td class="text-md-left">
+          <v-tooltip top>
+            <template v-slot:activator="{ on }" >
+              <v-icon  v-on="on">description</v-icon>
+            </template>
+            <span>{{ props.item.item }}</span>
+          </v-tooltip>
+        </td>
         <td class="text-md-left">{{ props.item.score }}</td>
         <td class="text-md-left">
-
-        <v-icon v-bind:class="getIcon(props.item.evaluation)">
-          {{ getIcon(props.item.evaluation) }}
-        </v-icon>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-icon v-on="on" v-bind:class="getIcon(props.item.evaluation)">
+              {{ getIcon(props.item.evaluation)  }}
+            </v-icon>
+          </template>
+          <span class="tool">{{ getEvaluation(props.item.evaluation) }}</span>
+        </v-tooltip>
         </td>
         <td class="justify-center layout px-0">
           <show-sent-document :situation="situation" :document="props.item" @refresh="updateEvaluation"></show-sent-document>
@@ -99,7 +110,7 @@ export default {
         { text: 'Item', value: 'item', sortable: false, align: 'left' },
         { text: 'Pontos', value: 'score', sortable: false, align: 'left' },
         { text: 'Avaliação', value: 'evaluation', sortable: false, align: 'left' },
-        { text: 'ações', value: 'actions', sortable: false, align: 'left' }
+        { text: 'ver documento', value: 'actions', sortable: false, align: 'center' }
       ]
     }
   },
@@ -135,6 +146,17 @@ export default {
           return 'remove_circle'
       }
     },
+    getEvaluation (evaluation) {
+
+      switch (evaluation) {
+       case 'none':
+          return 'não avaliado'
+        case 'aproved':
+          return 'aceito'
+        case 'reproved':
+          return 'não aceito'
+      }
+    }
   }
 }
 </script>

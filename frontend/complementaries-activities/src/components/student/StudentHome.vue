@@ -31,6 +31,13 @@
         <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
       </v-toolbar-items>
     </ac-navbar>
+    <v-alert
+        class="alert"
+        :type="typeAlert"
+        :value="showAlert"
+        >
+        {{message}}
+    </v-alert>
     <student-progress v-if="situation && documents.length >= 0" :documents="documents" :situation="situation"></student-progress>
     <student-documents v-if="documents.length >= 0" :documents="documents" :situation="situation"></student-documents>
   </v-app>
@@ -51,6 +58,9 @@ export default {
   components: { AcNavbar, MaskLoad, StudentDocuments, StudentProgress },
   data () {
     return {
+      message: '',
+      typeAlert: 'error',
+      showAlert: false,
       showMask: false,
       pdf: null,
       documents: [],
@@ -71,14 +81,14 @@ export default {
       StudentService.getSituation(idStudent)
         .then((res) => res.data.situation)
         .then((situation) => this.situation = situation)
-        .catch((err) => console.log(err))
+        .catch((err) => this.getAlert('error', 'ocorreu um erro, tente mais uma vez'))
     },
     initialize (idStudent) {
       GroupService.readAll()
         .then((res) => res.data)
         .then((groups) => this.getDocuments(idStudent, groups))
         .then(() => this.getSituation(idStudent))
-        .catch((err) => console.log(err))
+        .catch((err) => this.getAlert('error', 'ocorreu um erro, tente mais uma vez'))
     },
     getDocuments (idStudent, groups) {
        DocumentService.readAll(idStudent)
@@ -86,24 +96,23 @@ export default {
         .then((documents) => {
           if (documents.length > 0) {
             this.documents = this.replaceIdForNames(groups, documents)
-            //this.Pusher()
           } else {
             this.documents = []
           }
-          //this.documents = this.replaceIdForNames(groupsItems, documents)
           setTimeout(() => {
             this.showMask = false 
           }, 1000)
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          this.showMask = false
+          this.getAlert('error', 'ocorreu um erro, tente mais uma vez')
+        })
     },
     getNameGroup(groupId, groups) {
-
       const group = groups.filter((group) => group._id == groupId)
       return group
     },
     getNameItem (group, idItem) {
-
       const item = group[0].items.filter((item) => item._id == idItem)
       return item
     },
@@ -112,6 +121,7 @@ export default {
       const newdocuments = documents.map((document) => {
         const group = this.getNameGroup(document.group, groups)
         const item = this.getNameItem(group, document.item)
+   
         document.group = group[0].name
         document.item = item[0].description
         return document
@@ -119,28 +129,14 @@ export default {
   
       return newdocuments
     },
-    
-    /* Pusher () {
-      
-      Pusher.logToConsole = true;
-
-      let pusher = new Pusher('9dc5a8662a93a62e45bb', {
-        cluster: 'us2',
-        forceTLS: true
-      });
-      const changeDocument = this.changeDocument
-      let channel = pusher.subscribe(JSON.parse(localStorage.getItem('user'))._id);
-      var docs = this.documents
-      channel.bind('my-event', function(data) {
-        
-        const document = docs.filter((doc) => doc._id == data.message.id)
- 
-        const position = docs.indexOf(document[0])
-        docs[position].evaluation = data.message.evaluation
-
-      });
-
-    } */
+    getAlert (type, message) {
+      this.typeAlert = type
+      this.message = message
+      this.showAlert = true
+      setTimeout(() => {
+        this.showAlert = false
+      }, 5000)
+    }
   }
 }
 </script>

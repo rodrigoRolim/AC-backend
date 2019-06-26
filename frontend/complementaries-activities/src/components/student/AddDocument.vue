@@ -33,7 +33,7 @@
     </ac-navbar>
     <v-layout justify-center class="container">
     
-      <v-flex xs12 sm10 md9 lg9>
+      <v-flex xs12 sm10 md9 lg11>
         <transition>
           <v-alert
           :value="successUpload"
@@ -69,6 +69,7 @@
               required
             ></v-autocomplete>
             <v-autocomplete
+              style="work-break: break-all"
               ref="item"
               v-model="document.item"
               :rules="[() => !!document.item || 'This field is required']"
@@ -251,6 +252,7 @@ export default {
         } else {
           const idDoc = this.$route.params.id
           this.document.evaluation = 'none'
+          this.document.sent = false
           formData.append('document', JSON.stringify(this.document))
           DocumentService.update(idDoc, JSON.parse(formData.get('document')))
             .then((res) => {
@@ -315,5 +317,11 @@ export default {
 <style scoped>
 .container {
   margin-top: 30px;
+}
+#select {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  word-break: break-all;
 }
 </style>

@@ -39,12 +39,24 @@
       <template v-slot:items="props">
         <td>{{ props.item.name }}</td>
         <td class="text-md-left">{{ props.item.group }}</td>
-        <td class="text-md-left">{{ props.item.item }}</td>
+        <td class="text-md-left">
+          <v-tooltip top>
+            <template v-slot:activator="{ on }" >
+              <v-icon  v-on="on">description</v-icon>
+            </template>
+            <span>{{ props.item.item }}</span>
+          </v-tooltip>
+        </td>
         <td class="text-md-left">{{ props.item.score }}</td>
         <td class="text-md-left">
-        <v-icon v-bind:class="getIcon(props.item.evaluation)">
-          {{ getIcon(props.item.evaluation)  }}
-        </v-icon>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-icon v-on="on" v-bind:class="getIcon(props.item.evaluation)">
+              {{ getIcon(props.item.evaluation)  }}
+            </v-icon>
+          </template>
+          <span>{{ getEvaluation(props.item.evaluation) }}</span>
+        </v-tooltip>
         </td>
         <td class="text-md-left">
           <comments v-if="props.item.feedback" :feedback="props.item.feedback"></comments>
@@ -123,17 +135,10 @@ export default {
     }
   },
   created () {
-    //this.turnAllSent()
+
   },
   methods: {
-  /*   turnAllSent () {
-      if (this.documents.length !== 0) {
-        const qtdDocuments = this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved') 
-        this.isAllSent = (qtdDocuments.length === this.documents.length)
-      } else {
-        this.isAllSent = false
-      }
-    }, */
+
     allsents () {
       if (this.documents.length !== 0) {
         const qtdDocuments = this.documents.filter((doc) => doc.sent && doc.evaluation !== 'reproved')
@@ -162,7 +167,7 @@ export default {
       }, 5000)
     },
     deleteDocument (doc) {
-      // verificar se o sent é falso no lado do servidor: middleware
+
       const userResponse = confirm('tem certeza que deseja excluir este item?')
       if (userResponse) {
          DocumentService.delete(doc.path)
@@ -198,7 +203,7 @@ export default {
     sentDocuments () {
       this.loadBtn = true
       const studentid = JSON.parse(localStorage.getItem('user'))._id
-      console.log(this.allsents())
+
       if (!this.allsents()) {
         DocumentService.send(studentid)
         .then((res) => {
@@ -218,6 +223,16 @@ export default {
     popDocument (doc) {
       const index = this.documents.indexOf(doc)
       this.documents.splice(index, 1)
+    },
+    getEvaluation (evaluation) {
+      switch (evaluation) {
+       case 'none':
+          return 'não avaliado'
+        case 'aproved':
+          return 'aceito'
+        case 'reproved':
+          return 'não aceito'
+      }
     }
   }
 }
@@ -244,5 +259,9 @@ export default {
 }
 .remove_circle {
   color: red
+}
+#description {
+  word-break: break-all;
+  width: 1%;
 }
 </style>

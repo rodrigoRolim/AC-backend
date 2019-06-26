@@ -118,6 +118,8 @@
       :headers="headers"
       :items="groups"
       :expand="expand"
+      hide-actions
+      :pagination.sync="pagination"
       item-key="name"
       >
       <template v-slot:items="props">
@@ -146,12 +148,14 @@
         </tr>
       </template>
       <template v-slot:expand="props">
-        <v-card flat v-for="item in props.item.items" :key="item._id">
+        <div id="itens">
+        <v-card flat v-for="item in props.item.items" :key="item._id" >
           <v-card-text class="item"><span class="format-text">{{item.description}}</span>
-            <edit-item  :item="item" :idGroup="props.item._id" class="edit mr-2" small></edit-item>
+            <edit-item :item="item" :idGroup="props.item._id" class="edit mr-2" small></edit-item>
             <v-icon class="mr-2" small dark color="secondary" @click="removeItem(props.item, item)">delete</v-icon>
           </v-card-text>
         </v-card>
+        </div>
       </template>
        <template v-slot:no-results  >
           <v-alert :value="true" color="error" icon="warning">
@@ -164,6 +168,9 @@
           </v-alert>
         </template>
     </v-data-table>
+    <div class="text-xs-center pt-0">
+      <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+    </div>
     </v-card>
     </v-layout>
   </v-app>
@@ -189,7 +196,11 @@ import GroupService from '@/services/Group.js'
         showAlert: false,
         validations: [
           v => !!v || 'Campo obrigatório*'
-        ], 
+        ],
+        pagination: {
+          rowsPerPage: 6,
+          page: 1
+        }, 
         editedItem: {
           name: '',
           description: '',
@@ -211,10 +222,10 @@ import GroupService from '@/services/Group.js'
             sortable: false,
             value: 'name'
           },
-          { text: 'pontuação mínima', value: 'minimo', align: 'left' },
-          { text: 'pontuação máxima', value: 'maximo', align: 'left' },
-          { text: 'description', value: 'description', align: 'left' },
-          {text: 'Actions', value: 'name', sortable: false, align: 'center' }
+          { text: 'pontuação mínima', value: 'minimo', sortable: false, align: 'left' },
+          { text: 'pontuação máxima', value: 'maximo', sortable: false, align: 'left' },
+          { text: 'descrição', value: 'description', sortable: false, align: 'left' },
+          {text: 'ações', value: 'name', sortable: false, align: 'center' }
         ],
         groups: []
       }
@@ -224,6 +235,15 @@ import GroupService from '@/services/Group.js'
       this.initializeGroup()
     },
     computed: {
+      pages () {
+        this.pagination.totalItems = this.groups.length
+        if (this.pagination.rowsPerPage == null ||
+          this.pagination.totalItems == null
+        ) {
+            return 0
+          } 
+        return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+      },
       formTitle () {
         return this.editedIndex === -1 ? 'Novo grupo' : 'Editar grupo'
       },
@@ -352,10 +372,16 @@ import GroupService from '@/services/Group.js'
   word-break: break-all;  
 }
 .format-text {
-
-  width: 50%;
+  margin: 0;
+  padding: 0;
+  width: 70%;
 }
 .alert {
   width: 100%;
+}
+#itens {
+  background-color: rgba(0,0,0,0.05);
+  max-height: 32vh;
+  overflow: auto;
 }
 </style>
