@@ -167,9 +167,11 @@ router.beforeEach((to, from, next) => {
       })
     } else {
       if (to.matched.some(record => record.meta.is_professor)) {
-        if (typeof user !== null || user.type_user == 'professor') {
+        if (typeof user !== null && user.type_user == 'professor') {
+          console.log("aqui")
           next()
         } else {
+          console.log("nao")
           next({ name: 'Home' })
         }
       } else {
