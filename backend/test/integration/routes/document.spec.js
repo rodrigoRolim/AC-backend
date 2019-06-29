@@ -105,7 +105,9 @@ describe('Router: document', () => {
   describe('GET /document/:id', () => {
     it('should return document', done => {
       const customId = "5ce98fb42552b2f933f5e47a"
-      const documentResponse = Object.assign({}, { _id: "5ce98fb42552b2f933f5e47a", __v: 0}, defaultDocument)
+      const documentResponse = Object.assign({}, 
+                              { _id: "5ce98fb42552b2f933f5e47a", __v: 0}, 
+                              defaultDocument)
       request
         .get(`/document/${customId}`)
         .set('authorization', token)
@@ -175,16 +177,4 @@ describe('Router: document', () => {
       })
     })
   })
-  /* describe('DELETE /document/:student', () => {
-    it('should return delete document', done => {
-      const pathFile = 'test.pdf'
-      request
-        .del(`/document/uploads/${pathFile}`)
-        .set('authorization', token)
-        .end((err, res) => {
-          expect(res.status).to.eql(204)
-          done(err)
-        })
-    })
-  }) */
 })
