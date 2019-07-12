@@ -7,9 +7,6 @@ stages:
   - test
   - package
 
-#cache:
- # directories:
-  #  - "node_modules"
 
 before_script:
   - npm update -q
