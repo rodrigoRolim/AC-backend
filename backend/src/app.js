@@ -7,7 +7,10 @@ import cors from 'cors'
 
 
 const configureExpress = () => {
-  dotenv.config({allowEmptyValues: true})
+  dotenv.config({
+    allowEmptyValues: true,
+    example: process.env.CI ? '.env.ci.example' : '.env.example'
+  })
   dotenv.load()
   const app = express()
   app.use(bodyParser.json())
