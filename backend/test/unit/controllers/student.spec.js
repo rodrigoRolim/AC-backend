@@ -291,7 +291,6 @@ describe('Management student', () => {
   describe('getSituation() getting situation of student', () => {
     it('should return studend situation', () => {
       const fakeidstudent = 'fake-id-student'
-      const situation = 'situation'
       const studentReturned = Object.assign({}, { situation: 'situation' })
       const request = { params: { id: fakeidstudent } }
       const response = {
