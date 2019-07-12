@@ -7,7 +7,7 @@ import cors from 'cors'
 
 const configureExpress = () => {
 
-  dotenv.load({
+  dotenv.config({
     allowEmptyValues: true
   })
   const app = express()

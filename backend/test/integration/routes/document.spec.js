@@ -46,7 +46,7 @@ describe('Router: document', () => {
     return document.save()
   })
   afterEach(() => Document.deleteMany({}))
-
+  after(() => exit(0))
   describe('POST /document/add', () => {
     it('should return new saved document', done => {
       const newDocument = Object.assign({}, {_id: defaultId}, defaultDocument)
