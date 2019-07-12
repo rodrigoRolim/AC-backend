@@ -116,7 +116,7 @@ describe('Management student', () => {
         response.status.withArgs(400).returns(response)
         const _id = '12345'
         jwt.sign = sinon.stub()
-        jwt.sign.withArgs({ _id }, process.env.SECRET , {
+        jwt.sign.withArgs({ _id }, process.env.SECRET, {
           expiresIn: 86400
         }).returns('hashToken')
   
