@@ -12,7 +12,6 @@ stages:
 
 before_script:
   - whoami
-  - pwd
 
 test site:
   stage: test
