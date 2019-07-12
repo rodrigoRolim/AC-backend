@@ -307,7 +307,7 @@ describe('Management student', () => {
 
       return studentController.getSituation(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, 'situation')
+          sinon.assert.calledWith(response.send, {situation:'situation'})
         })
     })
     context('when an error occurs', () => {
