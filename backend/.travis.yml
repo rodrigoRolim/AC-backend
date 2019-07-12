@@ -1,1 +1,9 @@
 language: node_js
+stages:
+  - test
+  - package
+  - deploy
+
+before_script:
+  - whoami
+  - pwd
