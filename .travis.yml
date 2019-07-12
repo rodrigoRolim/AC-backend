@@ -13,3 +13,9 @@ before_script:
   - npm install
 script: 
   - npm run test:unit
+
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+      script: npm run test:unit
