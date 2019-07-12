@@ -18,5 +18,4 @@ jobs:
     script: npm run test:unit
     - stage: package
     cache:
-      directories:
-       - "node_modules"
+      directories: "node_modules"
