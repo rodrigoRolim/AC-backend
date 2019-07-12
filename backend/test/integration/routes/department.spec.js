@@ -29,7 +29,7 @@ describe('Routes: Department', () => {
   })
 
   afterEach(() => Department.deleteMany({}))
-  after(() => exit(0))
+  after(() => process.exit(0))
   describe('POST /admin/department', () => {
     it('should return added last department', done => {
       const newDepartment = Object.assign({}, { _id: defaultId, __v: 0}, { name: 'DAEL' })

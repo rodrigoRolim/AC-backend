@@ -36,7 +36,7 @@ describe('Management groups', () => {
     return Group.deleteMany({})
       .then(() => group.save())
   })
-  after(() => exit(0))
+  after(() => process.exit(0))
   afterEach(() => Group.deleteMany({}))
   describe('POST /group/add', () => {
     context('when add a new group', () => {
