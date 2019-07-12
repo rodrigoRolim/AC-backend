@@ -6,14 +6,17 @@ services:
 stages:
   - test
   - package
-cache:
-  directories:
-    - "node_modules"
 
 before_script:
   - npm update -q
   - cd backend
   - npm install
 
-script: 
-  - npm run test:unit
+jobs:
+  include:
+    - stage: test
+    script: npm run test:unit
+    - stage: package
+    cache:
+      directories:
+       - "node_modules"
