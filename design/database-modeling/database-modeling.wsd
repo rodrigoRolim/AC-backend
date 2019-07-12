@@ -1,5 +1,9 @@
 @startuml
 left to right direction
+skinparam classFontSize 28
+skinparam ClassAttributeFontSize 28
+skinparam ArrowFontSize 28
+
 class student {
     _id: number
     ra: String
@@ -59,6 +63,6 @@ document "*..0"--- "1" group
 group o-- items
 document "*..0" --- "1" student
 student "*..0" --- "1" department
-department "1" -- "*..0" graduation
+department "1" --- "*..0" graduation
 professor "1" --- "1" department 
 @enduml

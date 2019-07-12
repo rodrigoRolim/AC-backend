@@ -1,5 +1,6 @@
 @startuml
-left to right direction
+skinparam classFontSize 18
+skinparam ClassStereotypeFontSize 18
 hide members
 class document  <<(M, #00ffbb)Model>> {
 

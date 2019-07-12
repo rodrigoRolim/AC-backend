@@ -57,14 +57,11 @@ class DocumentController {
       .catch((err) => res.status(400).send(err.message))
   }
   update (req, res) {
-    // extrair id de student em document e usar no canal
+
     const { params: { id } } = req
 
-    return this.Document.findOneAndUpdate({ _id: id }, req.body, { returnNewDocument: true })
-      .then((doc) => {
-        //this.subscription.recalculeScore(doc.student, { id: req.body._id, evaluation: req.body.evaluation })
-        res.send(doc)
-      })
+    return this.Document.findOneAndUpdate({ _id: id } , req.body, { returnNewDocument: true })
+      .then((doc) => res.send(doc))
       .catch((err) => res.status(422).send(err.message))
   }
   sent (req, res) {
