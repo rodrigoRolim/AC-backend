@@ -6,16 +6,16 @@ cache:
   directories:
     - "node_modules"
 
-stages:
-  - test
-  - package
-  - deploy
+#stages:
+ # - test
+  #- package
+  #- deploy
 
-before_script:
-  - whoami
+#before_script:
+ # - whoami
 
-test site:
-  stage: test
-  script: 
-    - cd backend
-    - npm install && npm run test:unit
+#test site:
+ # stage: test
+  #script: 
+   # - cd backend
+    #- npm install && npm run test:unit
