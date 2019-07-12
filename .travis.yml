@@ -12,6 +12,7 @@ before_script:
   - npm update -q
   - cd backend
   - npm install
+
 jobs:
   include:
     - stage: test
