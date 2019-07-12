@@ -1,13 +1,13 @@
 @startuml
-actor Student
+actor Aluno
 boundary "tela principal" as home
 control DocumentController as control
 entity DocumentEntity as entity
 
-Student ->> home: selecionar documento
-activate Student
+Aluno ->> home: selecionar documento
+activate Aluno
 activate home
-Student ->> home: tentar deletar documento
+Aluno ->> home: tentar deletar documento
 home ->> home: verificar se documento foi enviado para avaliação
 alt documento não enviado para avaliação
   home ->> control: solicitar exclusão do documento
@@ -22,9 +22,9 @@ alt documento não enviado para avaliação
   control -->> home: enviar mensagem de confirmação
   activate home
   deactivate control
-  home -->> Student: exibir mensagem de confirmação 
+  home -->> Aluno: exibir mensagem de confirmação 
   
   else document enviado para avaliação
-    home -->> Student: exclusão não permitida
+    home -->> Aluno: exclusão não permitida
 end
 @enduml

@@ -1,12 +1,12 @@
 @startuml
-actor Admin
+actor Professor
 boundary "tela principal" as home
 control ProfessorController
 entity ProfessorEntity
 
 
-activate Admin
-Admin ->> home: tentar substiuir professor por outro
+activate Professor
+Professor ->> home: tentar substiuir professor por outro
 activate home
 home ->> ProfessorController: solicitar atualização de professor
 activate ProfessorController
@@ -18,6 +18,6 @@ deactivate ProfessorEntity
 activate ProfessorController
 ProfessorController -->> home: enviar mesagem de confirmação
 deactivate ProfessorController
-home -->> Admin: exibir mensagem de confirmação 
+home -->> Professor: exibir mensagem de confirmação 
 
 @enduml

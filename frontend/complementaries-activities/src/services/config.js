@@ -1,6 +1,10 @@
 import axios from 'axios'
 
 export const http = axios.create({
-  baseUrl: '/',
+  baseURL: 'http://localhost:3000',
   timeout: 10000,
-}) 
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Acess-Control-Allow-Headers': '*'
+  }
+})

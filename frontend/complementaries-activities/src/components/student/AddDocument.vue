@@ -1,0 +1,327 @@
+<template>
+  <v-app>
+    <mask-load v-if="showMask"></mask-load>
+    <ac-navbar>
+      <v-toolbar-items>
+        <v-btn depressed color="secondary" dark to="/aluno/home">Documentos <v-icon dark right>fa-file</v-icon></v-btn>
+        <v-menu
+        transition="slide-y-transition"
+        bottom
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="purple"
+              color="primary"
+              depressed
+              dark
+              v-on="on"
+            >
+              menu <v-icon dark right>menu</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-tile to="/aluno/perfil">
+              <v-list-tile-title>perfil</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-btn depressed  dark color="blue-grey" to="/aluno/documento/add">
+        upload <v-icon right dark>cloud_upload</v-icon>
+        </v-btn>
+        <v-btn color="error"  @click="logout()">sair<v-icon dark right>exit_to_app</v-icon></v-btn>
+      </v-toolbar-items>
+    </ac-navbar>
+    <v-layout justify-center class="container">
+    
+      <v-flex xs12 sm10 md9 lg11>
+        <transition>
+          <v-alert
+          :value="successUpload"
+          :type="alert"
+          >
+            {{ messageAlert }}
+         </v-alert>
+        </transition>
+       <!--<v-progress-linear v-if="load" :indeterminate="load"></v-progress-linear>-->
+        <v-form 
+          enctype="multipart/form-data"
+          @submit.prevent="save"
+          ref="form"
+        >
+          <v-card>
+          <v-card-text>
+            <v-text-field
+              ref="name"
+              v-model="document.name"
+              :rules="[() => !!document.name || 'This field is required']"
+              label="Nome do documento"
+              placeholder="Qualquer nome que você quise"
+              required
+            ></v-text-field>
+            <v-autocomplete
+              ref="group"
+              v-model="document.group"
+              @change="changeItem"
+              :rules="[() => !!document.group || 'This field is required']"
+              :items="groupsNames"
+              label="Grupo"
+              placeholder="Select..."
+              required
+            ></v-autocomplete>
+            <v-autocomplete
+              style="work-break: break-all"
+              ref="item"
+              v-model="document.item"
+              :rules="[() => !!document.item || 'This field is required']"
+              :items="items"
+              label="Item"
+              placeholder="Select..."
+              required
+            ></v-autocomplete>
+            <v-text-field
+              type="number"
+              ref="score"
+              v-model="document.score"
+              :rules="[() => !!document.score || 'This field is required']"            
+              label="Pontos (o que você acha)*"
+              placeholder="10"
+              required
+            ></v-text-field>
+           
+            <v-text-field
+              v-if="!this.$route.params.id"
+              ref="score"
+              v-model="docName"
+              :rules="[() => !!docName || 'This field is required']"
+              label="Selecione o documento*"
+              prepend-icon="attach_file"
+              @click="pickFile"
+              required
+            ></v-text-field>
+            <input
+              v-if="!this.$route.params.id"
+              type="file"
+              style="display: none"
+              ref="doc"
+              @change="onFilePicked"
+            >        
+          </v-card-text>
+          <v-divider class="mt-5"></v-divider>
+          <v-card-actions class="justify-end">
+            <v-btn color="success" :disabled="load" :loading="load" depressed to="/aluno/home">voltar</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" :disabled="load" :loading="load" depressed @click="reset">Resetar</v-btn>
+            <v-btn color="primary" depressed :disabled="load" :loading="load" type="submit">Submit</v-btn>
+          </v-card-actions>
+        </v-card>
+        </v-form>
+      </v-flex>
+    </v-layout>
+  </v-app>
+</template>
+
+<script>
+import AcNavbar from '../AcNavbar'
+import MaskLoad from '../MaskLoad'
+import DocumentService from '@/services/Document.js'
+import GroupService from '@/services/Group'
+import StudentService from '@/services/Student'
+
+export default {
+  name: 'AddDocument',
+  components: { AcNavbar, MaskLoad },
+  data () {
+    return {
+      showMask: false,
+      load: false,
+      successUpload: false,
+      messageAlert: '',
+      alert: 'success',
+      document: {
+        name: null,
+        score: null,
+        path: null,
+        group: null,
+        item: null,
+        student: JSON.parse(localStorage.getItem('user'))._id
+      },
+      rules: {
+        required: value => !!value || 'Required'
+      },
+      items: [],
+      groups: [],
+      groupsNames: [],
+      situation: null,
+      docName: '',
+      docUrl: '',
+      docFile: ''
+    }
+  },
+  created () {
+    this.student = JSON.parse(localStorage.getItem('user'))._id
+    this.showMask = true
+    GroupService.readAll()
+      .then((res) => res.data)
+      .then((groups) => {
+        this.groups = groups
+        return groups
+      })
+      .then((groups) => this.namesGroups(groups))
+      .then(() => this.getSituation(this.student))
+      .then(() => setTimeout(() => { this.showMask = false }, 1000))
+      .then(() => {
+        if (this.$route.params.id) {
+          this.getDocument(this.$route.params.id)
+        }
+      })
+  },
+  methods: {
+    getDocument (id) {
+      DocumentService.getById(id)
+        .then((res) => res.data[0])
+        .then((document) =>  this.getItemsWhenUpdate(document))
+        .then((document) => {
+          this.document = this.changeIdForNames(document)
+        })
+        .catch((err) => {
+
+        })
+    },
+    getSituation (idStudent) {
+      StudentService.getSituation(idStudent)
+        .then((res) => res.data.situation)
+        .then((situation) => this.situation = situation)
+    },
+    changeIdForNames (document) {
+      
+      const group = this.groups.filter((group) => group._id == document.group)[0]
+      const item = group.items.filter((item) => item._id == document.item)[0]
+      document.group = group.name
+      document.item = item.name
+      
+      return document
+    },
+    getItemsWhenUpdate (document) {
+      const group = this.groups.filter((group) => group._id === document.group)[0]
+      group.items.map((item) => {
+        this.items.push(item.description)
+      })
+      return document
+    },
+    namesGroups (groups) {
+      groups.map((group) => {
+        this.groupsNames.push(group.name)
+      })
+    },
+    changeItem () {
+      this.items = []
+      const groups = this.groups.filter((group) => this.document.group == group.name)
+      groups[0].items.map((item) => {
+        this.items.push(item.description)
+      })
+      
+    },
+    getIdGroupItem (nameGroup, nameItem) {
+      const group = this.groups.filter((group) => group.name == nameGroup)[0]
+      const item = this.getIdItem(group.items, nameItem)
+      return [group._id, item._id]
+    },
+    getIdItem (items, nameItem) {
+      const item = items.filter((item) => item.description == nameItem)[0]
+      return item
+    },
+    save () {
+
+      const ids = this.getIdGroupItem(this.document.group, this.document.item)
+      this.document.group = ids[0]
+      this.document.item = ids[1]
+   
+      const formData = new FormData()
+      if (this.situation == 'debting') {
+        if (typeof this.$route.params.id == 'undefined') {
+        
+        formData.append('document', JSON.stringify(this.document))
+        formData.append('file', this.docFile)
+        DocumentService.save(formData)
+          .then((res) => {
+            this.getAlert('success', 'carregado com sucesso!')
+          })
+          .catch((err) => {
+            this.getAlert('error', err.response.data.error)
+          })
+        } else {
+          const idDoc = this.$route.params.id
+          this.document.evaluation = 'none'
+          this.document.sent = false
+          formData.append('document', JSON.stringify(this.document))
+          DocumentService.update(idDoc, JSON.parse(formData.get('document')))
+            .then((res) => {
+              this.getAlert('success', 'atualizado com sucesso!')
+            })
+        }
+      } else {
+        this.getAlert('info', 'você já está aprovado, não pode mais enviar documentos')
+      }
+     
+    },
+    getAlert (type, message) {
+      this.reset()
+      this.alert = type
+      this.messageAlert = message
+      this.successUpload = true
+      setTimeout(() => {
+        this.successUpload = false
+      }, 5000)
+    },
+    reset () {
+      this.$refs.form.reset()
+    },
+    pickFile () {
+     
+      this.successUpload = false
+      this.$refs.doc.click()
+      
+    },
+    onFilePicked (e) {
+      const files = e.target.files
+      if (typeof files[0] !== undefined) {
+        
+        this.docName = files[0].name
+
+        if (this.docName.lastIndexOf('.') <= 0) {
+          return 
+        }
+        const fr = new FileReader ()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          
+          this.docUrl = fr.result
+          this.docFile = files[0] //that can be sent to server
+
+        })
+      } else {
+        this.docName = ''
+        this.docUrl = ''
+        this.docFile = ''
+      }
+    },
+    logout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.replace('/aluno')
+    },
+  }
+}
+</script>
+
+<style scoped>
+.container {
+  margin-top: 30px;
+}
+#select {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  word-break: break-all;
+}
+</style>

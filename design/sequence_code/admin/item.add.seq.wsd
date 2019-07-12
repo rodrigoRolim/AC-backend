@@ -1,11 +1,11 @@
 @startuml
-actor Admin
-boundary "cadastro de item" as grupo
+actor Professor
+boundary "tela de item" as grupo
 control ItemController
 entity ItemEntity
 
-Admin ->> grupo: tentar cadastrar um item
-activate Admin
+Professor ->> grupo: tentar cadastrar um item
+activate Professor
 activate grupo
 grupo ->> ItemController: solicitar cadastro do item
 deactivate grupo
@@ -19,6 +19,6 @@ activate ItemController
 ItemController -->> grupo: enviar mensagem de confirmação
 deactivate ItemController
 activate grupo
-grupo -->> Admin: exibir mensagem de confirmação
+grupo -->> Professor: exibir mensagem de confirmação
 deactivate grupo
 @enduml

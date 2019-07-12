@@ -1,11 +1,11 @@
 @startuml
-actor Student
+actor Aluno
 boundary "tela principal" as home
 control DocumentController as controller
 entity DocumentEntity as model
 
-Student ->> home: ver progresso
-activate Student
+Aluno ->> home: ver progresso
+activate Aluno
 activate home
 home ->> controller: requisitar todos os documentos do aluno
 activate controller
@@ -18,5 +18,5 @@ activate controller
 controller -->> home: responder com lista de documentos
 deactivate controller
 home ->> home: calcular progresso do aluno
-home -->> Student: exibir progresso ao aluno 
+home -->> Aluno: exibir progresso ao aluno 
 @enduml

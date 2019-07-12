@@ -1,0 +1,24 @@
+@startuml
+actor Professor
+boundary "tela de graduações" as graduação
+control GraduationController
+entity GraduationEntity
+
+Professor ->> graduação: tentar cadastrar um novo curso
+activate Professor
+activate graduação
+graduação -> GraduationController: solicitar cadastro de graduação
+deactivate graduação
+activate GraduationController
+GraduationController -> GraduationEntity: confirmar cadastro de graduação
+deactivate GraduationController
+activate GraduationEntity
+GraduationEntity -->> GraduationController: mensagem de confirmação
+deactivate GraduationEntity
+activate GraduationController
+GraduationController -->> graduação: enviar mensagem de confirmação
+deactivate GraduationController
+activate graduação
+graduação -->> Professor: exibir mensagem de confirmação
+deactivate graduação
+@enduml

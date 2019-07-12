@@ -1,0 +1,9 @@
+@startuml
+left to right direction
+skinparam packgestyle rectangle
+actor Professor
+rectangle "visualizar relatório" {
+  Professor -- (visualizar relatório de alunos)
+  Professor -- (lançar alunos aprovados no sistema)
+}
+@enduml

@@ -1,22 +1,17 @@
 <template>
   <div id="app">
-    <admin-login></admin-login>  
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import AdminLogin from './components/AdminLogin'
-  export default {
-    name: 'App',
-    components: { AdminLogin },
-    data () {
-      return {
-        
-      }
-    }
-  }
+export default {
+  name: 'App'
+}
 </script>
 
 <style scoped>
-
+#app {
+  background-color: rgba(0,0,0,0.02)
+}
 </style>

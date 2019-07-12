@@ -1,0 +1,34 @@
+@startuml
+actor Professor
+boundary "tela de departamentos" as departamentos
+control DepartmentController
+entity DepartmentEntity
+
+Professor ->> departamentos: tentar deletar um departamento
+activate Professor
+activate departamentos
+departamentos ->> DepartmentController: solicitar exclusão do departamento
+deactivate departamentos
+departamentos ->> DepartmentController: verificar se o departamento tem relacionamento com algum curso
+alt departamento não tem relacionamento com um curso 
+  activate DepartmentController
+  DepartmentController -> DepartmentEntity: confirmar exclusão de departamento
+  activate DepartmentEntity
+  deactivate DepartmentController
+  DepartmentEntity --> DepartmentController: mensagem de confirmação
+  deactivate DepartmentEntity
+  activate DepartmentController
+  DepartmentController -->> departamentos: enviar mensagem de confirmação
+  deactivate DepartmentController
+  activate departamentos
+  departamentos -->> Professor: exibir mensagem de confirmação
+  deactivate departamentos
+  
+  else Departamento não tem relacionamento com um curso
+     DepartmentController -->> departamentos: mensagem de erro
+     activate DepartmentController
+    activate departamentos
+     departamentos -->> Professor: exibir mensagem de erro
+    
+end
+@enduml

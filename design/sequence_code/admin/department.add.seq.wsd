@@ -1,0 +1,24 @@
+@startuml
+actor Professor
+boundary "tela de departamento" as departamento
+control DepartmentController
+entity DepartmentEntity
+
+Professor ->> departamento: tentar cadastrar um novo departamento
+activate Professor
+activate departamento
+departamento -> DepartmentController: solicitar cadastro de departamento
+deactivate departamento
+activate DepartmentController
+DepartmentController -> DepartmentEntity: confirmar cadastro de departamento
+deactivate DepartmentController
+activate DepartmentEntity
+DepartmentEntity -->> DepartmentController: mensagem de confirmação
+deactivate DepartmentEntity
+activate DepartmentController
+DepartmentController -->> departamento: enviar mensagem de confirmação
+deactivate DepartmentController
+activate departamento
+departamento -->> Professor: exibir mensagem de confirmação
+deactivate departamento
+@enduml

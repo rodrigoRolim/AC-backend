@@ -14,4 +14,4 @@ Todo o projeto deverá ser feito utilizando uma arquitetura separada em camadas,
 
 - **Segurança:** abrigar lógicas de autenticação, auditoria, manutenção de usuários.
 
-- **Infraestrutura:** abrigar lógicas não relacionadas a interfaces gráficas, regras de negócio, dados ou segurança, mas que poderão ser utilizadas em todas estas camadas. Conterá recursos para gravação de logs, transferência de arquivos, mensagens, envio/recepção de e-mails etc. 
+- **Infraestrutura:** abrigar lógicas não relacionadas a interfaces gráficas, regras de negócio, dados ou segurança, mas que poderão ser utilizadas em todas estas camadas. Conterá recursos para gravação de logs, transferência de arquivos e de mensagens. 

@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+skinparam packgestyle rectangle
+actor Professor
+rectangle "gerenciar cursos" {
+  Professor -- (adicionar curso)
+  Professor -- (excluir curso)
+  Professor -- (editar curso)
+  (excluir curso) ..> (selecionar curso): <<include>>
+  (editar curso) ..> (selecionar curso): <<include>>
+}
+@enduml

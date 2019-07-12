@@ -1,11 +1,11 @@
 @startuml
-actor Admin
+actor Professor
 boundary "tela de cadastro de professor" as cadastro
 control ProfessorController
 entity ProfessorEntity
 
-Admin -> cadastro: entrar com os dados do professor
-activate Admin
+Professor -> cadastro: entrar com os dados do professor
+activate Professor
 activate cadastro
 cadastro ->o UTFPR: verificar se o professor pertence a UTFPR-CP
 activate UTFPR
@@ -13,11 +13,11 @@ deactivate cadastro
 alt Professor pertence a UTFPR-CP
     UTFPR o--> cadastro: professor pertence
     activate cadastro
-    cadastro --> Admin: mensagem de sucesso
-    deactivate Admin
+    cadastro --> Professor: mensagem de sucesso
+    deactivate Professor
     deactivate cadastro
-    Admin ->> cadastro: confirmar envio de dados
-    activate Admin
+    Professor ->> cadastro: confirmar envio de dados
+    activate Professor
     activate cadastro
     cadastro ->> ProfessorController: requisitar cadastro de professor
     deactivate cadastro
@@ -31,14 +31,14 @@ alt Professor pertence a UTFPR-CP
     ProfessorController -->> cadastro: responder com mesagem de 'ok'
     deactivate ProfessorController
     activate cadastro
-    cadastro -->> Admin: salvo com sucesso
-    deactivate Admin
+    cadastro -->> Professor: salvo com sucesso
+    deactivate Professor
     deactivate cadastro 
 else Professor não pertence
     UTFPR o--> cadastro: professor não pertence
     activate cadastro
-    cadastro --> Admin: cadastro não permitido
+    cadastro --> Professor: cadastro não permitido
     deactivate cadastro
-    activate Admin
+    activate Professor
 end     
 @enduml
