@@ -14,5 +14,3 @@ before_script:
 
 script: 
   - npm run test:unit
-script: 
-  - whoami
