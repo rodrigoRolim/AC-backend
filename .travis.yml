@@ -2,13 +2,25 @@ language: node_js
 node_js: 8.15.1
 services:
   - docker
-cache:
-  directories:
-    - "node_modules"
+
+stages:
+  - test
+  - package
+
+
 
 before_script:
   - npm update -q
   - cd backend
   - npm install
-script: 
-  - npm run test:unit
+
+test:
+  stage: test
+  script: 
+    - npm run test:unit
+
+package:
+  stage: package
+  cache:
+    directories:
+      - "node_modules"
