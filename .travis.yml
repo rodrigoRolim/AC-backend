@@ -1,13 +1,14 @@
-image: node
 language: node_js
 node_js:
   - "stable"
-
+services:
+  - docker
 cache:
   directories:
     - "node_modules"
 
 before_script:
+  - docker pull node
   - cd backend
   - npm install
 script: 
