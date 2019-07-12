@@ -45,7 +45,6 @@ describe('Routes: Graduation', () => {
       .set('authorization', token)
       .send(newGraduation)
       .end((err, res) => {
-        console.log(res.body)
         expect(res.status).to.be.eql(201)
         done(err)
       })
