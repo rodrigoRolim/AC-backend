@@ -2,12 +2,11 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import routes from './routes';
 import database from './config/database'
-import dotenv from 'dotenv-safe'
+//import dotenv from 'dotenv-safe'
+var dotenv = require('dotenv-safe').config({ allowEmptyValues: true })
 import cors from 'cors'
 
-dotenv.config({
-  allowEmptyValues: true
-})
+
 const configureExpress = () => {
  
   dotenv.load()
