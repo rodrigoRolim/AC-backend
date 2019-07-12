@@ -1,0 +1,10 @@
+language: node_js
+image: node
+stages:
+  - test
+  - package
+  - deploy
+
+before_script:
+  - whoami
+  - pwd
