@@ -5,11 +5,11 @@ import database from './config/database'
 import dotenv from 'dotenv-safe'
 import cors from 'cors'
 
-
+dotenv.config({
+  allowEmptyValues: true
+})
 const configureExpress = () => {
-  dotenv = dotenv.config({
-    allowEmptyValues: true
-  })
+ 
   dotenv.load()
   const app = express()
   app.use(bodyParser.json())
