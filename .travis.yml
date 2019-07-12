@@ -9,4 +9,5 @@ cache:
 
 script: 
   - cd backend
+  - npm install mocha
   - npm run test:unit
