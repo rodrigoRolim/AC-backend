@@ -5,20 +5,16 @@ node_js:
 cache:
   directories:
     - "node_modules"
-script:
-  - cd backend
-  - npm install
-  - npm run test:unit
-#stages:
- # - test
-  #- package
-  #- deploy
 
-#before_script:
- # - whoami
+stages:
+  - test
 
-#test site:
- # stage: test
-  #script: 
-   # - cd backend
-    #- npm install && npm run test:unit
+before_script:
+  - whoami
+
+test site:
+  stage: test
+  script: 
+    - cd backend
+    - npm install
+    - npm run test:unit
