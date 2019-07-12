@@ -15,7 +15,7 @@ class ProfessorController {
             if (resp) {
 
               const _id = professor._id
-              const token = this.jwt.sign({ _id }, process.env.SECRET || process.env.example.SECRET, { expiresIn: 86400 })
+              const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
 
               res.status(201).send({ token: token, auth: resp, user: professor })
 
