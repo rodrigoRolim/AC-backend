@@ -5,10 +5,10 @@ cache:
   directories:
     - "node_modules"
 image: node
-stages:
-  - test
-  - package
-  - deploy
+#stages:
+ # - test
+  #- package
+  #- deploy
 
 before_script:
   - whoami
