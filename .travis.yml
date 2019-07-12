@@ -11,5 +11,6 @@ before_script:
   - npm update -q
   - cd backend
   - npm install
-script: 
-  - npm run test:unit
+test:
+  script: 
+    - npm run test:unit
