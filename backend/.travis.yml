@@ -1,4 +1,4 @@
-language: node_js
+image: node
 stages:
   - test
   - package
