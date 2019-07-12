@@ -3,6 +3,8 @@ node_js: 8.15.1
 services:
   - docker
   - mongodb
+env:
+  - SECRET=mysecret
 cache:
   directories:
     - "node_modules"
