@@ -15,7 +15,7 @@ before_script:
 jobs:
   include:
     - stage: test
-    script: npm run test:unit
+        script: npm run test:unit
     - stage: package
-    cache:
-      directories: "node_modules"
+        cache:
+        directories: "node_modules"
