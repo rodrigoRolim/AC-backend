@@ -80,12 +80,11 @@ export default {
         const score = scores_valides.reduce((acc, doc_ap) => {
             return acc + doc_ap.score
           }, 0)
-                  // usar o id de group no lugar do nome
+
         return { group: group.name, percent: score*100/group.scoreMin, raw: score, min: group.scoreMin }
       })
  
       this.scoreboard = scores
-      console.log(scores)
       this.$store.dispatch('set', scores)
       //return scores
     },
