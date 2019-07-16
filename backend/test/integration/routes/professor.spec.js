@@ -49,7 +49,7 @@ describe('Routes: professor', () => {
   })
 
   afterEach(() => Professor.deleteMany({}))
-  // after(() => process.exit(0))
+
   describe('POST /professor/add', () => {
     
     context('when posting an professor', () => {

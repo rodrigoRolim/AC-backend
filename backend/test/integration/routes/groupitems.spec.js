@@ -36,8 +36,8 @@ describe('Management groups', () => {
     return Group.deleteMany({})
       .then(() => group.save())
   })
-  after(() => process.exit(0))
-  // afterEach(() => Group.deleteMany({}))
+
+  afterEach(() => Group.deleteMany({}))
   describe('POST /group/add', () => {
     context('when add a new group', () => {
       it('should added new item and return 201 and new group', done => {

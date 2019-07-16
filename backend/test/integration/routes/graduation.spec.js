@@ -37,7 +37,6 @@ describe('Routes: Graduation', () => {
   })
 
   afterEach(() => Graduation.deleteMany({}))
-  // after(() => process.exit(0))
   describe('POST /graduation/add', () => {
     it('should return added last graduation', done => {
       request

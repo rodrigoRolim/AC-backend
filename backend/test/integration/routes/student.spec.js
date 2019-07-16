@@ -64,7 +64,7 @@ describe('Route: Student', () => {
   })
 
   afterEach(() => Student.remove({}))
-  // after(() => process.exit(0))
+ 
   describe('POST /student/add', () => {
     
     context('when posting a new student', () => {
