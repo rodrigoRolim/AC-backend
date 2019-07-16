@@ -23,7 +23,7 @@ jobs:
       name: "Integration Tests"
     - before_script: 
       - cd .. 
-      - ls remote
+      - ls
       # - cd complementaries-activities
     #- script: npm test
       name: "Test in frontend"
