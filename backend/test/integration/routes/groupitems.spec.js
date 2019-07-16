@@ -5,9 +5,7 @@ describe('Management groups', () => {
 
   let request
   const defaultId = '56cb91bdc3464f14678934ca'
-  let token = jwt.sign({ defaultId }, 'mysecret', {
-    expiresIn: 86400
-  })
+  let token
   const defaultItem = {
     __v: 0,
     _id: '5cdb31b01872e0c67bb54ed9',
@@ -28,6 +26,11 @@ describe('Management groups', () => {
     return setupApp()
       .then(app => {
         request = supertest(app)
+      })
+      .then(() => {
+        token = jwt.sign({ defaultId }, process.env.SECRET, {
+          expiresIn: 86400
+        })
       })
   })
   beforeEach(() => {

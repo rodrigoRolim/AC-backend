@@ -6,12 +6,11 @@ import fs from 'mz/fs'
 // colocar context em todos os testes
 
 describe('Router: document', () => {
+
   const newPathfile = path.join(__dirname, '..', '..', '..', 'uploads/test.pdf')
   let request
   const defaultId = '5cd60a0312c3e687ea34667f'
-  let token = jwt.sign({ defaultId }, 'mysecret', {
-    expiresIn: 86400
-  })
+  let token
   const defaultDocument = {
     name: 'document name',
     score: 10,
@@ -33,9 +32,15 @@ describe('Router: document', () => {
     student: '5ce30224b1bcd6cda1addc58'
   }
   before(() => {
+    console.log(process.env.SECRET)
     return setupApp()
       .then(app => {
         request = supertest(app)
+      })
+      .then(() => {
+        token = jwt.sign({ defaultId }, process.env.SECRET, {
+          expiresIn: 86400
+        })
       })
   })
   beforeEach(() => {
