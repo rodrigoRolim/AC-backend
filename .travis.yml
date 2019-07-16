@@ -13,8 +13,6 @@ before_script:
   - npm update -q
   - cd backend
   - npm install
-script: 
-  - npm run test:unit
 
 jobs:
   include:
@@ -25,8 +23,8 @@ jobs:
       name: "Integration Tests"
     - before_script: 
       - cd .. 
-      - cd frontend
-      - cd complementaries-activities
+      - whoami
+      # - cd complementaries-activities
     - script: npm test
       name: "Test in frontend"
     #- stage: deploy
