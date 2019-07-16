@@ -23,7 +23,11 @@ jobs:
       script: npm run test:unit
     - script: npm run test:integration
       name: "Integration Tests"
-    - before_script: cd .. && cd frontend/complementaries-activities
+    - before_script: 
+      - cd .. 
+      - cd frontend/complementaries-activities
+    - script: npm test
+      name: "Test in frontend"
     #- stage: deploy
     #  name: "Deploy to heroku"
     #  script: 
