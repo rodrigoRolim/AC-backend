@@ -22,9 +22,9 @@ jobs:
     - script: npm run test:integration
       name: "Integration Tests"
     - before_script: 
-      - cd frontend
+      - cd frontend/complementaries-activities
       name: "Test in frontend"
-      script: ls
+      script: npm test
      
     #- stage: deploy
     #  name: "Deploy to heroku"
