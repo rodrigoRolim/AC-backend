@@ -25,7 +25,8 @@ jobs:
       name: "Integration Tests"
     - before_script: 
       - cd .. 
-      - cd frontend/complementaries-activities
+      - cd frontend
+      - cd complementaries-activities
     - script: npm test
       name: "Test in frontend"
     #- stage: deploy
