@@ -23,10 +23,9 @@ jobs:
       name: "Integration Tests"
     - before_script: 
       - cd .. 
-      - ls
-      # - cd complementaries-activities
-    #- script: npm test
       name: "Test in frontend"
+      script: ls
+     
     #- stage: deploy
     #  name: "Deploy to heroku"
     #  script: 
