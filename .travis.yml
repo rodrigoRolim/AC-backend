@@ -22,7 +22,6 @@ jobs:
     - script: npm run test:integration
       name: "Integration Tests"
     - before_script: 
-      - cd .. 
       - cd frontend
       name: "Test in frontend"
       script: ls
