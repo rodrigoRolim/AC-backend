@@ -1,5 +1,5 @@
 class DocumentController {
-  // pusher going to here
+
   constructor (Document, path, fs) {
 
     this.Document = Document
@@ -10,7 +10,7 @@ class DocumentController {
   create (req, res) {
 
     const docJson = JSON.parse(req.body.document)
-    docJson.path = req.file.path // change for filename
+    docJson.path = req.file.path
     const document = new this.Document(docJson)
     return document.save()
       .then(() => res.status(201).send(document))
@@ -71,13 +71,6 @@ class DocumentController {
       .then(() => res.sendStatus(200))  
       .catch((err) => res.status(400).send(err.message))
   }
-  /* findAndRemoveAllDocumenByStudent (req, res) {
-    const documentService = new DocumentService(Document, path, fs)
-    return this.Document.find({ student: { $in: req.params.ids } })
-      .then((documents) => documentService.removeAllDocumentsByStudent(documents))
-      .then(() => res.sendStatus(204))
-      .catch((err) => res.status(422).send(err.message))
-  } */
 }
 
 export default DocumentController

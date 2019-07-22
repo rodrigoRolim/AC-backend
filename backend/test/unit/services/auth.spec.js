@@ -32,7 +32,7 @@ describe('Middleware: auth. It is responsible for authorization token generate',
         let auth = new Auth(compare, jwt)
         auth.authorization = sinon.stub()
         auth.authorization.withArgs(password, student).throws('No authorization')
-        //console.log(auth.authorization(password, student))
+        
         expect(() => auth.authorization(password, student)).to.throw()
       })
     })

@@ -50,7 +50,7 @@ export default {
     }
   },
   created () {
-
+    console.log(this.$store.getters.getBoard)
     const student = JSON.parse(localStorage.getItem('user'))
     GroupService.readAll()
       .then((res) => res.data)
@@ -60,8 +60,6 @@ export default {
       })
       .then(() => this.setScoreboard())
       .catch((err) => console.log(err))
-      //.then(() => this.Pusher())
-      //.then((aproved) => this.aproved = aproved) 
   },
   updated() {
     this.aprobation(this.$store.getters.getBoard)

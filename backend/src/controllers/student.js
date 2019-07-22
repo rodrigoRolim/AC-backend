@@ -4,6 +4,7 @@ class StudentController {
     this.jwt = jwt
     this.compare = compare
     this.castingId = castingId
+
   }
   create (req, res) {
     const student = new this.Student(req.body)
@@ -17,7 +18,7 @@ class StudentController {
     return this.Student.findOne({ ra: req.body.ra })
       .then((student) => {
 
-        this.compare(req.body.password, student.password)
+        return this.compare(req.body.password, student.password)
           .then((resp) => {
 
             if (resp) {

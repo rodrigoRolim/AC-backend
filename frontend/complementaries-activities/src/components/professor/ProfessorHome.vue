@@ -195,7 +195,7 @@ export default {
     }
   },
   created () {
-    // this.testPusher()
+
     this.showMask = true
     if (localStorage.getItem('user') == null) {
       this.$router.replace('/')

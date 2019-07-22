@@ -13,7 +13,6 @@ class Auth {
         }
         throw new Error('No authorization')
       })
-      //.catch((err) => err.message)
   }
 }
 

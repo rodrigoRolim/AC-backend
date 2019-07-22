@@ -9,13 +9,6 @@
    <v-toolbar flat color="white">
     <v-toolbar-title>Lista de documentos</v-toolbar-title>
     <v-spacer></v-spacer>
-    <!--<v-btn 
-    color="secondary" 
-    v-if="documents.length > 0"
-    depressed 
-    :disabled="false"
-    :loading="false"
-    class="mb-1">enviar documentos</v-btn>-->
    </v-toolbar>
     <v-card>
       <v-card-title>
