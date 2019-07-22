@@ -3,9 +3,7 @@ import jwt from 'jsonwebtoken'
 
 describe('Routes: Department', () => {
   let request
-  let token = jwt.sign({ defaultId }, 'mysecret', {
-    expiresIn: 86400
-  })
+  let token
   const defaultId = '5cd60a0312c3e687ea34667f'
   const defaultDepartment = {
     name: 'department name',
@@ -20,6 +18,11 @@ describe('Routes: Department', () => {
       .then(app => {
         request = supertest(app)
       })
+      .then(() => {
+        token = jwt.sign({ defaultId }, process.env.SECRET, {
+          expiresIn: 86400
+        })
+      })
   })
   beforeEach(() => {
     let department =  new Department(defaultDepartment)
@@ -29,7 +32,7 @@ describe('Routes: Department', () => {
   })
 
   afterEach(() => Department.deleteMany({}))
-  
+
   describe('POST /admin/department', () => {
     it('should return added last department', done => {
       const newDepartment = Object.assign({}, { _id: defaultId, __v: 0}, { name: 'DAEL' })

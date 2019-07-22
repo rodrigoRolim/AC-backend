@@ -3,15 +3,8 @@ import jwt from 'jsonwebtoken'
 
 describe('Routes: professor', () => {
   let request
-  let token = jwt.sign({ defaultId }, 'mysecret', {
-    expiresIn: 86400
-  })
-  before(() => {
-    return setupApp()
-      .then(app => {
-        request = supertest(app)
-      })
-  })
+  let token
+ 
   const defaultId = '56cb91bdc3464f14678934ca'
   const defaultProfessor = {
     name: 'roger jhon',
@@ -41,6 +34,17 @@ describe('Routes: professor', () => {
     name: 'roger jhon',
     password: '12345'
   }
+  before(() => {
+    return setupApp()
+      .then(app => {
+        request = supertest(app)
+      })
+      .then(() => {
+        token = jwt.sign({ defaultId }, process.env.SECRET, {
+          expiresIn: 86400
+        })
+      })
+  })
   beforeEach(() => {
     const professor = new Professor(defaultProfessor)
     professor._id = '56cb91bdc3464f14678934ca'

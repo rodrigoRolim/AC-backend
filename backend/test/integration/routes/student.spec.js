@@ -5,9 +5,7 @@ import jwt from 'jsonwebtoken'
 describe('Route: Student', () => {
   let request
   const defaultId = '56cb91bdc3464f14678934ca'
-  let token = jwt.sign({ defaultId }, 'mysecret', {
-    expiresIn: 86400
-  })
+  let token
   const customId = '5ce1b5aaf14a857fd993a364'
   const defaultStudent = {
     ra: 'a12345',
@@ -55,6 +53,11 @@ describe('Route: Student', () => {
       .then(app => {
         request = supertest(app)
       })
+      .then(() => {
+        token = jwt.sign({ defaultId }, process.env.SECRET, {
+          expiresIn: 86400
+        })
+      })
   })
   beforeEach(() => {
     const student = new Student(defaultStudent)
@@ -64,7 +67,7 @@ describe('Route: Student', () => {
   })
 
   afterEach(() => Student.remove({}))
-
+ 
   describe('POST /student/add', () => {
     
     context('when posting a new student', () => {

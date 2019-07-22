@@ -116,7 +116,7 @@ describe('Management student', () => {
         response.status.withArgs(400).returns(response)
         const _id = '12345'
         jwt.sign = sinon.stub()
-        jwt.sign.withArgs({ _id }, process.env.SECRET , {
+        jwt.sign.withArgs({ _id }, process.env.SECRET, {
           expiresIn: 86400
         }).returns('hashToken')
   
@@ -291,7 +291,6 @@ describe('Management student', () => {
   describe('getSituation() getting situation of student', () => {
     it('should return studend situation', () => {
       const fakeidstudent = 'fake-id-student'
-      const situation = 'situation'
       const studentReturned = Object.assign({}, { situation: 'situation' })
       const request = { params: { id: fakeidstudent } }
       const response = {
@@ -307,7 +306,7 @@ describe('Management student', () => {
 
       return studentController.getSituation(request, response)
         .then(() => {
-          sinon.assert.calledWith(response.send, 'situation')
+          sinon.assert.calledWith(response.send, {situation:'situation'})
         })
     })
     context('when an error occurs', () => {

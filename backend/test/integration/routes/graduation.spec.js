@@ -3,9 +3,7 @@ import jwt from 'jsonwebtoken'
 
 describe('Routes: Graduation', () => {
   let request
-  let token = jwt.sign({ defaultId }, 'mysecret', {
-    expiresIn: 86400
-  })
+  let token
   const defaultId = '5cd60a0312c3e687ea34667f'
   const defaultGraduation = {
     __v: 0,
@@ -28,6 +26,11 @@ describe('Routes: Graduation', () => {
       .then(app => {
         request = supertest(app)
       })
+      .then(() => {
+        token = jwt.sign({ defaultId }, process.env.SECRET, {
+          expiresIn: 86400
+        })
+      })
   })
   beforeEach(() => {
     let graduation =  new Graduation(defaultGraduation)
@@ -37,7 +40,6 @@ describe('Routes: Graduation', () => {
   })
 
   afterEach(() => Graduation.deleteMany({}))
-  
   describe('POST /graduation/add', () => {
     it('should return added last graduation', done => {
       request
@@ -45,7 +47,6 @@ describe('Routes: Graduation', () => {
       .set('authorization', token)
       .send(newGraduation)
       .end((err, res) => {
-        console.log(res.body)
         expect(res.status).to.be.eql(201)
         done(err)
       })

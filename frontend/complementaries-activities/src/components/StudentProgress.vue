@@ -50,7 +50,7 @@ export default {
     }
   },
   created () {
-
+    console.log(this.$store.getters.getBoard)
     const student = JSON.parse(localStorage.getItem('user'))
     GroupService.readAll()
       .then((res) => res.data)
@@ -60,8 +60,6 @@ export default {
       })
       .then(() => this.setScoreboard())
       .catch((err) => console.log(err))
-      //.then(() => this.Pusher())
-      //.then((aproved) => this.aproved = aproved) 
   },
   updated() {
     this.aprobation(this.$store.getters.getBoard)
@@ -80,12 +78,11 @@ export default {
         const score = scores_valides.reduce((acc, doc_ap) => {
             return acc + doc_ap.score
           }, 0)
-                  // usar o id de group no lugar do nome
+
         return { group: group.name, percent: score*100/group.scoreMin, raw: score, min: group.scoreMin }
       })
  
       this.scoreboard = scores
-      console.log(scores)
       this.$store.dispatch('set', scores)
       //return scores
     },
