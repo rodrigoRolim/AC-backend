@@ -1,0 +1,28 @@
+language: node_js
+node_js: 8.15.1
+services:
+  - docker
+  - mongodb
+env:
+  - SECRET=othersecret
+cache:
+  directories:
+    - "node_modules"
+
+before_script:
+  - npm update -q
+  - cd backend
+  - npm install
+
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+      script: npm run test:unit
+    - script: npm run test:integration
+      name: "Integration Tests"
+   
+     
+    #- stage: deploy
+    #  name: "Deploy to heroku"
+    #  script: 
