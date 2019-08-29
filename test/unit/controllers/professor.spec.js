@@ -2,19 +2,18 @@ import sinon from 'sinon'
 import Professor from  '../../../src/models/professor'
 import ProfessorController from '../../../src/controllers/professor'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-
+import br  from 'bcrypt'
+import Authorization from '../../../src/services/auth'
 
 describe('Management professor', () => {
   const defaultProfessor = {
-    _id: '12345',
+    _id: 'id-fake',
+    password: 'encrypter-password',
     siape: 'a12345',
     name: 'eduardo siqueira',
     email: 'eduardo@email.com',
-    password: '12345',
     department: '5cd85d1b942d44d0ae60f2fb',
-    type_user: 'professor',
-    admin: true
+    type_user: 'professor'
   }
   const defaultRequest = {
     params: {}
@@ -185,10 +184,19 @@ describe('Management professor', () => {
           password: '12345'
         }
       }
-
-      bcrypt.compare = sinon.stub()
-      bcrypt.compare.withArgs(request.body.password, '12345').resolves(true)
+      const professor = { _id: 'id-fake', password: 'encrypter-password'}
+      br.compare = sinon.stub()
+      br.compare.withArgs(request.body.password, professor.password).resolves(true)
       
+      jwt.sign = sinon.stub()
+      jwt.sign.withArgs({ _id }, process.env.SECRET , {
+        expiresIn: 86400
+      }).returns('hashToken')
+      
+      const auth = new Authorization(br.compare, jwt)
+      auth.authorization = sinon.stub()
+      auth.authorization.withArgs(request.body.password, defaultProfessor).resolves('hashToken')
+     
       const response = {
         send: sinon.spy(),
         status: sinon.stub()
@@ -196,15 +204,12 @@ describe('Management professor', () => {
       response.status.withArgs(201).returns(response)
       const _id = '12345'
 
-      jwt.sign = sinon.stub()
-      jwt.sign.withArgs({ _id }, process.env.SECRET , {
-        expiresIn: 86400
-      }).returns('hashToken')
+      
 
       Professor.findOne = sinon.stub()
-      Professor.findOne.withArgs({ name: request.body.name }).resolves(defaultProfessor)
+      Professor.findOne.withArgs({ siape: request.body.siape }).resolves(defaultProfessor)
 
-      const professorController = new ProfessorController(Professor, jwt, bcrypt.compare)
+      const professorController = new ProfessorController(Professor, auth)
       return professorController.login(request, response) 
         .then(() => {
           sinon.assert.calledWith(response.send, expectedResponse)
@@ -219,27 +224,34 @@ describe('Management professor', () => {
             password: '12345'
           }
         }
-        bcrypt.compare = sinon.stub()
-        bcrypt.compare.withArgs(request.body.password, '12345').resolves(true)
+        const professor = { _id: 'id-fake', password: 'encrypter-password'}
+        br.compare = sinon.stub()
+        br.compare.withArgs(request.body.password, professor.password).resolves(true)
+        
+        jwt.sign = sinon.stub()
+        jwt.sign.withArgs(professor._id , process.env.SECRET , {
+          expiresIn: 86400
+        }).returns('hashToken')
+        
+        const auth = new Authorization(br.compare, jwt)
+        auth.authorization = sinon.stub()
+        auth.authorization.withArgs(request.body.password, defaultProfessor).resolves('hashToken')
+     
+      
         const response = {
           send: sinon.spy(),
           status: sinon.stub()
         }
   
-        response.status.withArgs(400).returns(response)
-        const _id = '12345'
-        jwt.sign = sinon.stub()
-        jwt.sign.withArgs({ _id }, process.env.SECRET , {
-          expiresIn: 86400
-        }).returns('hashToken')
+        response.status.withArgs(404).returns(response)
   
         Professor.findOne = sinon.stub()
-        Professor.findOne.withArgs({ name: request.body.name }).rejects({ message: 'Error' })
+        Professor.findOne.withArgs({ siape: request.body.siape }).rejects({ message: 'No authorization' })
   
-        const professorController = new ProfessorController(Professor, jwt, bcrypt.compare)
+        const professorController = new ProfessorController(Professor, auth)
         return professorController.login(request, response) 
           .then(() => {
-            sinon.assert.calledWith(response.send, 'Error')
+            sinon.assert.calledWith(response.send, 'No authorization')
           })
       })
     })
