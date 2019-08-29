@@ -15,12 +15,21 @@ class CourseController {
         "localField": "department",
         "from": "departments", 
         "foreignField": "_id",
-        "as": "deps"
+        "as": "departments"
       }
     },
       {
+        "$addFields": {
+          "departmentID": "$departments._id",
+          "departmentName": "$departments.name"
+        }
+      },
+      {
         "$project":
-        {"department": 0}
+        {
+          "departments": 0
+        }
+
       }
     ])
       .then((graduations) => res.send(graduations))
