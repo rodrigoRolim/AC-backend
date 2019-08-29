@@ -6,7 +6,8 @@ describe('Controller: graduation', () => {
   const listGraduation = [
     {
       name: 'engenharia de software',
-      professor: '56cb91bdc3464f14678934ca'
+      departmentID: ['56cb91bdc3464f14678934ca'],
+      departmentName: ['department name']
     }
   ]
   const aggregateParams = [
@@ -15,20 +16,28 @@ describe('Controller: graduation', () => {
       "localField": "department",
       "from": "departments", 
       "foreignField": "_id",
-      "as": "deps"
+      "as": "departments"
     }
   },
     {
+      "$addFields": {
+        "departmentID": "$departments._id",
+        "departmentName": "$departments.name"
+      }
+    },
+    {
       "$project":
-      {"department": 0}
-    }
-  ]
+      {
+        "departments": 0
+      }
+
+  }]
   describe('when adding graduation', () => {
     it('should save a graduation into the database', () => {
       const request = {
         body: {
           name: 'engenharia de software',
-          professor: '56cb91bdc3464f14678934ca'
+          departmentID: '56cb91bdc3464f14678934ca',
         }
       }
       const response = {
