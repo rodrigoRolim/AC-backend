@@ -15,8 +15,8 @@ export default {
         res.status(500).send({ auth: false, message: 'failed to authenticate token.' })
         next(err)
       }
-      // req['context']['userId'] = decoded.id
-      req.userId = decoded.id
+
+      req.user.id = decoded.id
       next()
     })
   }
