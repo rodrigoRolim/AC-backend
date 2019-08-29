@@ -12,9 +12,10 @@ describe("verifyJWT", () => {
     const reqFake = {
       headers: {
         'authorization': jwtToken
-      }
+      },
+      user: { }
     }
-    
+    reqFake.user.id = id
     const resFake = {}
     verify.verifyJWT(reqFake, resFake, done, jwt)
   })
