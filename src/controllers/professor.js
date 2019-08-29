@@ -1,30 +1,15 @@
 class ProfessorController {
-  constructor (Professor, jwt, compare) {
+  constructor (Professor, auth) {
     this.Professor = Professor
-    this.jwt = jwt
-    this.compare = compare
+    this.auth = auth
   }
   login (req, res) {
-
-    return this.Professor.findOne({ name: req.body.name })
+    return this.Professor.findOne({ siape: req.body.siape })
       .then((professor) => {
-
-        this.compare(req.body.password, professor.password)
-          .then((resp) => {
-
-            if (resp) {
-
-              const _id = professor._id
-              const token = this.jwt.sign({ _id }, process.env.SECRET, { expiresIn: 86400 })
-
-              res.status(201).send({ token: token, auth: resp, user: professor })
-
-            } else {
-              res.status(404).send('No authorization')
-            }
-          })
+        this.auth.authorization(req.body.password, professor)
+          .then((token) =>  res.status(201).send({ token: token, auth: true, user: professor }))
       })
-      .catch((err) => res.status(400).send(err.message))
+      .catch(() => res.status(404).send('No authorization'))
   }
   create (req, res) {
     const professor = new this.Professor(req.body)
