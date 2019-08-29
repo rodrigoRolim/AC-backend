@@ -3,11 +3,12 @@ class Auth {
     this.compare = compare
     this.jwt = jwt
   }
-  authorization(password, student) {
-    return this.compare(password, student.password)
+  authorization(password, user) {
+    return this.compare(password, user.password)
       .then((resp) => {
         if (resp) {
-          return this.jwt({ id: student.id }, process.env.SECRET, {
+
+          return this.jwt.sign({ id: user._id }, process.env.SECRET, {
             expiresIn: 86400
           })
         }
