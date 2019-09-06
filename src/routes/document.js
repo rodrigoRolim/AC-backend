@@ -53,7 +53,7 @@ router.put('/sent/:id', verify.verifyJWT, StudentMiddle.approved, (req, res) => 
 
 router.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_TYPES") {
-    res.status(422).json({ error: "Somente pdfs são pertmitidos" })
+    res.status(422).json({ error: "Somente pdfs são permitidos" })
     return
   }
   if (err.code === "LIMIT_FILE_SIZE") {

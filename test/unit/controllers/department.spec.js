@@ -3,11 +3,6 @@ import Department from '../../../src/models/department'
 import DepartmentController from '../../../src/controllers/department'
 
 describe('Management department', () => {
-  const department = {
-    body: {
-      name: 'DACOMP',
-    }
-  }
   const listDepartment = [
     {
       name: 'DACOMP'
